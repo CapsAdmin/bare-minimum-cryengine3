@@ -15,13 +15,9 @@ History:
 #include "GameCVars.h"
 #include "GameActions.h"
 #include "Player.h"
-#include "PlayerView.h"
 #include "GameUtils.h"
 
 #include "GameRules.h"
-
-#include "Camera/CameraManager.h"
-#include "Camera/CameraView.h"
 
 #include <IViewSystem.h>
 #include <IPhysics.h>
@@ -1393,68 +1389,6 @@ void CPlayer::UpdateView(SViewParams &viewParams)
 	viewParams.position = GetEntity()->GetWorldPos() + GetEyeOffset();
 	viewParams.rotation = this->GetViewRotation();
 	viewParams.fov = DEG2RAD(75);
-
-	{return;}
-
-	if (viewParams.groundOnly)
-	{
-		if (m_stats.inAir > 0.0f)
-		{
-			float factor = m_stats.inAir;
-			Limit(factor, 0.0f, 0.2f);
-			factor = 1.0f - factor / 0.2f;
-			factor = factor * factor;
-			viewParams.currentShakeQuat.SetSlerp(IDENTITY, viewParams.currentShakeQuat, factor);
-			viewParams.currentShakeShift *= factor;
-		}
-	}
-
-	if(g_pGameCVars->cl_cam_orbit != 0 && IsThirdPerson())
-	{
-		CCameraView *pCamView = g_pGame->GetCameraManager()->GetCamView();
-		pCamView->SetTarget(GetEntity());
-		pCamView->Update(viewParams);
-		viewParams.blend = m_viewBlending;
-		m_viewBlending = true;	// only disable blending for one frame
-		//store the view matrix
-		m_clientViewMatrix.SetFromVectors(viewParams.rotation.GetColumn0(), viewParams.rotation.GetColumn1(), m_upVector, viewParams.position);
-	}
-	else
-	{
-		CPlayerView playerView(*this, viewParams);
-		playerView.Process(viewParams);
-		playerView.Commit(*this, viewParams);
-
-		if (!IsThirdPerson())
-		{
-			float animControlled = m_pAnimatedCharacter->FilterView(viewParams);
-
-			if (animControlled >= 1.f)
-			{
-				assert( viewParams.rotation.IsValid() );
-				m_baseQuat = m_viewQuat = m_viewQuatFinal = viewParams.rotation;
-				m_lastAnimContPos = viewParams.position;
-				m_lastAnimContRot = viewParams.rotation;
-			}
-			else if (animControlled > 0.f && m_lastAnimControlled > animControlled)
-			{
-				m_viewQuat = m_viewQuatFinal = m_lastAnimContRot;
-				viewParams.position = m_lastAnimContPos;
-				viewParams.rotation = m_lastAnimContRot;
-			}
-
-			m_lastAnimControlled = animControlled;
-		}
-
-		viewParams.blend = m_viewBlending;
-		m_viewBlending = true;	// only disable blending for one frame
-		//store the view matrix, without vertical component tough, since its going to be used by the VectorToLocal function.
-		Vec3 forward(viewParams.rotation.GetColumn1());
-		Vec3 up(m_baseQuat.GetColumn2());
-		Vec3 right(-(up % forward));
-		m_clientViewMatrix.SetFromVectors(right, up % right, up, viewParams.position);
-		m_clientViewMatrix.OrthonormalizeFast();
-	}
 
 	// finally, update the network system
 	if (gEnv->bMultiplayer)

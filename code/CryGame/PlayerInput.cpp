@@ -6,7 +6,6 @@
 #include "GameActions.h"
 #include "IVehicleSystem.h"
 #include "GameRules.h"
-#include "Camera/CameraInputHelper.h"
 
 #include <IWorldQuery.h>
 #include <IInteractor.h>
@@ -47,7 +46,6 @@ CPlayerInput::CPlayerInput( CPlayer *pPlayer ) :
 {
 	m_pPlayer->GetGameObject()->CaptureActions(this);
 	// Create the input helper class for the new third person camera
-	m_pCameraInputHelper = new CCameraInputHelper(m_pPlayer, this);
 
 	// set up the handlers
 	if (s_actionHandler.GetNumHandlers() == 0)
@@ -95,7 +93,6 @@ CPlayerInput::CPlayerInput( CPlayer *pPlayer ) :
 
 CPlayerInput::~CPlayerInput()
 {
-	SAFE_DELETE(m_pCameraInputHelper);
 	m_pPlayer->GetGameObject()->ReleaseActions(this);
 }
 
@@ -460,11 +457,6 @@ void CPlayerInput::PreUpdate()
 			m_pPlayer->m_camViewMtxFinal = Matrix33(gEnv->pRenderer->GetCamera().GetViewMatrix());
 			IsInit = true;
 		}
-
-		float frameTime = gEnv->pTimer->GetFrameTime();
-		float frameTimeNormalised = (frameTime > 1 ? 1 : frameTime < 0.0001f ? 0.0001f : frameTime) * 30;	// 1/30th => 1 1/60th =>0.5 etc
-		float frameTimeClamped = (frameTime > 1 ? 1 : frameTime < 0.0001f ? 0.0001f : frameTime);
-		m_pCameraInputHelper->UpdateCameraInput(deltaRotation, frameTimeClamped, frameTimeNormalised);	// also modifies deltaRotation.
 	}
 
 	if (!animControlled)
@@ -604,7 +596,6 @@ void CPlayerInput::PostUpdate()
 	float deltaPitch = m_deltaPitch;
 	deltaPitch += m_deltaPitchOnce;
 	m_deltaPitchOnce = 0;
-	m_pCameraInputHelper->PostUpdate(frameTime, deltaPitch);
 
 	if (m_mouseInput)
 	{

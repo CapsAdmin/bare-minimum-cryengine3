@@ -21,7 +21,6 @@
 #include "Actor.h"
 #include <IActionMapManager.h>
 #include "Network/NetActionSync.h"
-#include "Camera/CameraManager.h"
 #include "Animation/PoseModifier/ILeanPoseModifier.h"
 
 class CPlayerMovement;

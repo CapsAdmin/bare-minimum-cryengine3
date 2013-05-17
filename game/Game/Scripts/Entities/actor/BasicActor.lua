@@ -904,10 +904,6 @@ function BasicActor:GetSelfCollisionMult(collider, hit)
 		return self.selfCollisionDamageMult or 1;  
 	end
 
-	if(collider and collider.vehicle) then
-		return self.vehicleCollisionDamageMult or 1;
-	end
-
 	return self.entityCollisionDamageMult or 1;
 end
 
@@ -942,9 +938,9 @@ function BasicActor:Reset(bFromInit, bIsReload)
 		
 	--misc resetting
 	self.actor:SetMovementTarget(g_Vectors.v000,g_Vectors.v000,g_Vectors.v000,1);
-	self.lastVehicleId = nil;
-	self.AI.theVehicle = nil;
-		
+
+
+	
 	self:ResetBleeding();
 	
 	--E3 hacks
@@ -1459,14 +1455,6 @@ function BasicActor.Server:OnHit(hit)
 	if (not self.MusicInfo) then self.MusicInfo={}; end
 	self.MusicInfo.nonbullet = true;
 	
-	if (self:IsOnVehicle() and hit.type~="heal") then
-		local vehicle = System.GetEntity(self.actor:GetLinkedVehicleId());				
-		local newDamage = vehicle.vehicle:ProcessPassengerDamage(self.id, self.actor:GetHealth(), hit.damage, hit.typeId, hit.explosion or false);
-		if (newDamage <= 0.0) then		  
-			return;
-		end		
-	end
-	
 	local isPlayer = self.actor:IsPlayer();
 	
 	if (hit.damage>0) then
@@ -1496,17 +1484,7 @@ function BasicActor.Server:OnHit(hit)
 	--some AI related
 	if (not isPlayer) then	
 		local theShooter=hit.shooter;
-		-- upade hide-in-vehicle
-		if (theShooter and theShooter.IsOnVehicle) then
-			local shootersVehicleId = theShooter:IsOnVehicle();
-			if (shootersVehicleId) then
-				local shootersVehicle = System.GetEntity(shootersVehicleId);
-				if(shootersVehicle and shootersVehicle.ChangeSpecies and (shootersVehicle.AI==nil or shootersVehicle.AI.hostileSet~=1)) then
-					shootersVehicle:ChangeSpecies(theShooter, 2);
-				end
-			end	
-		end
-	
+			
 		if (hit.type and hit.type ~= "collision" and hit.type ~= "fall" and hit.type ~= "event") then
 			if (theShooter) then
 				CopyVector(g_SignalData.point, theShooter:GetWorldPos());
@@ -1531,11 +1509,7 @@ function BasicActor.Server:OnHit(hit)
 --			elseif(hit.shooter and hit.shooter==g_localActor and self.Properties.species==hit.shooter.Properties.species) then
 --				AI.Signal(SIGNALFILTER_SENDER,0,"OnFriendlyDamageByPlayer",self.id,g_SignalData);
 				elseif (theShooter ~= nil and theShooter~=self) then
-					if(hit.weapon and hit.weapon.vehicle) then 
-						AI.Signal(SIGNALFILTER_SENDER,0,"OnDamage",self.id,g_SignalData);
-					else
 						AI.Signal(SIGNALFILTER_SENDER,0,"OnFriendlyDamage",self.id,g_SignalData);
-					end
 				else
 					AI.Signal(SIGNALFILTER_SENDER,0,"OnDamage",self.id,g_SignalData);
 				end
@@ -1849,20 +1823,6 @@ function BasicActor:Kill(ragdoll, shooterId, weaponId, freeze)
 	--			AI.Signal(SIGNALFILTER_SENDER, 1, "OnEnemyDied", hit.shooter.id);
 	end
 
-	-- when a driver ai is dead, something will happen to his vehicle depending on the situation.
-	if ( g_gameRules:IsMultiplayer() == false ) then
-		if ( self.actor and not self.actor:IsPlayer() ) then
-			local vd = self.actor:GetLinkedVehicleId();
-			if ( vd ) then
-				local ve = System.GetEntity( vd );
-				if ( ve ) then
-					if ( ve.OnPassengerDead ) then
-						ve:OnPassengerDead(self);
-					end
-				end
-			end
-		end
-	end
 	if AI then
 		-- Notify CLeader about this
 		AI.Signal(SIGNALFILTER_LEADER, 10, "OnUnitDied", self.id);
@@ -1909,17 +1869,12 @@ function BasicActor:Kill(ragdoll, shooterId, weaponId, freeze)
 		Script.SetTimerForFunction( 1000 , "BasicAI.OnDeath", self );
 	end;
 	
-	if (nil) then
-	-- alternative death solutions can be put here
-	elseif (not self:IsOnVehicle()) then
 		if (ragdoll) then
 			self:TurnRagdoll(1);
 			-- self.actor:SetAnimationInput("Signal", "playDeathAnim");
 		end	
-	end
 
-	if (not self.actor:IsPlayer() and self.Properties.ragdollPersistence>=0 
-		and not self:IsOnVehicle() and not freeze) then
+	if (not self.actor:IsPlayer() and self.Properties.ragdollPersistence>=0 and not freeze) then
 		local pos = self:GetPos();
 		local level,normal,flow=CryAction.GetWaterInfo(pos);
 
@@ -2129,11 +2084,7 @@ function BasicActor:MakeBloodSplats(effect, radius, targetPos)
 	if (blood == 0) then
 		return;
 	end
-	
-	if (g_localActor:IsOnVehicle() and not self:IsOnVehicle()) then		
-		return;
-	end
-		
+			
 	if (targetPos == nil) then
 		targetPos = g_Vectors.temp_v2;
 		self:GetWorldPos(targetPos);
@@ -2639,32 +2590,6 @@ function BasicActor:PrevItem()
 		ItemSystem:PrevItem(self);
 	end
 end
-
-
---vehicles
-function BasicActor:IsOnVehicle()
-	return self.actor:GetLinkedVehicleId();
-end
-
-
--- print entity name of vehicleId, if present
-function LogLinkedVehicle(entityName)
-  if (entityName) then
-    local ent = System.GetEntityByName(entityName);    
-    if (ent) then
-      if (ent.vehicleId) then
-        Log("LinkedVehicle id: "..tostring(ent.vehicleId));
-        local vehicle = System.GetEntity(ent.vehicleId);
-        if (vehicle) then
-          Log("LinkedVehicle: %s", vehicle:GetName());          
-        end
-      else
-        Log("No vehicleId");
-      end
-    end
-  end
-end
-
 
 function BasicActor:ActorLink(entName)
 	if (not entName) then
