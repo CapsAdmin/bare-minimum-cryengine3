@@ -32,38 +32,6 @@ void cry_sprintf(char * destination, size_t size, const char* format, ...);
 // first 'bufferLength' bytes of 'source'.
 size_t cry_copyStringUntilFindChar(char * destination, const char * source, size_t bufferLength, char until);
 
-#if !defined(_DEBUG)
-#define cry_displayMemInHexAndAscii(...)			(void)(0)
-#else
-
-class ITextOutputHandler
-{
-public:
-	virtual void DoOutput(const char * text) = 0;
-};
-
-class CCryWatchOutputHandler : public ITextOutputHandler
-{
-	virtual void DoOutput(const char * text);
-};
-
-class CCryLogOutputHandler : public ITextOutputHandler
-{
-	virtual void DoOutput(const char * text);
-};
-
-class CCryLogAlwaysOutputHandler : public ITextOutputHandler
-{
-	virtual void DoOutput(const char * text);
-};
-
-//--------------------------------------------------------------------------------
-// cry_displayMemInHexAndAscii outputs (using an ITextOutputHandler subclass) the
-// contents of the first 'size' bytes starting at memory location 'data'.
-void cry_displayMemInHexAndAscii(const char * startEachLineWith, const void * data, int size, ITextOutputHandler & output, const int bytesPerLine = 32);
-#endif
-
-
 //--------------------------------------------------------------------------------
 // Convert a standard string into a wstring, useful.
 // Converting a wstring into a utf8 string is done by the engine stringutils

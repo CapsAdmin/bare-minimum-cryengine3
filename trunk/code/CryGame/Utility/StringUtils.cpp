@@ -7,8 +7,6 @@ StringUtils.cpp
 
 #include "StdAfx.h"
 #include "StringUtils.h"
-#include "CryWatch.h"
-//#include "HUD/HUDUtils.h"
 
 static bool s_stringUtils_assertEnabled = true;
 
@@ -94,69 +92,6 @@ size_t cry_copyStringUntilFindChar(char * destination, const char * source, size
 
 	return reply;
 }
-
-//--------------------------------------------------------------------------------
-
-#ifndef cry_displayMemInHexAndAscii
-void cry_displayMemInHexAndAscii(const char * startEachLineWith, const void * data, int size, ITextOutputHandler & output, const int bytesPerLine)
-{
-	if (size > 0 && data)
-	{
-		const unsigned char * charData = (const unsigned char *) data;
-		string hexLine, asciiLine;
-		int bytesOnThisLineSoFar = 0;
-		int padTo = 0;
-
-		while (size)
-		{
-			if (++ bytesOnThisLineSoFar > bytesPerLine)
-			{
-				output.DoOutput(string().Format("%s%s  %s", startEachLineWith, hexLine.c_str(), asciiLine.c_str()));
-				padTo = hexLine.length();
-				bytesOnThisLineSoFar -= bytesPerLine;
-				asciiLine = "";
-				hexLine = "";
-			}
-
-			hexLine = hexLine + string().Format("%02x", (int) * charData);
-
-			if ((bytesOnThisLineSoFar & 7) == 0 && (bytesOnThisLineSoFar != bytesPerLine))
-			{
-				hexLine += " ";
-			}
-
-			asciiLine = asciiLine + string().Format("%c", (*charData >= 32 && *charData != 127) ? *charData : '.');
-
-			++ charData;
-			-- size;
-		}
-
-		output.DoOutput(string().Format("%s%s%s  %s", startEachLineWith, hexLine.c_str(), padTo ? string(' ', padTo - hexLine.length()).c_str() : "", asciiLine.c_str()));
-	}
-	else
-	{
-		output.DoOutput(string().Format("%sPTR=%p SIZE=%d", startEachLineWith, size));
-	}
-}
-
-//---------------------------------------------------------------------
-void CCryWatchOutputHandler::DoOutput(const char * text)
-{
-	CryWatch ("%s", text);
-}
-
-//---------------------------------------------------------------------
-void CCryLogOutputHandler::DoOutput(const char * text)
-{
-	CryLog ("%s", text);
-}
-
-//---------------------------------------------------------------------
-void CCryLogAlwaysOutputHandler::DoOutput(const char * text)
-{
-	CryLogAlways ("%s", text);
-}
-#endif
 
 //---------------------------------------------------------------------
 void StrToWstr(const char* str, wstring& dstr)
