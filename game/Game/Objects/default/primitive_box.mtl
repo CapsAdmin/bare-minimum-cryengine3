@@ -1,0 +1,16 @@
+<Material MtlFlags="256">
+ <SubMaterials>
+  <Material Name="Material #25" MtlFlags="128" Shader="Illum" GenMask="268435456" SurfaceType="" Diffuse="0.588,0.588,0.588" Specular="0,0,0" Emissive="0,0,0" Shininess="10" Opacity="1">
+   <Textures />
+   <PublicParams DebugUVScale="64"/>
+   <MaterialLayers />
+  </Material>
+  <Material Name="Material #26" MtlFlags="128" Shader="Illum" GenMask="268435456" SurfaceType="" Diffuse="0.658824,0,0" Specular="0,0,0" Emissive="0,0,0" Shininess="10" Opacity="0.24">
+   <Textures />
+   <PublicParams DebugUVScale="64"/>
+   <MaterialLayers />
+  </Material>
+ </SubMaterials>
+ <PublicParams DebugUVScale="64"/>
+ <MaterialLayers />
+</Material>

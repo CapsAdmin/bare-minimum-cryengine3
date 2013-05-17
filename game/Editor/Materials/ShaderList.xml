@@ -1,0 +1,36 @@
+<ShaderList>
+	<Shader name="Cloth" />
+	<Shader name="Eye" />
+	<Shader name="Fx_velocitybeamparticles" />
+	<Shader name="Glass" />
+	<Shader name="Hair" />
+	<Shader name="Humanskin" />
+	<Shader name="Illum" />
+	<Shader name="Monitor" />
+	<Shader name="Nodraw" />
+	<Shader name="Particles" />
+	<Shader name="Terrain.Layer" />
+	<Shader name="Vegetation" />
+	<Shader name="Water" />
+	<Shader name="Waterfall" />
+
+	<Shader name="Common.Cloud" />
+	<Shader name="Distanceclouds" />
+	<Shader name="Frozenlayerwip" />
+	<Shader name="Hologram" />
+	<Shader name="Ice" />
+	<Shader name="Light.Flare" />
+	<Shader name="Lightbeam.LightBeam" />
+	<Shader name="Lightflares.Flare" />
+	<Shader name="Liquid" />
+	<Shader name="Methagen" />
+	<Shader name="Ping" />
+	<Shader name="Referenceimage" />
+	<Shader name="Scopes" />
+	<Shader name="Sky" />
+	<Shader name="Skyhdr" />
+	<Shader name="Specialeffects" />
+	<Shader name="GeometryBeam" />
+	<Shader name="Templbeamproc" />
+	<Shader name="Volumeobject" />	
+</ShaderList>

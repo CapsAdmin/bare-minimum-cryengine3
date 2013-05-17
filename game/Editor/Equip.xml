@@ -1,0 +1,28 @@
+<AvailableEquipItems>
+	<Health type="Item"/>
+	<Armor type="Item"/>
+	<AmmoAssault type="Item"/>
+	<AmmoHandGrenades type="Item"/>
+	<AmmoPistol type="Item"/>
+	<AmmoRocket type="Item"/>
+	<AmmoShotgun type="Item"/>
+	<AmmoSniper type="Item"/>
+	<AmmoSMG type="Item"/>
+	<PickupAG36 type="Item"/>
+	<PickupSniperRifle type="Item"/>
+	<PickupFalcon type="Item"/>
+	<PickupG11 type="Item"/>
+	<PickupM4 type="Item"/>
+	<PickupMP5 type="Item"/>
+	<PickupOICW type="Item"/>
+	<PickupP90 type="Item"/>
+	<PickupShotgun type="Item"/>
+	<PickupRL type="Item"/>
+	<PickupM249 type="Item"/>
+	<KeyCard0 type="Item"/>
+	<KeyCard1 type="Item"/>
+	<KeyCard2 type="Item"/>
+	<PickupFlashlight type="Item"/>
+	<PickupBinoculars type="Item"/>
+	<PickupHeatVisionGoggles type="Item"/>
+</AvailableEquipItems>

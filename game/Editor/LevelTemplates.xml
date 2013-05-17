@@ -1,0 +1,65 @@
+<Templates>
+	<Environment>
+		<Fog>
+			<ViewDistance type="Int" value="5000"/>
+      <ViewDistanceLowSpec type="Int" value="1000"/>
+      <LDRGlobalDensMult type="Float" value="1.0"/>
+    </Fog>
+
+    <Terrain>
+      <DetailLayersViewDistRatio type="Float" value="1.0"/>
+    </Terrain>
+
+    <EnvState>
+			<WindVector type="Vector" value="1,0,0"/>
+			<ShowTerrainSurface type="BOOL" value="true"/>
+      <SunShadowsMinSpec type="Int" value="1"/>
+      <SunShadowsAdditionalCascadeMinSpec type="Int" value="0"/>
+      <ExtendLastShadowLODMinSpec type="Int" value="0"/>
+      <HeightBasedAmbientAffectsGlobalCube type="BOOL" value="true"/>
+			<UseLayersActivation type="BOOL" value="false"/>
+    </EnvState>
+
+		<CloudShadows>
+			<CloudShadowTexture type="Texture" value="" />
+			<CloudShadowSpeed type="Vector" value="0,0,0"/>
+			<CloudShadowTilling type="Float" value="1.0"/>
+			<CloudShadowBrightness type="Float" value="1.0"/>
+			<CloudShadowInvert type="BOOL" value="false"/>
+		</CloudShadows>
+
+		<SkyBox>
+			<Material type="Material" value="Materials/Sky/Sky"/>
+			<MaterialLowSpec type="Material" value="Materials/Sky/Sky"/>
+			<Angle       type="Float" value="0"/>
+			<Stretching type="Float" value="0.5"/>
+		</SkyBox>
+
+		<Ocean>
+			<Material type="Material" value="Materials/Ocean/ocean_pier" />		
+			<CausticDepth type="Float" value="8.0"/>
+			<CausticIntensity type="Float" value="1.0"/>
+			<CausticsTilling type="Float" value ="1.0"/>
+		</Ocean>
+		
+		<OceanAnimation>
+			<WindDirection type="Float" value="0"/>
+			<WindSpeed type="Float" value="1"/>			
+			<WavesSpeed type="Float" value="0.5"/>			
+			<WavesAmount type="Float" value="1"/>			
+			<WavesSize type="Float" value="0.5"/>	
+		</OceanAnimation>
+
+		<Moon>
+			<Latitude type="Float" value="240.0"/>
+			<Longitude type="Float" value="45.0"/>
+			<Size type="Float" value="0.5"/>
+			<Texture type="Texture" value="Textures/Skys/Night/half_moon.dds"/>
+		</Moon>
+
+		<HDRSetup>
+			<BloomColor type="Color" value="255,255,255"/>
+			<BloomMul type="Float" value="1.0"/>
+		</HDRSetup>
+	</Environment>
+</Templates>

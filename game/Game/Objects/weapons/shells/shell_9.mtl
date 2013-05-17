@@ -1,0 +1,8 @@
+<Material MtlFlags="524288" Shader="Illum" GenMask="80001" StringGenMask="%ALLOW_POM%GLOSS_MAP" SurfaceType="mat_metal_shell" MatTemplate="" Diffuse="0.227451,0.227451,0.227451" Specular="0.23099814,0.20109573,0.10871115" Emissive="0,0,0" Shininess="6.7600002" Opacity="1">
+ <Textures>
+  <Texture Map="Diffuse" File="objects/weapons/shells/shell_9mm.tif"/>
+  <Texture Map="Specular" File="objects/weapons/shells/shell_9mm.tif"/>
+  <Texture Map="Bumpmap" File="objects/weapons/shells/shell_9mm_ddn.tif"/>
+ </Textures>
+ <PublicParams SpecMapChannelB="0" SpecMapChannelR="0" FresnelPower="4" GlossMapChannelB="0" SpecMapChannelG="0" FresnelScale="1" FresnelBias="1" IndirectColor="0.25,0.25,0.25"/>
+</Material>

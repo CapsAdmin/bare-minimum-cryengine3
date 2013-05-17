@@ -1,0 +1,18 @@
+<Material AlphaTest="0.40000001" Diffuse="0.42352945,0.4666667,0.40784317" Emissive="0,0,0" GenMask="100667696" MtlFlags="0" Opacity="1" Shader="Vegetation" Shininess="9.999999" Specular="0.18823531,0.20784315,0.25490198" SurfaceType="" >
+ <Textures>
+  <Texture File="objects/natural/bushes/junglebush/leaves_a.tif" Map="Diffuse" >
+   <TexMod />
+  </Texture>
+  <Texture File="objects/natural/bushes/junglebush/leaves_a_opac.tif" Map="Specular" >
+   <TexMod />
+  </Texture>
+  <Texture File="objects/natural/bushes/junglebush/leaves_a_ddn.tif" Map="Normalmap" >
+   <TexMod />
+  </Texture>
+  <Texture File="objects/natural/bushes/junglebush/leaves_a_opac.tif" Map="Opacity" >
+   <TexMod />
+  </Texture>
+ </Textures>
+ <PublicParams AmbientMul="1.5" AnimAltitude="0.029999999" BackDiffuse="0.56999999,0.75999999,0.37" BackDiffuseMultiplier="0.5" BackShadowBias="0.89999998" BackViewDep="0.5" FrontMult="1.3" OcclStrength="1.3" SHSunShadMul="1" SHSunShadowBias="0.2" SpecularDistance="40" />
+ <MaterialLayers />
+</Material>

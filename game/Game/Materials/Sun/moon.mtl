@@ -1,0 +1,9 @@
+<Material AlphaTest="0.5" Diffuse="0,0,0" Emissive="0.73333335,0.73333335,0.73333335" GenMask="0" MtlFlags="0" Opacity="1" Shader="Illum" Shininess="10" Specular="0,0,0" SurfaceType="" >
+ <Textures>
+  <Texture File="textures/skys/night/moon_small_glowing.dds" Map="Diffuse" >
+   <TexMod />
+  </Texture>
+ </Textures>
+ <PublicParams BumpOffset="0.039999999" DebugUVScale="64" />
+ <MaterialLayers />
+</Material>

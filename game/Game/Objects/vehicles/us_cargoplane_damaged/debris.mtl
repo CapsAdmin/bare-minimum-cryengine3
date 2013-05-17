@@ -1,0 +1,21 @@
+<Material MtlFlags="256" >
+ <SubMaterials>
+  <Material Diffuse="0.69999999,0.69999999,0.69999999" Emissive="0,0,0" GenMask="1" MtlFlags="130" Name="debris" Opacity="0.99000001" Shader="Illum" Shininess="50" Specular="0,0,0" SurfaceType="" >
+   <Textures>
+    <Texture File="objects/vehicles/us_cargoplane_damaged/debris.tif" Map="Diffuse" >
+     <TexMod />
+    </Texture>
+   </Textures>
+   <PublicParams BumpOffset="0.039999999" DebugUVScale="64" EnvMapAmount="0.25" FresnelBias="0" FresnelPow="5" FresnelScale="1" Reflect="0.5" />
+  </Material>
+  <Material Diffuse="0.69999999,0.69999999,0.69999999" Emissive="0,0,0" GenMask="1" MtlFlags="130" Name="body_burnt" Opacity="0.99000001" Shader="Illum" Shininess="50" Specular="0,0,0" SurfaceType="" >
+   <Textures>
+    <Texture File="objects/vehicles/us_cargoplane_damaged/body_burnt_diffuse.tif" Map="Diffuse" >
+     <TexMod />
+    </Texture>
+   </Textures>
+   <PublicParams BumpOffset="0.039999999" DebugUVScale="64" EnvMapAmount="0.25" FresnelBias="0" FresnelPow="5" FresnelScale="1" Reflect="0.5" />
+  </Material>
+ </SubMaterials>
+ <PublicParams BumpOffset="0.039999999" DebugUVScale="64" EnvMapAmount="0.25" FresnelBias="0" FresnelPow="5" FresnelScale="1" Reflect="0.5" />
+</Material>

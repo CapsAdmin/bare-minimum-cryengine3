@@ -1,0 +1,11 @@
+<Material MtlFlags="524288" Shader="Illum" GenMask="10000" StringGenMask="%ENVIRONMENT_MAP" SurfaceType="" MatTemplate="" Diffuse="0.49950528,0.49950528,0.49950528" Specular="0.49950528,0.49950528,0.49950528" Emissive="1,1,1" Shininess="255" Opacity="1">
+ <Textures>
+  <Texture Map="Diffuse" File="textures/defaults/black.dds">
+   <TexMod />
+  </Texture>
+  <Texture Map="Environment" File="textures/cubemaps/cubemap_test.dds">
+   <TexMod />
+  </Texture>
+ </Textures>
+ <PublicParams FresnelScale="0" FresnelPower="4" FresnelBias="1" IndirectColor="0.25,0.25,0.25"/>
+</Material>

@@ -1,0 +1,15 @@
+<Material MtlFlags="256">
+ <SubMaterials>
+  <Material Name="wheel" MtlFlags="128" Shader="Illum" GenMask="268435456" SurfaceType="" Diffuse="0.52156866,0.51372552,0.51764709" Specular="0.035294119,0.050980397,0.054901965" Emissive="0,0,0" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/effects/particle_effects/tire_parts.tif">
+     <TexMod />
+    </Texture>
+   </Textures>
+   <PublicParams Displacement="0.025" AmbientMultiplier="1"/>
+   <MaterialLayers />
+  </Material>
+ </SubMaterials>
+ <PublicParams Displacement="0.025" AmbientMultiplier="1"/>
+ <MaterialLayers />
+</Material>

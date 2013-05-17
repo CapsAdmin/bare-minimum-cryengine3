@@ -1,0 +1,163 @@
+<?xml version="1.0" ?>
+<Params>
+	<AnimationList>
+		<Animation name="#filepath" path="animations\human_male"/>
+		<Animation name="$AnimEventDatabase" path="animations\human_male\human_male.animevents"/>
+		<Comment value="$Include = objects\characters\human\GlobalHuman.cal"/>
+		<Animation name="$TracksDatabase" path="animations\human_male\human_male.dba"/>
+		<Comment value=" ----- IdleAimPoses ---------"/>
+		<Animation name="relaxed_idleAimPoses_scar" path="relaxed\relaxed_idleAimPoses_scar.caf"/>
+		<Animation name="crouch_idleAimPoses_scar" path="crouch\crouch_idleAimPoses_scar.caf"/>
+		<Comment value=" ----- Ladder Climbing -----"/>
+		<Animation name="ladder_ExitOffTop_nw_01" path="ladder\relaxed_ladderOffTop_nw_01.caf"/>
+		<Animation name="ladder_ClimbLoop_nw_01" path="ladder\relaxed_ladderClimbLoopNoZ_nw_01.caf"/>
+		<Animation name="ladder_*" path="ladder\relaxed_*.caf"/>
+		<Comment value=" ----- LMG ---------"/>
+		<Animation name="_RELAXED_RUN" path="lmg_files\relaxed_run.lmg (relaxed_idleAimPoses_scar)"/>
+		<Animation name="_RELAXED_RUN_NW" path="lmg_files\relaxed_run.lmg"/>
+		<Animation name="_RELAXED_RUN_BWD" path="lmg_files\relaxed_run_bwd.lmg (relaxed_idleAimPoses_scar)"/>
+		<Animation name="_RELAXED_RUN_BWD_NW" path="lmg_files\relaxed_run_bwd.lmg"/>
+		<Animation name="_RELAXED_WALK" path="lmg_files\relaxed_walk.lmg (relaxed_idleAimPoses_scar)"/>
+		<Animation name="_RELAXED_WALK_NW" path="lmg_files\relaxed_walk.lmg"/>
+		<Animation name="_RELAXED_WALK_BWD" path="lmg_files\relaxed_walk_bwd.lmg (relaxed_idleAimPoses_scar)"/>
+		<Animation name="_RELAXED_WALK_BWD_NW" path="lmg_files\relaxed_walk_bwd.lmg"/>
+		<Animation name="_RELAXED_STEP_ROTATE" path="lmg_files\relaxed_IdleStepRotate_nw.lmg (relaxed_idleAimPoses_scar)"/>
+		<Animation name="_RELAXED_STEP_ROTATE_NW" path="lmg_files\relaxed_IdleStepRotate_nw.lmg"/>
+		<Animation name="_CROUCH_MOVE" path="lmg_files\crouch_move.lmg (crouch_idleAimPoses_scar)"/>
+		<Animation name="_CROUCH_RUN" path="lmg_files\crouch_run.lmg (crouch_idleAimPoses_scar)"/>
+		<Animation name="_CROUCH_WALK" path="lmg_files\crouch_walk.lmg (crouch_idleAimPoses_scar)"/>
+		<Animation name="_CROUCH_MOVE_NW" path="lmg_files\crouch_move.lmg"/>
+		<Animation name="_CROUCH_RUN_NW" path="lmg_files\crouch_run.lmg"/>
+		<Animation name="_CROUCH_WALK_NW" path="lmg_files\crouch_walk.lmg"/>
+		<Comment value=" ----- Idle ---------"/>
+		<Animation name="relaxed_idle_01" path="relaxed\relaxed_idle_01.caf (relaxed_idleAimPoses_scar)"/>
+		<Animation name="crouch_idle_01" path="crouch\crouch_idle_01.caf (crouch_idleAimPoses_scar)"/>
+		<Animation name="relaxed_idle_nw_01" path="relaxed\relaxed_idle_01.caf"/>
+		<Animation name="crouch_idle_nw_01" path="crouch\crouch_idle_01.caf"/>
+		<Animation name="relaxed_step_nw_idle_01" path="relaxed\relaxed_steprotate_nw_idle_01.caf"/>
+		<Animation name="relaxed_steprotate_nw_left_01" path="relaxed\relaxed_steprotate_nw_left_01.caf"/>
+		<Animation name="relaxed_steprotate_nw_right_01" path="relaxed\relaxed_steprotate_nw_right_01.caf"/>
+		<Comment value=" ----- Reload -----"/>
+		<Animation name="combat_reloadFullChamberUB_rifle_01" path="combat\combat_reloadFullChamberUB_rifle_01.caf"/>
+		<Animation name="combat_reloadEmptyChamberUB_rifle_01" path="combat\combat_reloadEmptyChamberUB_rifle_01.caf"/>
+		<Comment value=" ----- Misc -----"/>
+		<Animation name="idleBreak_*" path="idle_breaks\relaxed_*.caf"/>
+		<Animation name="additive_*" path="additive\Additive_*.caf"/>
+		<Animation name="coop_*" path="coop\coop_*.caf"/>
+		<Animation name="misc_*" path="misc\*.caf"/>
+		<Animation name="additional_*" path="additional\*.caf"/>
+		<Animation name="relaxed_*" path="relaxed\*.caf"/>
+		<Animation name="throw_*" path="throw\*.caf"/>
+		<Animation name="contextual_*" path="contextual\h_*.caf"/>
+		<Animation name="melee_*" path="melee\*.caf"/>
+		<Animation name="ikposes_*" path="interactionposes\*.caf"/>
+		<Comment value=" ----- Demonstration Asset for Animation Controlled IK"/>
+		<Animation name="ik_demo_touch_chin" path="relaxed\relaxed_idle_touchChin_IK_01.caf"/>
+		<Comment value=" ----- Jump ---------"/>
+		<Animation name="jump_*" path="jump\relaxed_jump_*.caf"/>
+		<Animation name="jump_loop_nw_01" path="jump\relaxed_jumpLoop_nw_01.caf"/>
+		<Animation name="jump_freefall_nw_01" path="jump\relaxed_freefallLoop_nw_01.caf"/>
+		<Animation name="jump_fall_long_nw_01" path="jump\relaxed_jump_land_long_nw_01.caf"/>
+		<Comment value=" ----- Swimming -----"/>
+		<Animation name="swim_*" path="swim\swim_*.caf"/>
+		<Comment value=" ----- Stand Up Animations -----"/>
+		<Animation name="*" path="standup\*.caf"/>
+		<Comment value=" ----- Run ---------"/>
+		<Animation name="relaxed_run_forward_fast" path="relaxed\relaxed_run_nw_forward_fast_01.caf"/>
+		<Animation name="relaxed_run_forward_slow" path="relaxed\relaxed_run_nw_forward_slow_01.caf"/>
+		<Animation name="relaxed_run_back_fast" path="relaxed\relaxed_run_nw_back_fast_01.caf"/>
+		<Animation name="relaxed_run_back_slow" path="relaxed\relaxed_run_nw_back_slow_01.caf"/>
+		<Animation name="relaxed_run_left_fast" path="relaxed\relaxed_runStrafe_nw_left_fast_01.caf"/>
+		<Animation name="relaxed_run_left_slow" path="relaxed\relaxed_runStrafe_nw_left_slow_01.caf"/>
+		<Animation name="relaxed_run_right_fast" path="relaxed\relaxed_runStrafe_nw_right_fast_01.caf"/>
+		<Animation name="relaxed_run_right_slow" path="relaxed\relaxed_runStrafe_nw_right_slow_01.caf"/>
+		<Animation name="relaxed_run_left_bwd_fast" path="relaxed\relaxed_runStrafe_nw_left_bwd_fast_01.caf"/>
+		<Animation name="relaxed_run_left_bwd_slow" path="relaxed\relaxed_runStrafe_nw_left_bwd_slow_01.caf"/>
+		<Animation name="relaxed_run_right_bwd_fast" path="relaxed\relaxed_runStrafe_nw_right_bwd_fast_01.caf"/>
+		<Animation name="relaxed_run_right_bwd_slow" path="relaxed\relaxed_runStrafe_nw_right_bwd_slow_01.caf"/>
+		<Animation name="combat_run_rifle_forward_fast" path="combat\combat_run_rifle_forward_fast_01.caf"/>
+		<Animation name="combat_run_rifle_forward_slow" path="combat\combat_run_rifle_forward_slow_01.caf"/>
+		<Animation name="combat_run_rifle_left_fast" path="combat\combat_run_rifle_strafe_left_fast_01.caf"/>
+		<Animation name="combat_run_rifle_left_slow" path="combat\combat_run_rifle_strafe_left_slow_01.caf"/>
+		<Animation name="combat_run_rifle_right_fast" path="combat\combat_run_rifle_strafe_right_fast_01.caf"/>
+		<Animation name="combat_run_rifle_right_slow" path="combat\combat_run_rifle_strafe_right_slow_01.caf"/>
+		<Animation name="combat_run_rifle_back_fast" path="combat\combat_run_rifle_back_fast_01.caf"/>
+		<Animation name="combat_run_rifle_back_slow" path="combat\combat_run_rifle_back_slow_01.caf"/>
+		<Animation name="crouch_run_forward_fast" path="crouch\crouch_run_forward_fast_nw_01.caf"/>
+		<Animation name="crouch_run_back_fast" path="crouch\crouch_run_back_fast_nw_01.caf"/>
+		<Animation name="crouch_run_left_fast" path="crouch\crouch_strafe_left_fast_nw_01.caf"/>
+		<Animation name="crouch_run_right_fast" path="crouch\crouch_strafe_right_fast_nw_01.caf"/>
+		<Comment value=" ----- Walk ---------"/>
+		<Animation name="relaxed_walk_forward_fast" path="relaxed\relaxed_walk_nw_forward_fast_01.caf"/>
+		<Animation name="relaxed_walk_forward_slow" path="relaxed\relaxed_walk_nw_forward_slow_01.caf"/>
+		<Animation name="relaxed_walk_back_fast" path="relaxed\relaxed_walk_nw_back_fast_01.caf"/>
+		<Animation name="relaxed_walk_back_slow" path="relaxed\relaxed_walk_nw_back_slow_01.caf"/>
+		<Animation name="relaxed_walk_left_fast" path="relaxed\relaxed_walkStrafe_nw_left_fast_01.caf"/>
+		<Animation name="relaxed_walk_left_slow" path="relaxed\relaxed_walkStrafe_nw_left_slow_01.caf"/>
+		<Animation name="relaxed_walk_right_fast" path="relaxed\relaxed_walkStrafe_nw_right_fast_01.caf"/>
+		<Animation name="relaxed_walk_right_slow" path="relaxed\relaxed_walkStrafe_nw_right_slow_01.caf"/>
+		<Animation name="relaxed_walk_left_bwd_fast" path="relaxed\relaxed_walkStrafe_nw_left_bwd_fast_01.caf"/>
+		<Animation name="relaxed_walk_left_bwd_slow" path="relaxed\relaxed_walkStrafe_nw_left_bwd_slow_01.caf"/>
+		<Animation name="relaxed_walk_right_bwd_fast" path="relaxed\relaxed_walkStrafe_nw_right_bwd_fast_01.caf"/>
+		<Animation name="relaxed_walk_right_bwd_slow" path="relaxed\relaxed_walkStrafe_nw_right_bwd_slow_01.caf"/>
+		<Animation name="combat_walk_rifle_forward_fast" path="combat\combat_walk_rifle_forward_fast_01.caf"/>
+		<Animation name="combat_walk_rifle_forward_slow" path="combat\combat_walk_rifle_forward_slow_01.caf"/>
+		<Animation name="combat_walk_rifle_left_fast" path="combat\combat_walk_rifle_strafe_left_fast_01.caf"/>
+		<Animation name="combat_walk_rifle_left_slow" path="combat\combat_walk_rifle_strafe_left_slow_01.caf"/>
+		<Animation name="combat_walk_rifle_right_fast" path="combat\combat_walk_rifle_strafe_right_fast_01.caf"/>
+		<Animation name="combat_walk_rifle_right_slow" path="combat\combat_walk_rifle_strafe_right_slow_01.caf"/>
+		<Animation name="combat_walk_rifle_back_fast" path="combat\combat_walk_rifle_back_fast_01.caf"/>
+		<Animation name="combat_walk_rifle_back_slow" path="combat\combat_walk_rifle_back_slow_01.caf"/>
+		<Animation name="crouch_walk_forward" path="crouch\crouch_walk_forward.caf"/>
+		<Animation name="crouch_walk_back" path="crouch\crouch_walk_back.caf"/>
+		<Animation name="crouch_walk_left" path="crouch\crouch_walk_left.caf"/>
+		<Animation name="crouch_walk_right" path="crouch\crouch_walk_right.caf"/>
+		<Comment value=" ----- Uphill Downhill ---------"/>
+		<Animation name="relaxed_walkDownhill_nw_forward_fast_01" path="relaxed\relaxed_walkDownhill_nw_forward_fast_01.caf"/>
+		<Animation name="relaxed_walkUphill_nw_forward_fast_01" path="relaxed\relaxed_walkUphill_nw_forward_fast_01.caf"/>
+		<Animation name="relaxed_walkDownhill_nw_forward_slow_01" path="relaxed\relaxed_walkDownhill_nw_forward_slow_01.caf"/>
+		<Animation name="relaxed_walkUphill_nw_forward_slow_01" path="relaxed\relaxed_walkUphill_nw_forward_slow_01.caf"/>
+		<Comment value="-------US LTV-------"/>
+		<Animation name="usLTV_passenger01Enter_01" path="vehicles\us\usLTV\usLTV_passenger01Enter_01.caf"/>
+		<Animation name="usLTV_passenger01Exit_01" path="vehicles\us\usLTV\usLTV_passenger01Exit_01.caf"/>
+		<Animation name="usLTV_passenger01Idle_01" path="vehicles\us\usLTV\usLTV_passenger01Idle_01.caf"/>
+		<Animation name="usLTV_passenger02Enter_01" path="vehicles\us\usLTV\usLTV_passenger02Enter_01.caf"/>
+		<Animation name="usLTV_passenger02Exit_01" path="vehicles\us\usLTV\usLTV_passenger02Exit_01.caf"/>
+		<Animation name="usLTV_passenger02Idle_01" path="vehicles\us\usLTV\usLTV_passenger02Idle_01.caf"/>
+		<Animation name="usLTV_passenger03Enter_01" path="vehicles\us\usLTV\usLTV_passenger03Enter_01.caf"/>
+		<Animation name="usLTV_passenger03Exit_01" path="vehicles\us\usLTV\usLTV_passenger03Exit_01.caf"/>
+		<Animation name="usLTV_passenger03Idle_01" path="vehicles\us\usLTV\usLTV_passenger03Idle_01.caf"/>
+		<Animation name="usLTV_passenger04Enter_01" path="vehicles\us\usLTV\usLTV_passenger04Enter_01.caf"/>
+		<Animation name="usLTV_passenger04Exit_01" path="vehicles\us\usLTV\usLTV_passenger04Exit_01.caf"/>
+		<Animation name="usLTV_passenger04Idle_01" path="vehicles\us\usLTV\usLTV_passenger04Idle_01.caf"/>
+		<Animation name="usLTV_steering_01" path="vehicles\us\usLTV\usLTV_steering_01.caf"/>
+		<Comment value="usLTV_passenger02IdleBreak_01		=	vehicles\us\usLTV\usLTV_passenger02IdleBreak_01.caf"/>
+		<Comment value="usLTV_passenger02IdleBreak_02		=	vehicles\us\usLTV\usLTV_passenger02IdleBreak_02.caf"/>
+		<Comment value="-------US Abrams-----"/>
+		<Animation name="abrams_enterOpenedHatch_01" path="vehicles\us\abrams\abrams_enterOpenedHatch_01.caf"/>
+		<Animation name="abrams_driveridle_01" path="vehicles\us\abrams\abrams_driverIdle_01.caf"/>
+		<Animation name="abrams_exitOpenedHatch_01" path="vehicles\us\abrams\abrams_exitOpenedHatch_01.caf"/>
+		<Comment value=" ----- cutscene ---------"/>
+		<Animation name="test_*" path="crouch\test*.caf"/>
+		<Comment value=" ----- throw ------"/>
+		<Animation name="throw_leftarm_UB_01" path="throw\throw_leftarm_UB_01.caf"/>
+		<Animation name="throw_leftarm_UB_02" path="throw\throw_leftarm_UB_02.caf"/>
+		<Animation name="throw_leftarm_UB_03" path="throw\throw_leftarm_UB_03.caf"/>
+		<Comment value=" ----- pickup ------"/>
+		<Animation name="relaxed_crouchPickUpItem_01" path="relaxed\relaxed_crouchPickUpItem_01.caf"/>
+		<Comment value=" ----- baseball bat ------"/>
+		<Animation name="combat_swing_bat_01" path="combat\combat_swing_bat_01.caf"/>
+		<Animation name="combat_swing_bat_UB_01" path="combat\combat_swing_bat_UB_01.caf"/>
+		<Animation name="combat_swing_bat_UB_02" path="combat\combat_swing_bat_UB_02.caf"/>
+		<Animation name="combat_swing_bat_UB_03" path="combat\combat_swing_bat_UB_03.caf"/>
+		<Comment value="-------HMMWV-------"/>
+		<Animation name="*" path="vehicles\us\hmmwv\*.caf"/>
+		<Comment value="-------Look Poses-------"/>
+		<Animation name="*" path="LookPoses\*.caf"/>
+		<Comment value="-------Hit Reactions-------"/>
+		<Animation name="*" path="hits\1p\*.caf"/>
+		<Animation name="*" path="hits\3p\*.caf"/>
+		<Comment value="-------Death Reactions-------"/>
+		<Animation name="*" path="deaths\*.caf"/>
+	</AnimationList>
+</Params>

@@ -1,0 +1,19 @@
+<LocomotionGroup>
+
+  <BLENDTYPE type="STF2" />
+	<CAPS code="WALK" />
+
+  <ExampleList>
+    <Example Position=" 0, 1, 0" AName="combat_walk_rifle_forward_fast" />
+    <Example Position=" -1, 0, 0" AName="combat_walk_rifle_left_fast" />
+    <Example Position=" 0,-1, 0" AName="combat_walk_rifle_back_fast" />
+    <Example Position="1, 0, 0" AName="combat_walk_rifle_right_fast" />
+
+    <Example Position=" 0, 1, 0" AName="combat_walk_rifle_forward_slow" />
+    <Example Position=" -1, 0, 0" AName="combat_walk_rifle_left_slow" />
+    <Example Position=" 0,-1, 0" AName="combat_walk_rifle_back_slow" />
+    <Example Position="1, 0, 0" AName="combat_walk_rifle_right_slow" />
+  </ExampleList>
+
+
+</LocomotionGroup>

@@ -1,0 +1,17 @@
+<Material MtlFlags="524544">
+ <SubMaterials>
+  <Material Name="muzzleflash_side" MtlFlags="524450" Shader="Templbeamproc" GenMask="0" StringGenMask="" SurfaceType="" MatTemplate="" Diffuse="0.58823532,0.58823532,0.58823532" Specular="0,0,0" Emissive="0,0,0" Shininess="9.999999" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/weapons/muzzle_flash/scar_muzzle_side.tif"/>
+   </Textures>
+   <PublicParams StartRadius="1" EndRadius="2" StartColor="1,1,1" EndColor="1,1,1" FinalMultiplier="1" SoftIntersectionFactor="1" BeamLength="10" viewDependencyFactor="2" OrigLength="10" OrigWidth="1"/>
+  </Material>
+  <Material Name="muzzleflash_front" MtlFlags="524450" Shader="Templbeamproc" GenMask="0" StringGenMask="" SurfaceType="" MatTemplate="" Diffuse="0.588,0.588,0.588" Specular="0,0,0" Emissive="0,0,0" Shininess="10" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/weapons/muzzle_flash/scar_muzzle_front.tif"/>
+   </Textures>
+   <PublicParams StartRadius="1" EndRadius="2" StartColor="1,1,1" EndColor="1,1,1" FinalMultiplier="1" SoftIntersectionFactor="1" BeamLength="10" viewDependencyFactor="2" OrigLength="10" OrigWidth="1"/>
+  </Material>
+ </SubMaterials>
+ <PublicParams FresnelPower="4" GlossFromDiffuseContrast="1" FresnelScale="1" GlossFromDiffuseOffset="0" FresnelBias="0" GlossFromDiffuseAmount="0" GlossFromDiffuseBrightness="0.333" IndirectColor="0.25,0.25,0.25"/>
+</Material>

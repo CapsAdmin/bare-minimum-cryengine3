@@ -1,0 +1,9 @@
+<Material MtlFlags="524288" Shader="Illum" GenMask="100090000" StringGenMask="%ENVIRONMENT_MAP%GLOSS_MAP%TESSELLATION" SurfaceType="mat_metal_shell" MatTemplate="" Diffuse="0.35865393,0.35865393,0.35865393" Specular="0.24279638,0.24279638,0.24279638" Emissive="0,0,0" Shininess="132" Opacity="1">
+ <Textures>
+  <Texture Map="Diffuse" File="objects/weapons/shells/shell_556.tif" Filter="7"/>
+  <Texture Map="Specular" File="objects/weapons/Shells/Shell_556_spec.tif"/>
+  <Texture Map="Bumpmap" File="objects/weapons/shells/shell_556_ddn.tif"/>
+  <Texture Map="Environment" File="textures/cubemaps/eye_reflect.dds"/>
+ </Textures>
+ <PublicParams SpecMapChannelB="0" SpecMapChannelR="0" FresnelPower="4" GlossMapChannelB="0" SpecMapChannelG="0" FresnelScale="1" FresnelBias="1" IndirectColor="0.25,0.25,0.25"/>
+</Material>

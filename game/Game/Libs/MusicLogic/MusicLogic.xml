@@ -1,0 +1,28 @@
+<MusicLogic>
+ <Configuration>
+   <!--MusicLogicEvent Name="EventName" SetAI="0.0" ChangeAI="0.0" SetPlayer="0.0" ChangePlayer="0.0" SetGame="0.0" ChangeGame="0.0" SetAllowChange="0.0" ChangeAllowChange="0.0"/-->
+  <MusicLogicEvent Name="VehicleEnter" ChangePlayer="200.0" ChangeAllowChange="100.0"/>
+  <MusicLogicEvent Name="VehicleLeave" ChangePlayer="-150.0" ChangeAllowChange="100.0"/>
+  <MusicLogicEvent Name="WeaponMount" ChangePlayer="200.0" ChangeAllowChange="200.0"/>
+  <MusicLogicEvent Name="WeaponUnmount" ChangePlayer="-150.0" ChangeAllowChange="200.0"/>
+  <MusicLogicEvent Name="SniperModeEnter" ChangePlayer="-150.0" ChangeAllowChange="200.0"/>
+  <MusicLogicEvent Name="SniperModeLeave" ChangePlayer="150.0" ChangeAllowChange="200.0"/>
+  <MusicLogicEvent Name="CloakModeEnter" ChangePlayer="-150.0" ChangeAllowChange="200.0"/>
+  <MusicLogicEvent Name="CloakModeLeave" ChangePlayer="150.0" ChangeAllowChange="200.0"/>
+  <MusicLogicEvent Name="EnemySpotted" ChangePlayer="50.0" ChangeAllowChange="100.0"/>
+  <MusicLogicEvent Name="EnemyKilled" ChangePlayer="50.0" ChangeAllowChange="50.0"/>
+  <MusicLogicEvent Name="EnemyHeadshot" ChangePlayer="100.0" ChangeAllowChange="100.0"/>
+  <MusicLogicEvent Name="EnemyOverrun" ChangePlayer="150.0" ChangeAllowChange="150.0"/>
+  <MusicLogicEvent Name="PlayerWounded" ChangePlayer="150.0" />
+  <MusicLogicEvent Name="PlayerKilled" ChangePlayer="-500.0" ChangeAllowChange="600.0"/>
+  <MusicLogicEvent Name="PlayerSpotted" ChangeAI="150.0" ChangeAllowChange="110.0"/>
+  <MusicLogicEvent Name="PlayerAttackedByTurret" ChangePlayer="150.0" ChangeAllowChange="100.0"/>
+  <MusicLogicEvent Name="PlayerSwimEnter" ChangePlayer="-150.0" ChangeAllowChange="100.0"/>
+  <MusicLogicEvent Name="PlayerSwimLeave" ChangePlayer="150.0" ChangeAllowChange="100.0"/>
+  <MusicLogicEvent Name="Explosion" ChangePlayer="80.0" ChangeAllowChange="300.0"/>
+  <MusicLogicEvent Name="FactoryCaptured" ChangePlayer="150.0" ChangeAllowChange="300.0"/>
+  <MusicLogicEvent Name="FactoryLost" ChangePlayer="50.0" ChangeAllowChange="300.0"/>
+  <MusicLogicEvent Name="FactoryRecaptured" ChangePlayer="150.0" ChangeAllowChange="300.0"/>
+  <MusicLogicEvent Name="VehicleCreated" ChangePlayer="150.0" ChangeAllowChange="300.0"/>
+ </Configuration>
+ </MusicLogic>

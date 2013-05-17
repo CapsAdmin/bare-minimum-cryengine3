@@ -1,0 +1,24 @@
+<Material MtlFlags="524544">
+ <SubMaterials>
+  <Material Name="Eyeball" MtlFlags="524448" Shader="Eye" GenMask="40010000" StringGenMask="%ENVIRONMENT_MAP%TEMP_EYES" SurfaceType="mat_flesh" MatTemplate="" Diffuse="0.12752977,0.12752977,0.12752977" Specular="0.53564161,0.53564161,0.53564161" Emissive="0,0,0" Shininess="200" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/characters/heads/eyes/eyeball.tif"/>
+    <Texture Map="Bumpmap" File="objects/characters/heads/eyes/eyeball_ddn.tif"/>
+    <Texture Map="Environment" File="objects/characters/heads/eyes/eye_reflect.tif"/>
+   </Textures>
+   <PublicParams PupilX="0.5" IrisDepth="0.0019" PupilDynDilation="2" CorneaOpacity="0.5" FresnelPower="1.691" PupilDilation="0.5" IrisScattering="3" FresnelScale="1" PupilY="0.5" IrisColor="0.42050794,0.42050794,0.5989418" GlintMul="1" FresnelBias="0.80000001" IndirectColor="0.25084025,0.25084025,0.25084025"/>
+  </Material>
+  <Material Name="LOD" MtlFlags="524448" Shader="Illum" GenMask="100000000" StringGenMask="%TESSELLATION" SurfaceType="mat_flesh" MatTemplate="" Diffuse="0.10615607,0.10615607,0.10615607" Specular="0.14799802,0.14799802,0.14799802" Emissive="0,0,0" Shininess="124" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/characters/heads/eyes/eyeball.tif"/>
+    <Texture Map="Bumpmap" File="objects/characters/heads/eyes/eyeball_ddn.tif"/>
+    <Texture Map="Environment" File="objects/characters/heads/eyes/eye_reflect.tif"/>
+   </Textures>
+   <PublicParams FresnelPower="4" GlossFromDiffuseContrast="1" FresnelScale="1" GlossFromDiffuseOffset="0" FresnelBias="1" GlossFromDiffuseAmount="0" GlossFromDiffuseBrightness="0.333" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+  <Material Name="nodraw" MtlFlags="525440" Shader="Nodraw" GenMask="0" StringGenMask="" SurfaceType="mat_default" MatTemplate="" Diffuse="1,1,1" Specular="0,0,0" Emissive="0,0,0" Shininess="10" Opacity="1">
+   <Textures />
+  </Material>
+ </SubMaterials>
+ <PublicParams FresnelPower="4" GlossFromDiffuseContrast="1" FresnelScale="1" GlossFromDiffuseOffset="0" FresnelBias="1" GlossFromDiffuseAmount="0" GlossFromDiffuseBrightness="0.333" IndirectColor="0.25,0.25,0.25"/>
+</Material>

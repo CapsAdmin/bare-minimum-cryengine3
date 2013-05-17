@@ -1,0 +1,14 @@
+<Material MtlFlags="524544">
+ <SubMaterials>
+  <Material Name="wood_render" MtlFlags="524416" Shader="Vegetation" GenMask="400000000" StringGenMask="%TEMP_VEGETATION" SurfaceType="" MatTemplate="" Diffuse="0.75686282,0.75686282,0.75686282" Specular="0.56078434,0.56078434,0.56078434" Emissive="0,0,0" Shininess="9.999999" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/natural/trees/explosion_shape/broken_tree.tif"/>
+   </Textures>
+   <PublicParams bendDetailLeafAmplitude="0.079999998" FresnelPower="4" bendDetailFrequency="5" bendDetailBranchAmplitude="0.2" FresnelScale="1" FresnelBias="1" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+  <Material Name="proxy" MtlFlags="525440" Shader="Nodraw" GenMask="0" StringGenMask="" SurfaceType="mat_wood" MatTemplate="" Diffuse="0.098039225,0.098039225,0.57254905" Specular="0,0,0" Emissive="0,0,0" Shininess="10" Opacity="0.30000001">
+   <Textures />
+  </Material>
+ </SubMaterials>
+ <PublicParams FresnelPower="4" GlossFromDiffuseContrast="1" FresnelScale="1" GlossFromDiffuseOffset="0" FresnelBias="1" GlossFromDiffuseAmount="0" GlossFromDiffuseBrightness="0.333" IndirectColor="0.25,0.25,0.25"/>
+</Material>

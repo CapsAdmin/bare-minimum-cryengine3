@@ -1,0 +1,39 @@
+<!-- 
+Common				: Always preloaded
+NoLevel				: Loaded from the main menu (when there is no level active)
+Levels, Common		: Always loaded after a level is loaded
+Levels, <levelname>	: Loaded after a level is loaded with this name, if the level is Singleplayer/Forest, the tag should be Singleplayer_Forest
+-->
+<Preload>
+
+	<!-- always preloaded (level and main menu) -->
+	<Common>
+		<Preload file="Libs/UI/Textures/*"/>
+	</Common>
+		
+	<!-- only preloaded when enter the main menu -->
+	<NoLevel>
+		<Preload file="levels/Singleplayer/Forest/LoadingForest.dds"/> <!-- preload images for loadingscreen otherwise they won't show up! -->
+		<Preload file="levels/Singleplayer/Forest_Winter/Loading_Winter_Forest.dds"/>
+	</NoLevel>
+	
+	<!-- level specific -->
+	<Levels>
+	
+		<!-- only preloaded when loading a level -->
+		<Common>
+		</Common>
+		
+		<!-- per level -->
+		<Singleplayer_Forest>
+			<Preload file="levels/Singleplayer/Forest/Forest_minimap.dds"/>
+			<Preload file="levels/Singleplayer/Forest/LoadingForest.dds"/>
+		</Singleplayer_Forest>
+		<Singleplayer_Forest_Winter>
+			<Preload file="levels/Singleplayer/Forest_Winter/Forest.dds"/>
+			<Preload file="levels/Singleplayer/Forest_Winter/Loading_Winter_Forest.dds"/>
+		</Singleplayer_Forest_Winter>
+		
+	</Levels>
+	
+</Preload>

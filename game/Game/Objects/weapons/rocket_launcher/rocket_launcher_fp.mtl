@@ -1,0 +1,45 @@
+<Material MtlFlags="524544">
+ <SubMaterials>
+  <Material Name="scope_attachment" MtlFlags="524418" Shader="Illum" GenMask="100080000" StringGenMask="%GLOSS_MAP%TESSELLATION" SurfaceType="mat_metal" MatTemplate="" Diffuse="0.19046287,0.17343903,0.08241421" Specular="0.15162975,0.15162975,0.15162975" Emissive="0,0,0" Shininess="60" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/weapons/rocket_launcher/textures/rocket_launcher_scope_diff.tif"/>
+    <Texture Map="Specular" File="objects/weapons/rocket_launcher/textures/rocket_launcher_scope_spec.tif"/>
+    <Texture Map="Bumpmap" File="objects/weapons/rocket_launcher/textures/rocket_launcher_scope_ddn.tif"/>
+   </Textures>
+   <PublicParams SpecMapChannelB="0" SpecMapChannelR="0" FresnelPower="4" GlossMapChannelB="0" SpecMapChannelG="0" FresnelScale="1" FresnelBias="1" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+  <Material Name="rocket_launcher" MtlFlags="524416" Shader="Illum" GenMask="100082280" StringGenMask="%DETAIL_BUMP_MAPPING%DETAIL_TEXTURE_IS_NORMALMAP%DETAIL_TEXTURE_IS_SET%GLOSS_MAP%TESSELLATION" SurfaceType="mat_metal" MatTemplate="" Diffuse="0.66611695,0.66611695,0.66611695" Specular="0.25410002,0.25410002,0.25410002" Emissive="0,0,0" Shininess="100" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/weapons/rocket_launcher/textures/rocket_launcher.tif"/>
+    <Texture Map="Specular" File="objects/weapons/rocket_launcher/textures/rocket_launcher_spec.tif"/>
+    <Texture Map="Bumpmap" File="objects/weapons/rocket_launcher/textures/rocket_launcher_ddn.tif"/>
+    <Texture Map="Detail" File="textures/detail/detail_cliff_rock_ddn.dds"/>
+   </Textures>
+   <PublicParams SpecMapChannelB="0" SpecMapChannelR="0" FresnelPower="4" DetailBumpTillingU="20" GlossMapChannelB="0" SpecMapChannelG="0" FresnelScale="1" DetailDiffuseScale="0" FresnelBias="1" DetailBumpScale="0.2" DetailGlossScale="0" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+  <Material Name="aim_dot" MtlFlags="524416" Shader="Scopes" GenMask="2" StringGenMask="" SurfaceType="mat_glass_unbreakable" MatTemplate="" Diffuse="0.97430021,0.97430021,0.97430021" Specular="0.22713655,0.22713655,0.22713655" Emissive="0,0,0" Shininess="10" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/weapons/rocket_launcher/textures/crosshair.tif"/>
+   </Textures>
+   <PublicParams FakeGlowAmount="0.25" NoiseScale="0.75" ObjectUV="0" ScopeScale="74.800003" HolographicNoiseScale="0.28999999" ScopeColorMultiplier="1.17" NoiseBias="1"/>
+  </Material>
+  <Material Name="glass_scope" MtlFlags="524416" Shader="Illum" GenMask="100080004" StringGenMask="%ALPHAMASK_DETAILMAP%GLOSS_MAP%TESSELLATION" SurfaceType="mat_metal" MatTemplate="" Diffuse="0.0090214908,0.0090214908,0.0090214908" Specular="0.067724593,0.067724593,0.067724593" Emissive="0,0,0" Shininess="100" Opacity="0.30000001">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/weapons/binoculars/textures/google_diff.dds"/>
+    <Texture Map="Specular" File="textures/defaults/16_grey.dds"/>
+    <Texture Map="Bumpmap" File="objects/weapons/binoculars/textures/google_ddn.dds"/>
+   </Textures>
+   <PublicParams SpecMapChannelB="0" SpecMapChannelR="0" FresnelPower="4" GlossMapChannelB="0" SpecMapChannelG="0" FresnelScale="1" FresnelBias="1" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+  <Material Name="rocketlauncher_tube" MtlFlags="524416" Shader="Illum" GenMask="100082280" StringGenMask="%DETAIL_BUMP_MAPPING%DETAIL_TEXTURE_IS_NORMALMAP%DETAIL_TEXTURE_IS_SET%GLOSS_MAP%TESSELLATION" SurfaceType="mat_metal" MatTemplate="" Diffuse="0.17013837,0.15105805,0.086901255" Specular="0.1010856,0.1010856,0.1010856" Emissive="0,0,0" Shininess="40" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/weapons/rocket_launcher/textures/rocket_main.tif"/>
+    <Texture Map="Specular" File="objects/weapons/rocket_launcher/textures/rocket_main_spec.tif"/>
+    <Texture Map="Bumpmap" File="objects/weapons/rocket_launcher/textures/rocket_main_ddn.tif"/>
+    <Texture Map="Detail" File="textures/detail_bumpmaps/metal_a_detailbump_ddn.dds"/>
+   </Textures>
+   <PublicParams SpecMapChannelB="0" SpecMapChannelR="0" FresnelPower="4" DetailBumpTillingU="10" GlossMapChannelB="0" SpecMapChannelG="0" FresnelScale="1" DetailDiffuseScale="0" FresnelBias="0.5" DetailBumpScale="0.75" DetailGlossScale="0" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+ </SubMaterials>
+ <PublicParams FresnelPower="4" GlossFromDiffuseContrast="1" FresnelScale="1" GlossFromDiffuseOffset="0" FresnelBias="1" GlossFromDiffuseAmount="0" GlossFromDiffuseBrightness="0.333" IndirectColor="0.25,0.25,0.25"/>
+</Material>

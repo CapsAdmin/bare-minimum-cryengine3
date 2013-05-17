@@ -1,0 +1,152 @@
+<SoundMoods>
+ <Mood Name="underwater" Priority="80" MusicVolume="0.60000002">
+  <Category Name="ai_dialog" LowPassCutoff="1500"/>
+  <Category Name="bullets" Pitch="-0.1" LowPassCutoff="10000"/>
+  <Category Name="dialog" LowPassCutoff="2000"/>
+  <Category Name="environment" Pitch="-0.1" LowPassCutoff="800"/>
+  <Category Name="master"/>
+  <Category Name="movement" Pitch="-0.1" LowPassCutoff="4000"/>
+  <Category Name="music"/>
+  <Category Name="weapons" Pitch="-0.1" LowPassCutoff="1500"/>
+ </Mood>
+ <Mood Name="menu" Priority="100" MusicVolume="0.80000001">
+  <Category Name="ai_dialog" Volume="0.2"/>
+  <Category Name="bullets" Volume="0.2"/>
+  <Category Name="dialog" Volume="0.2"/>
+  <Category Name="environment" Volume="0.2"/>
+  <Category Name="master"/>
+  <Category Name="movement" Volume="0.2"/>
+  <Category Name="music"/>
+  <Category Name="weapons" Volume="0.2"/>
+ </Mood>
+ <Mood Name="low_health" Priority="60" MusicVolume="0.80000001">
+  <Category Name="ai_dialog"/>
+  <Category Name="bullets"/>
+  <Category Name="dialog"/>
+  <Category Name="environment"/>
+  <Category Name="master"/>
+  <Category Name="movement"/>
+  <Category Name="music"/>
+  <Category Name="weapons"/>
+ </Mood>
+ <Mood Name="knock_out" Priority="60" MusicVolume="0.80000001">
+  <Category Name="ai_dialog" LowPassCutoff="1000"/>
+  <Category Name="bullets" LowPassCutoff="1000"/>
+  <Category Name="dialog" LowPassCutoff="1000"/>
+  <Category Name="environment" Pitch="-0.30000001" LowPassCutoff="1000"/>
+  <Category Name="master"/>
+  <Category Name="movement" LowPassCutoff="1000"/>
+  <Category Name="music"/>
+  <Category Name="weapons" LowPassCutoff="1000"/>
+ </Mood>
+ <Mood Name="mission_hint" Priority="90" MusicVolume="0.60000002">
+  <Category Name="ai_dialog" Volume="0.69999999"/>
+  <Category Name="bullets" Volume="0.5"/>
+  <Category Name="dialog"/>
+  <Category Name="environment" Volume="0.69999999"/>
+  <Category Name="master"/>
+  <Category Name="movement" Volume="0.69999999"/>
+  <Category Name="music"/>
+  <Category Name="weapons" Volume="0.5"/>
+ </Mood>
+ <Mood Name="just_dialog" Priority="100" MusicVolume="0">
+  <Category Name="ai_dialog"/>
+  <Category Name="bullets" Volume="0"/>
+  <Category Name="dialog"/>
+  <Category Name="environment" Volume="0"/>
+  <Category Name="master"/>
+  <Category Name="movement" Volume="0"/>
+  <Category Name="music" Volume="0"/>
+  <Category Name="weapons" Volume="0"/>
+ </Mood>
+ <Mood Name="just_physics" Priority="100" MusicVolume="0">
+  <Category Name="ai_dialog" Volume="0"/>
+  <Category Name="bullets" Volume="0"/>
+  <Category Name="dialog" Volume="0"/>
+  <Category Name="environment"/>
+  <Category Name="master"/>
+  <Category Name="movement"/>
+  <Category Name="music"/>
+  <Category Name="weapons" Volume="0"/>
+ </Mood>
+ <Mood Name="just_vehicles" Priority="100" MusicVolume="0">
+  <Category Name="ai_dialog" Volume="0"/>
+  <Category Name="bullets" Volume="0"/>
+  <Category Name="dialog" Volume="0"/>
+  <Category Name="environment"/>
+  <Category Name="master"/>
+  <Category Name="movement" Volume="0"/>
+  <Category Name="music" Volume="0"/>
+  <Category Name="weapons" Volume="0"/>
+ </Mood>
+ <Mood Name="default" Priority="1" MusicVolume="0.80000001">
+  <Category Name="ai_dialog"/>
+  <Category Name="bullets"/>
+  <Category Name="dialog"/>
+  <Category Name="environment"/>
+  <Category Name="master"/>
+  <Category Name="movement"/>
+  <Category Name="music"/>
+  <Category Name="weapons"/>
+ </Mood>
+ <Mood Name="explosion" Priority="50" MusicVolume="0.80000001">
+  <Category Name="ai_dialog" LowPassCutoff="800"/>
+  <Category Name="bullets"/>
+  <Category Name="dialog" LowPassCutoff="800"/>
+  <Category Name="environment" LowPassCutoff="800"/>
+  <Category Name="master"/>
+  <Category Name="movement"/>
+  <Category Name="music"/>
+  <Category Name="weapons"/>
+ </Mood>
+ <Mood Name="cutscene" Priority="90" MusicVolume="1">
+  <Category Name="ai_dialog"/>
+  <Category Name="bullets"/>
+  <Category Name="dialog"/>
+  <Category Name="environment"/>
+  <Category Name="master"/>
+  <Category Name="movement"/>
+  <Category Name="music"/>
+  <Category Name="weapons"/>
+ </Mood>
+ <Mood Name="tv_mastering" Priority="10" MusicVolume="1">
+  <Category Name="ai_dialog"/>
+  <Category Name="bullets"/>
+  <Category Name="dialog"/>
+  <Category Name="environment"/>
+  <Category Name="master" CompressorThreshold="-15" CompressorAttack="50" CompressorRelease="50" CompressorGainMakeup="10"/>
+  <Category Name="movement"/>
+  <Category Name="music"/>
+  <Category Name="weapons"/>
+ </Mood>
+ <Mood Name="zone_in" Priority="20" MusicVolume="0.80000001">
+  <Category Name="ai_dialog" Volume="0.60000002"/>
+  <Category Name="bullets"/>
+  <Category Name="dialog" Volume="0.60000002"/>
+  <Category Name="environment"/>
+  <Category Name="master" CompressorThreshold="-8" CompressorAttack="10" CompressorRelease="100" CompressorGainMakeup="3"/>
+  <Category Name="movement"/>
+  <Category Name="music"/>
+  <Category Name="weapons" Pitch="-0.2"/>
+ </Mood>
+ <Mood Name="in_cover" Priority="80" MusicVolume="0.80000001">
+  <Category Name="ai_dialog" Volume="0.69999999"/>
+  <Category Name="bullets" ParamEQ1Gain="1.5" ParamEQ1Center="6000" ParamEQ1Bandwidth="0.5"/>
+  <Category Name="dialog" Volume="0.69999999"/>
+  <Category Name="environment" Volume="0.80000001"/>
+  <Category Name="master" CompressorThreshold="-6" CompressorAttack="10" CompressorRelease="100" CompressorGainMakeup="3"/>
+  <Category Name="movement" ParamEQ1Gain="2" ParamEQ1Center="6000" ParamEQ1Bandwidth="0.5"/>
+  <Category Name="music"/>
+  <Category Name="weapons"/>
+ </Mood>
+ <Mood Name="just_music" Priority="100" MusicVolume="0.80000001">
+  <Category Name="ai_dialog" Volume="0"/>
+  <Category Name="bullets" Volume="0"/>
+  <Category Name="dialog" Volume="0"/>
+  <Category Name="environment" Volume="0"/>
+  <Category Name="master"/>
+  <Category Name="movement" Volume="0"/>
+  <Category Name="music"/>
+  <Category Name="weapons" Volume="0"/>
+ </Mood>
+</SoundMoods>

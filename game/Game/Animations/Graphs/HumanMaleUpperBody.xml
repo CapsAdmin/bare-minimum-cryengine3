@@ -1,0 +1,88 @@
+<AnimationSetup version="1.5" expensiveLocomotionSelection="0">
+ <Character filename="objects/characters/sdk_player/sdk_player.cdf"/>
+ <DefaultNodeDetails allowSelect="1" includeInGame="1" canMix="1" Hurryable="1" SkipFP="0"/>
+ <DefaultAnimNodeDetails animLayer="2" fullRootPriority="0" ensureInStack="0" stickyOutTime="-1" forceLeaveWhenFinished="0" RandomizeSpeedMulPercent="0" speedMultiplier="1" MPSpeedMultiplier="1" stopCurrentAnimation="0" interruptCurrAnim="0" stayInStateUntil="0" dontInterrupt="0" TransitionTime="0.2" KeyTime="-1" Structure="" ManualUpdate="0" LoopAnimation="0" RepeatLastKey="1" AllowAnimRestart="0" VTimeWarping="0" Idle2Move="0" Move2Idle="0" PartialBodyUpdate="1"/>
+ <DefaultMovementNodeDetails useHorizGraphDefault="1" useVertGraphDefault="1" mcmHoriz="1" mcmVert="5" useAnimXY="0" useAnimZ="0" useAnimRot="0" angle="-1" distance="-1" useGraphDefaultCollider="1" colliderMode="3"/>
+ <Inputs>
+  <KeyState name="Action" signalled="0" priority="101" attachToBlendWeight="-1" blendWeightMoveSpeed="0" forceGuard="1" mixinFilter="0" defaultValue="idle">
+   <Key value="idle"/>
+  </KeyState>
+  <KeyState name="Signal" signalled="1" priority="102" attachToBlendWeight="-1" blendWeightMoveSpeed="0" forceGuard="1" mixinFilter="0" defaultValue="none">
+   <Key value="melee_punch_right"/>
+   <Key value="melee_punch_swing_left"/>
+   <Key value="none"/>
+   <Key value="reload_chamber_empty"/>
+   <Key value="reload_chamber_full"/>
+   <Key value="throw"/>
+  </KeyState>
+ </Inputs>
+ <Modifiers>
+  <Modifier Type="WaitForUBAllowed" Id="0"/>
+ </Modifiers>
+ <RandomizationSets />
+ <States>
+  <State id="Nothing" allowSelect="1" includeInGame="1" canMix="0" cost="100" MovementControlMethodH="0" MovementControlMethodV="0" hurryable="0" NoCollider="0" additionalTurnMultiplier="3" skipFirstPerson="0" snapshotTime="0.5" AnimNodePreset="&lt;Custom&gt;" animationControlledView="0">
+   <SelectWhen>
+    <Signal value="none"/>
+   </SelectWhen>
+   <NodeDetails animLayer="2" fullRootPriority="0" ensureInStack="0" stickyOutTime="-1" forceLeaveWhenFinished="0" RandomizeSpeedMulPercent="0" speedMultiplier="1" MPSpeedMultiplier="1" stopCurrentAnimation="0" interruptCurrAnim="0" stayInStateUntil="0" dontInterrupt="0" TransitionTime="0.2" KeyTime="-1" Structure="" ManualUpdate="0" LoopAnimation="0" RepeatLastKey="1" AllowAnimRestart="0" VTimeWarping="0" Idle2Move="0" Move2Idle="0" PartialBodyUpdate="1"/>
+   <ParameterizedData animationName=""/>
+   <MovementAndCollider useHorizGraphDefault="1" useVertGraphDefault="1" mcmHoriz="1" mcmVert="5" useAnimXY="0" useAnimZ="0" useAnimRot="0" angle="-1" distance="-1" useGraphDefaultCollider="1" colliderMode="3"/>
+   <LinkedModifiers>
+    <Modifier Id="0"/>
+   </LinkedModifiers>
+   <WaitForUBAllowed />
+  </State>
+  <State id="Reload Empty" allowSelect="1" includeInGame="1" canMix="1" cost="100" MovementControlMethodH="0" MovementControlMethodV="0" hurryable="0" NoCollider="0" additionalTurnMultiplier="3" skipFirstPerson="0" snapshotTime="0.5" AnimNodePreset="OneShot" animationControlledView="0">
+   <SelectWhen>
+    <Signal value="reload_chamber_empty"/>
+   </SelectWhen>
+   <NodeDetails animLayer="2" fullRootPriority="0" ensureInStack="0" stickyOutTime="-1" forceLeaveWhenFinished="0" RandomizeSpeedMulPercent="0" speedMultiplier="1" MPSpeedMultiplier="1" stopCurrentAnimation="0" interruptCurrAnim="0" stayInStateUntil="0.1" dontInterrupt="1" TransitionTime="0.2" KeyTime="-1" Structure="" ManualUpdate="0" LoopAnimation="0" RepeatLastKey="0" AllowAnimRestart="0" VTimeWarping="0" Idle2Move="0" Move2Idle="0" PartialBodyUpdate="1"/>
+   <ParameterizedData animationName="combat_reloadEmptyChamberUB_rifle_01"/>
+   <MovementAndCollider useHorizGraphDefault="1" useVertGraphDefault="1" mcmHoriz="1" mcmVert="5" useAnimXY="0" useAnimZ="0" useAnimRot="0" angle="-1" distance="-1" useGraphDefaultCollider="1" colliderMode="3"/>
+   <LinkedModifiers />
+   <TransitionParamsLayer2 TransitionTime="0.2" KeyTime="-1" Structure="" ManualUpdate="0" LoopAnimation="0" RepeatLastKey="0" AllowAnimRestart="0" VTimeWarping="0" Idle2Move="0" Move2Idle="0" PartialBodyUpdate="1"/>
+   <AnimationLayer2 animation1="combat_reloadEmptyChamberUB_rifle_01" fullRootPriority="0" ensureInStack="0" stickyOutTime="-1" forceLeaveWhenFinished="0" speedMultiplier="1" MPSpeedMultiplier="1" stopCurrentAnimation="0" interruptCurrAnim="0" RandomizeSpeedMulPercent="0" stayInStateUntil="0.1" forceInStateUntil="0.1"/>
+  </State>
+  <State id="Reload Full" allowSelect="1" includeInGame="1" canMix="1" cost="100" MovementControlMethodH="0" MovementControlMethodV="0" hurryable="0" NoCollider="0" additionalTurnMultiplier="3" skipFirstPerson="0" snapshotTime="0.5" AnimNodePreset="OneShot" animationControlledView="0">
+   <SelectWhen>
+    <Signal value="reload_chamber_full"/>
+   </SelectWhen>
+   <NodeDetails animLayer="2" fullRootPriority="0" ensureInStack="0" stickyOutTime="-1" forceLeaveWhenFinished="0" RandomizeSpeedMulPercent="0" speedMultiplier="1" MPSpeedMultiplier="1" stopCurrentAnimation="0" interruptCurrAnim="0" stayInStateUntil="0.1" dontInterrupt="1" TransitionTime="0.2" KeyTime="-1" Structure="" ManualUpdate="0" LoopAnimation="0" RepeatLastKey="0" AllowAnimRestart="0" VTimeWarping="0" Idle2Move="0" Move2Idle="0" PartialBodyUpdate="1"/>
+   <ParameterizedData animationName="combat_reloadFullChamberUB_rifle_01"/>
+   <MovementAndCollider useHorizGraphDefault="1" useVertGraphDefault="1" mcmHoriz="1" mcmVert="5" useAnimXY="0" useAnimZ="0" useAnimRot="0" angle="-1" distance="-1" useGraphDefaultCollider="1" colliderMode="3"/>
+   <LinkedModifiers />
+   <TransitionParamsLayer2 TransitionTime="0.2" KeyTime="-1" Structure="" ManualUpdate="0" LoopAnimation="0" RepeatLastKey="0" AllowAnimRestart="0" VTimeWarping="0" Idle2Move="0" Move2Idle="0" PartialBodyUpdate="1"/>
+   <AnimationLayer2 animation1="combat_reloadFullChamberUB_rifle_01" fullRootPriority="0" ensureInStack="0" stickyOutTime="-1" forceLeaveWhenFinished="0" speedMultiplier="1" MPSpeedMultiplier="1" stopCurrentAnimation="0" interruptCurrAnim="0" RandomizeSpeedMulPercent="0" stayInStateUntil="0.1" forceInStateUntil="0.1"/>
+  </State>
+  <State id="Throw" allowSelect="1" includeInGame="1" canMix="0" cost="100" MovementControlMethodH="0" MovementControlMethodV="0" hurryable="0" NoCollider="0" additionalTurnMultiplier="3" skipFirstPerson="0" snapshotTime="0.5" AnimNodePreset="&lt;Custom&gt;" animationControlledView="0">
+   <SelectWhen>
+    <Signal value="throw"/>
+   </SelectWhen>
+   <NodeDetails animLayer="2" fullRootPriority="0" ensureInStack="0" stickyOutTime="-1" forceLeaveWhenFinished="0" RandomizeSpeedMulPercent="0" speedMultiplier="1" MPSpeedMultiplier="1" stopCurrentAnimation="0" interruptCurrAnim="0" stayInStateUntil="0.98000002" dontInterrupt="1" TransitionTime="0.059999999" KeyTime="-1" Structure="" ManualUpdate="0" LoopAnimation="0" RepeatLastKey="0" AllowAnimRestart="1" VTimeWarping="0" Idle2Move="0" Move2Idle="0" PartialBodyUpdate="1"/>
+   <ParameterizedData animationName="throw_leftarm_UB_03"/>
+   <MovementAndCollider useHorizGraphDefault="1" useVertGraphDefault="1" mcmHoriz="1" mcmVert="5" useAnimXY="0" useAnimZ="0" useAnimRot="0" angle="-1" distance="-1" useGraphDefaultCollider="1" colliderMode="3"/>
+   <LinkedModifiers />
+   <TransitionParamsLayer2 TransitionTime="0.059999999" KeyTime="-1" Structure="" ManualUpdate="0" LoopAnimation="0" RepeatLastKey="0" AllowAnimRestart="1" VTimeWarping="0" Idle2Move="0" Move2Idle="0" PartialBodyUpdate="1"/>
+   <AnimationLayer2 animation1="throw_leftarm_UB_03" fullRootPriority="0" ensureInStack="0" stickyOutTime="-1" forceLeaveWhenFinished="0" speedMultiplier="1" MPSpeedMultiplier="1" stopCurrentAnimation="0" interruptCurrAnim="0" RandomizeSpeedMulPercent="0" stayInStateUntil="0.98000002" forceInStateUntil="0.98000002"/>
+  </State>
+ </States>
+ <Transitions>
+  <Link forceFollowChance="0" cost="100" transitionTime="0" from="Nothing" to="Reload Empty"/>
+  <Link forceFollowChance="0" cost="100" transitionTime="0" from="Nothing" to="Reload Full"/>
+  <Link forceFollowChance="0" cost="100" transitionTime="0" from="Nothing" to="Throw"/>
+  <Link forceFollowChance="0" cost="100" transitionTime="0" from="Reload Empty" to="Nothing"/>
+  <Link forceFollowChance="0" cost="100" transitionTime="0" from="Reload Full" to="Nothing"/>
+  <Link forceFollowChance="0" cost="100" transitionTime="0" from="Reload Full" to="Reload Full"/>
+  <Link forceFollowChance="0" cost="100" transitionTime="0" from="Throw" to="Nothing"/>
+ </Transitions>
+ <Views>
+  <View name="Default">
+   <State id="Nothing" x="-110" y="20"/>
+   <State id="Reload Empty" x="-340" y="-110"/>
+   <State id="Reload Full" x="60" y="-120"/>
+   <State id="Throw" x="-100" y="130"/>
+   <Modifier id="0" x="20" y="130"/>
+  </View>
+ </Views>
+</AnimationSetup>

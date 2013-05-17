@@ -1,0 +1,355 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	================================================================================================
+	CryENGINE Sandbox Editor Ribbon Configuration File 
+	
+	(C) Copyright CryTek GmbH - All rights reserved
+	
+	Please keep the XML node indentation as it is
+	================================================================================================
+-->
+<CommandBar Class="CXTPRibbonBar" Customizable="1" Type="3" BarID="1" Title="The Ribbon" MRUWidth="32767" EnableAnimation="1" Closeable="0">
+<Tabs>
+	<Tab Caption="&amp;Edit">
+		<Groups>
+			<Group Caption="Undo">
+				<Controls>
+					<Control Type="CustomSplitButtonPopup" Id="ID_UNDO" Caption="Undo" style="Icon" Icon="Editor/UI/Icons/Undo.png"/>
+					<Control Type="CustomSplitButtonPopup" Id="ID_REDO" Caption="Redo" style="Icon" Icon="Editor/UI/Icons/Redo.png"/>
+				</Controls>
+			</Group>
+
+			<Group Caption="Constrain" ControlGrouping="1" >
+				<Controls>
+					<Control Id="ID_SELECT_AXIS_X" style="Icon" Icon="Editor/UI/Icons/XAxis.png"/>
+					<Control Id="ID_SELECT_AXIS_Y" style="Icon" Icon="Editor/UI/Icons/YAxis.png"/>
+					<Control Id="ID_SELECT_AXIS_Z" style="Icon" Icon="Editor/UI/Icons/ZAxis.png"/>
+					<Control Id="ID_SELECT_AXIS_XY" style="Icon" Separator="1" Icon="Editor/UI/Icons/XYAxis.png"/>
+					<Control Id="ID_SELECT_AXIS_TERRAIN" style="Icon" Icon="Editor/UI/Icons/Follow.png"/>
+					<Control Id="ID_SELECT_AXIS_SNAPTOALL" style="Icon" Icon="Editor/UI/Icons/FollowSnap.png"/>
+				</Controls>
+			</Group>
+			
+			<Group Caption="Mode" ControlGrouping="1" ControlCentering="1">
+				<Controls>
+					<Control Id="ID_EDITMODE_MOVE" style="Icon" Icon="Editor/UI/Icons/Move.png"/>
+					<Control Id="ID_EDITMODE_ROTATE" style="Icon" Icon="Editor/UI/Icons/Rotate.png"/>
+					<Control Id="ID_EDITMODE_SCALE" style="Icon" Icon="Editor/UI/Icons/Scale.png"/>
+					<Control Id="ID_EDITMODE_SELECT" style="Icon" Separator="1" Icon="Editor/UI/Icons/Select.png"/>
+					<Control Id="ID_RULER" style="Icon" Icon="Editor/UI/Icons/Ruler.png"/>
+				</Controls>
+			</Group>
+
+			<Group Caption="Coords">
+				<Controls>
+					<Control Id="ID_REF_COORDS_SYS" type="ButtonPopup" Caption="" ToolTipText="Reference Coordinate System" Icon="Editor/UI/Icons/RefCoord.png" />
+				</Controls>
+			</Group>
+
+			<Group Caption="Arrange">
+				<Controls>
+					<Control Type="SplitButtonPopup" Id="ID_SNAP_TO_GRID" Caption="Snap To Grid" style="IconAndCaptionBelow" Icon="Editor/UI/Icons/SnapGrid.png"/>
+					<Control Id="ID_SNAPANGLE" Caption="Snap To Angle" style="Icon" Icon="Editor/UI/Icons/SnapAngle.png"/>
+					<Control Id="ID_VIEW_GRIDSETTINGS" Caption="Grid Settings" />
+				</Controls>
+			</Group>
+			
+			<Group Caption="Object(s)">
+				<Controls>
+					<Control Id="ID_EDITTOOL_LINK" Caption="Link" style="Icon" Icon="Editor/UI/Icons/Link.png"/>
+					<Control Id="ID_EDITTOOL_UNLINK" Caption="Unlink" style="Icon" Icon="Editor/UI/Icons/Unlink.png"/>
+					<Control Id="ID_EDIT_DELETE" Caption="Delete" style="Icon" Separator="1" Icon="Editor/UI/Icons/Delete.png"/>
+					<Control Id="ID_EDIT_CLONE" Caption="Clone" style="Icon" Icon="Editor/UI/Icons/Clone.png"/>
+					<Control Id="ID_EDIT_RENAMEOBJECT" style="Icon" Caption="Rename" Icon="Editor/UI/Icons/Rename.png"/>
+					<Control Id="ID_MODIFY_ALIGNOBJTOSURF" style="Icon" Icon="Editor/UI/Icons/AlObjSurf.png"/>
+					<Control Id="ID_OBJECTMODIFY_ALIGN" style="Icon" Icon="Editor/UI/Icons/AlSelect.png"/>
+					<Control Id="ID_OBJECTMODIFY_ALIGNTOGRID" style="Icon" Icon="Editor/UI/Icons/AlObjGrid.png"/>
+					<Control Id="ID_OBJECTMODIFY_SETHEIGHT" style="Icon" Icon="Editor/UI/Icons/SetHeight.png"/>
+				</Controls>
+			</Group>
+
+			<Group Caption="Layer">
+				<Controls>
+					<Control Id="ID_LAYER_SELECT" Caption="Layer" style="IconAndCaptionBelow" Checked="1" Tooltip="Select Current Workin Level" DescriptionText="Select Object Layer that all new objects will be automatically placed to" Icon="Editor/UI/Icons/Layer.png"/>
+				</Controls>
+			</Group>
+
+			<Group Caption="Visibility">
+				<Controls>
+					<Control Id="ID_EDIT_HIDE" Caption="Hide" Icon="Editor/UI/Icons/Hide.png"/>
+					<Control Id="ID_EDIT_UNHIDEALL" Caption="Unhide All" Icon="Editor/UI/Icons/UnhideAll.png"/>
+					<Control Id="ID_EDIT_FREEZE" Caption="Freeze" Separator="1" Icon="Editor/UI/Icons/Freeze.png"/>
+					<Control Id="ID_EDIT_UNFREEZEALL" Caption="Unfreeze All" Icon="Editor/UI/Icons/Unfreeze.png"/>
+				</Controls>
+			</Group>
+
+			<Group Caption="Selection">
+				<Controls>
+					<Control Id="ID_EDIT_SELECTALL" style="Icon" Caption="All" Icon="Editor/UI/Icons/SelectAll.png"/>
+					<Control Id="ID_EDIT_SELECTNONE" style="Icon" Caption="None" Icon="Editor/UI/Icons/SelectNone.png"/>
+					<Control Id="ID_EDIT_INVERTSELECTION" style="Icon" Caption="Invert" Icon="Editor/UI/Icons/Invert.png"/>
+					<Control Id="ID_SELECT_OBJECT" style="IconAndCaptionBelow"  Separator="1" Icon="Editor/UI/Icons/SelectObjects.png"/>
+					<Control Id="ID_GOTO_SELECTED" style="Icon" Icon="Editor/UI/Icons/GoToObj.png"/>
+				</Controls>
+			</Group>
+
+
+			<Group Caption="Advanced Selection">
+				<Controls>
+					<Control Id="IDC_SELECTION_MASK" Type="ButtonPopup" Caption="Selection Mask" DescriptionText="Limit selection to the choosen types of objects" Icon="Editor/UI/Icons/SelectionMask.bmp"/>
+					<Control Id="IDC_SELECTION_MASK" Type="ComboBox" Caption="Selection Mask" Icon="Editor/UI/Icons/SelObjType.png"/>
+					<Control Id="IDC_SELECTION" Type="ComboBox" Caption="Selection Set" Icon="Editor/UI/Icons/SelectionMask.bmp"/>
+					<Control Id="ID_SELECTION_DELETE" style="Icon" Icon="Editor/UI/Icons/DelSel.png"/>
+					<Control Id="ID_SELECTION_SAVE" Caption="Save" Separator="1" Icon="Editor/UI/Icons/SaveSelObj.png"/>
+					<Control Id="ID_SELECTION_LOAD" Caption="Load" Icon="Editor/UI/Icons/LoadSelObj.png" />
+				</Controls>
+			</Group>
+
+			<Group Caption="Hold">
+				<Controls>
+					<Control Id="ID_EDIT_HOLD" Caption="Hold" Icon="Editor/UI/Icons/Hold.png"/>
+					<Control Id="ID_EDIT_FETCH" Caption="Fetch" Icon="Editor/UI/Icons/Fetch.png"/>
+				</Controls>
+			</Group>
+			
+			<Group Caption="Physics">
+				<Controls>
+					<Control Command="Physics.SimulateObjects" Caption="Simulate Objects" DescriptionText="Simulate Objects" style="Icon" Icon="Editor/UI/Icons/SimObj.png"/>
+					<Control Command="Physics.ResetObjectsState" style="Icon" Caption="Reset Physics State" Icon="Editor/UI/Icons/ResetPhysics.png"/>
+					<Control Command="Physics.GetObjectsState" Caption="Get Physics State" style="Icon" Icon="Editor/UI/Icons/GetPhysics.png"/>
+				</Controls>
+			</Group>
+			
+			<Group Caption="Group" ControlGrouping="1" ControlCentering="1">
+				<Controls>
+					<Control Id="ID_GROUP_MAKE" Caption="Group" style="Icon" Icon="Editor/UI/Icons/Group.png"/>
+					<Control Id="ID_GROUP_UNGROUP" Caption="Ungroup" style="Icon" Icon="Editor/UI/Icons/Ungroup.png"/>
+					<Control Id="ID_GROUP_OPEN" Caption="Open"  Separator="1" style="Icon" Icon="Editor/UI/Icons/OpenGroup.png"/>
+					<Control Id="ID_GROUP_CLOSE" Caption="Close" style="Icon" Icon="Editor/UI/Icons/CloseGroup.png"/>
+					<Control Id="ID_GROUP_ATTACH" Caption="Attach"  Separator="1" style="Icon" Icon="Editor/UI/Icons/Attach.png"/>
+					<Control Id="ID_GROUP_DETACH" Caption="Detach" style="Icon" Icon="Editor/UI/Icons/Detach.png"/>
+					<Control id="ID_CLOUDS_CREATE" Caption="Create Cloud" DescriptionText="Create Cloud Template from Selected Objects" Separator="1" style="Icon" Icon="Editor/UI/Icons/Cloud.png"/>
+				</Controls>
+			</Group>
+			
+			<Group Caption="Prefab">
+				<Controls>
+					<Control id="ID_PREFABS_MAKEFROMSELECTION" Caption="Make" style="Icon" DescriptionText="Make Prefab From Selected Objects" Icon="Editor/UI/Icons/MakePref.png"/>
+					<Control Id="ID_PREFABS_REFRESHALL" Caption="Reload All" style="Icon" Icon="Editor/UI/Icons/ReloadAll.png"/>
+					<Control Id="ID_PREFABS_ADDSELECTIONTOPREFAB" Caption="Add Selection" DescriptionText="Add Selection to Prefab" style="Icon" Icon="Editor/UI/Icons/AddSel.png"/>
+				</Controls>
+			</Group>
+
+			<Group1 Caption="Edit Mode2">
+				<Controls>
+					<Control Class="CXTPControlButton" Command="Editor.Open_TimOfDay" Caption="Wow" Icon="Editor/UI/Icons/DeadBody.bmp"/>
+					<Control Class="CXTPControlButton" Command="Editor.Open_TimOfDay" Caption="Wow1" Icon="Editor/UI/Icons/DeadBody.bmp"/>
+					<Control Class="CXTPControlButton" Command="Editor.Open_TimOfDay" Caption="Wow2" Icon="Editor/UI/Icons/DeadBody.bmp"/>
+					<Control Class="CXTPControlButton" Command="Editor.Open_TimOfDay" Caption="Test" TooltipText="Test Command" DescriptionText="This is a test command" Icon="Editor/UI/Icons/bird.bmp"/>
+				</Controls>
+			</Group1>
+		</Groups>
+	</Tab>
+
+	<Tab Caption="&amp;Display">
+	<Groups>
+		<Group Caption="Config Spec">
+			<Controls>
+				<Control Id="ID_GAME_ENABLEVERYHIGHSPEC" Caption="Very High" />
+				<Control Id="ID_GAME_ENABLEHIGHSPEC" Caption="High" />
+				<Control Id="ID_GAME_ENABLEMEDIUMSPEC" Caption="Medium" />
+				<Control Id="ID_GAME_ENABLELOWSPEC" Caption="Low" />
+			</Controls>
+		</Group>
+	
+		<Group Caption="Mode">
+			<Controls>
+				<Control Id="ID_WIREFRAME" Caption="Wireframe" />
+				<Control Id="ID_POINT_MODE" Caption="Point"  />
+				<Control Id="ID_GAME_ENABLESKETCHMODE" Caption="Sketch" />
+			</Controls>
+		</Group>
+
+		<Group Caption="Layout">
+			<Controls>
+				<Control Id="ID_VIEW_CONFIGURELAYOUT" Caption="Configure"  />
+			</Controls>
+		</Group>
+
+		<Group Caption="Camera">
+			<Controls>
+				<Control Id="ID_SWITCHCAMERA_DEFAULTCAMERA" Caption="Editor Camera" />
+				<Control Id="ID_SWITCHCAMERA_SEQUENCECAMERA" Caption="Sequence Camera" />
+				<Control Id="ID_SWITCHCAMERA_SELECTEDCAMERA" Caption="Selected Camera" />
+			</Controls>
+		</Group>
+
+		<Group Caption="Advanced">
+			<Controls>
+				<Control Id="ID_DISPLAY_GOTOPOSITION" Caption="Goto Position" />
+				<Control Id="ID_DISPLAY_SHOWHELPERS" Caption="Hide Helpers" />
+				<Control Id="ID_DISPLAY_TOGGLEFULLSCREENMAINWINDOW" Caption="Toggle Fullscreen MainWindow!" />
+			</Controls>
+		</Group>
+	</Groups>
+	</Tab>
+	
+	<Tab Caption="&amp;Terrain">
+		<Groups>
+			<Group Caption="Dialogs">
+				<Controls>
+					<Control Id="ID_TERRAIN" style="IconAndCaptionBelow" Icon="Editor/UI/Icons/Terrain Editor.png"/>
+					<Control Id="ID_GENERATORS_TEXTURE" style="IconAndCaptionBelow" Icon="Editor/UI/Icons/Terrain Texture Layers.png"/>
+					<Control Id="ID_GENERATORS_LIGHTING" style="IconAndCaptionBelow" Icon="Editor/UI/Icons/Edit Terrain Lighting.png"/>
+					<Control Id="ID_TERRAIN_TIMEOFDAY" style="IconAndCaptionBelow" Caption="Time of Day" Icon="Editor/UI/Icons/Time of Day.png" />
+				</Controls>
+			</Group>
+
+			<Group Caption="Tools">
+				<Controls>
+					<Control Command="EditTool.TerrainModifyTool.Flatten" Caption="Flatten Terrain" style="" Icon="Editor/UI/Icons/Flatten Terrain.png"/>
+					<Control Command="EditTool.TerrainModifyTool.Smooth" Caption="Smooth Terrain" style="" Icon="Editor/UI/Icons/Smooth Terrain.png"/>
+					<Control Command="EditTool.VegetationTool.Activate" Caption="Edit Vegetation" style="" Icon="Editor/UI/Icons/Edit Vegetation.png"/>
+				</Controls>
+			</Group>
+
+			<Group Caption="Operations">
+				<Controls>
+					<Control Id="ID_RELOAD_TERRAIN" Caption="Reload Terrain" style="" Icon="Editor/UI/Icons/Reload Terrain.png"/>
+					<Control Id="ID_TERRAIN_RESIZE" Caption="Resize Terrain" style="" Icon="Editor/UI/Icons/Resize Terrain.png"/>
+				</Controls>
+			</Group>
+
+			<Group Caption="Import/Export">
+				<Controls>
+					<Control Id="ID_EDITMODE_SELECTAREA" style="IconAndCaptionBelow" Caption="Select Terrain Area" Icon="Editor/UI/Icons/SelectTerrainArea.png" />
+					<Control Id="ID_TERRAIN_TEXTURE_EXPORT" Caption="Export/Import Terrain Texture" style="" Icon="Editor/UI/Icons/ImportExport Terrain Texture.png"/>
+					<Control Id="ID_TERRAIN_EXPORTBLOCK" Caption="Export Block" style="" Icon="Editor/UI/Icons/Export Block.png"/>
+					<Control Id="ID_TERRAIN_IMPORTBLOCK" Caption="Import Block" style="" Icon="Editor/UI/Icons/Import Block.png"/>
+					<Control Id="ID_EXPORT_TERRAIN_GEOM" Caption="Save as Geometry" DescriptionText="Save Terrain Block as Geometry" style="" Icon="Editor/UI/Icons/Save as Geometry.png"/>
+				</Controls>
+			</Group>
+		</Groups>
+	</Tab>
+	<Tab Caption="&amp;Game">
+		<Groups>
+			<Group Caption="Game">
+				<Controls>
+					<Control Id="ID_VIEW_SWITCHTOGAME" Caption="Switch To Game" style="IconAndCaptionBelow" />
+					<Control Id="ID_SWITCH_PHYSICS" Caption="Enable Physics/AI" />
+					<Control Id="ID_TERRAIN_COLLISION" Caption="Terrain Collision" />
+					<Control id="ID_GAME_SYNCPLAYER" Caption="Sync Player with Camera" />
+					<Control id="ID_TOGGLE_MULTIPLAYER" Caption="Toggle Multiplayer/Singleplayer config" />
+				</Controls>
+			</Group>
+
+			<Group Caption="Equipment">
+				<Controls>
+					<Control Id="ID_TOOLS_EQUIPPACKSEDIT" Caption="Edit Equipment Packs..." />
+				</Controls>
+			</Group>
+
+			<Group Caption="AI Navigation">
+				<Controls>
+					<Control id="ID_AI_GENERATEALL" Caption="Generate All AI"  style="" />
+					<Control id="ID_AI_VALIDATENAVIGATION" Caption="Validate Navigation"  style="" />
+					<Control id="ID_AI_GENERATEWAYPOINT" Caption="Generate Waypoint" style="" />
+					<Control id="ID_AI_GENERATE3DDEBUGVOXELS" Caption="Generate 3D Debug Voxels" style="" />
+					<Control id="ID_AI_GENERATECOVERSURFACES" Caption="Generate Cover Surfaces" style="" />
+				</Controls>
+			</Group>
+
+			<Group Caption="Deprecated AI Navigation">
+				<Controls>
+					<Control id="ID_AI_GENERATESPAWNERS" Caption="Generate Spawner Entity Code" style="" />
+					<Control id="ID_AI_GENERATETRIANGULATION" Caption="Generate Triangulation" style="" />
+					<Control id="ID_AI_GENERATE3DVOLUMES" Caption="Generate 3D Navigation Volumes" style="" />
+					<Control id="ID_AI_GENERATEFLIGHTNAVIGATION" Caption="Generate Flight navigation" style="" />
+				</Controls>
+			</Group>
+		</Groups>
+	</Tab>
+
+	<Tab Caption="&amp;Tools">
+		<Groups>
+			<Group Caption="Reload">
+				<Controls>
+					<Control Id="ID_RELOAD_SCRIPTS" Caption="Reload Scripts" style="" />
+					<Control Id="ID_RELOAD_TEXTURES" Caption="Reload Textures/Shaders" style="" />
+					<Control Id="ID_RELOAD_GEOMETRY" Caption="Reload Geometry" style="" />
+					<Control Id="ID_RELOAD_TERRAIN" Caption="Reload Terrain" style="" />
+				</Controls>
+			</Group>
+
+			<Group Caption="Validate">
+				<Controls>
+					<Control Id="ID_VALIDATELEVEL" Caption="Check Level for Errors" style="" />
+					<Control Id="ID_TOOLS_LOGMEMORYUSAGE" Caption="Save Level Statistics" style="" />
+					<Control Id="" Caption="" style="" />
+					<Control Id="" Caption="" style="" />
+				</Controls>
+			</Group>
+			
+			<Group Caption="Advanced">
+				<Controls>
+					<Control Id="ID_SCRIPT_COMPILESCRIPT" Caption="Compile Script" style="" />
+					<Control Id="ID_RESOURCES_REDUCEWORKINGSET" Caption="Reduce Working Set" style="" />
+					<Control Id="ID_TOOLS_CLEARLEVELSHADERCACHE" Caption="Clear Level Shader List" style="" />
+					<Control Id="ID_TOOLS_UPDATEPROCEDURALVEGETATION" Caption="Update Procedural Vegetation" style="" />
+					<Control Command="Editor.ExportLayerResources" Caption="Export Selected Layer Resources" />
+				</Controls>
+			</Group>
+
+			<Group Caption="Customize">
+				<Controls>
+					<Control Id="ID_TOOLS_CUSTOMIZEKEYBOARD" Caption="Customize Keyboard..." style="" />
+					<Control Id="ID_TOOLS_PREFERENCES" Caption="Preferences..." style="" />
+					<Control Id="ID_TOOLS_CONFIGURETOOLS" Caption="Configure User Commands..." style="" />
+				</Controls>
+			</Group>
+
+			<Group Caption="Audio">
+				<Controls>
+					<Control Id="ID_SOUND_OPENDIALOGBROWSER" Caption="Dialog Browser" style="" />
+					<Control Id="ID_SOUND_OPENSOUNDBROWSER" Caption="Sound Browser" style="" />
+				</Controls>
+			</Group>
+		</Groups>
+	</Tab>
+	
+	<Tab Caption="&amp;View">
+		<Groups>
+			<Group Caption="Standard">
+				<Controls>
+					<Control Id="ID_VIEW_ROLLUPBAR" style="IconAndCaptionBelow" Caption="Show Rollup Bar" Icon="Editor/UI/Icons/ShowRollup.png"/>  
+				</Controls>
+			</Group>
+		</Groups>
+	</Tab>
+
+	<Tab Caption="Current Edit Tool">
+	</Tab>
+	
+	<Tab Caption="Advanced Edit">
+		<Groups>
+			<Group Caption="Selection">
+				<Controls>
+					<Control Id="ID_CONVERTSELECTION_TOBRUSHES"      style="IconAndCaptionBelow" Icon="Editor/UI/Icons/ConvertSelToBrushes.png"/>  
+				<Control Id="ID_CONVERTSELECTION_TOSIMPLEENTITY" style="IconAndCaptionBelow" Icon="Editor/UI/Icons/ConvertSelToSimpleEntity.png"/>
+				</Controls>
+			</Group>
+			<Group Caption="Validate Objects">
+				<Controls>
+					<Control Id="ID_TOOLS_VALIDATEOBJECTPOSITIONS"	Caption="Validate Position"      style="" Icon=""/>  
+				</Controls>
+			</Group>
+	</Groups>
+	</Tab>
+</Tabs>
+
+<QuickAccessControls>
+	<Control Class="CXTPControlButton" Id="57643" Caption="Undo" TooltipText="Undo" DescriptionText="Undo the last action"/>
+	<Control Class="CXTPControlButton" Id="57607" Caption="Print" TooltipText="Print" DescriptionText="Print the active document"/>
+</QuickAccessControls>
+
+</CommandBar>

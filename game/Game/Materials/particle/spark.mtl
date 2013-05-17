@@ -1,0 +1,6 @@
+<Material MtlFlags="526336" Shader="Particles" GenMask="0" StringGenMask="" SurfaceType="" MatTemplate="" Diffuse="1,1,1" Specular="0,0,0" Emissive="0,0,0" Shininess="10" Opacity="1" GlowAmount="4.04">
+ <Textures>
+  <Texture Map="Diffuse" File="textures/sprites/spark_a.tif"/>
+ </Textures>
+ <PublicParams SoftParticlesScale="1" AlphaScale="0" SoftParticlesVolumeScale="0" FresnelScale="1" FresnelPower="4" FresnelBias="1" GlobalIlluminationAmount="1"/>
+</Material>

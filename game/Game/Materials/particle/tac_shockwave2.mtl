@@ -1,0 +1,16 @@
+<Material MtlFlags="2048" Shader="Glass" GenMask="268435457" SurfaceType="" Diffuse="0.16862746,0.78823537,0.87450987" Specular="0,0,0" Emissive="0,0,0" Shininess="10" Opacity="1" vertModifType="1">
+ <Textures>
+  <Texture Map="Diffuse" File="materials/presets/materialtypes/textures/sparks_test.tif">
+   <TexMod />
+  </Texture>
+  <Texture Map="Normalmap" File="materials/presets/materialtypes/textures/crystal_ddn.tif" Amount="50">
+   <TexMod />
+  </Texture>
+  <Texture Map="Environment" File="materials/presets/materialtypes/textures/fringe_map.dds">
+   <TexMod />
+  </Texture>
+ </Textures>
+ <VertexDeform Type="1" DividerX="1.72" DividerY="0.28999999" NoiseScale="1,1,1"/>
+ <PublicParams TintAmount="0.198" RefrBumpScale="2" ReflectionAmount="7.3000002" FresnelBias="0.64399999" FresnelScale="23.76" BackLightScale="1.46" FilterColor="1,1,1"/>
+ <MaterialLayers />
+</Material>

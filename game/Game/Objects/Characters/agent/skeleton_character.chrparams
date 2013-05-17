@@ -1,0 +1,153 @@
+<?xml version="1.0" ?>
+<Params>
+	<IK_Definition>
+		<LimbIK_Definition>
+			<IK EndEffector="Bip01 R Hand" Handle="RgtArm01" Root="Bip01 R UpperArm" Solver="2BIK"/>
+			<IK EndEffector="Bip01 L Hand" Handle="LftArm01" Root="Bip01 L UpperArm" Solver="2BIK"/>
+			<IK EndEffector="Bip01 R Foot" Handle="RgtLeg01" Root="Bip01 R Thigh" Solver="2BIK"/>
+			<IK EndEffector="Bip01 L Foot" Handle="LftLeg01" Root="Bip01 L Thigh" Solver="2BIK"/>
+			<IK Handle="Spine_SpineToNeck" Solver="CCDX" Root="Bip01 Spine" EndEffector="Bip01 Neck" fStepSize="10" fThreshold="10" nMaxInteration="15"/>
+		</LimbIK_Definition>
+		
+		
+		
+		<IKTarget_CharacterSetup>
+			<!-- This section contains optional additional data for this character when he is using the IKTarget System or the Procedural Object Interaction System -->
+			<!-- every tag is optional, the default setup override the internals defaults and will be used for all limbs not specifically listed below -->
+			<!-- armLength: value used for distance calculation - does not need to represent actual arm value - can be made shorter for effects -->
+			<!-- endEffPullback: hand/finger thickness, the hand will be moved back by this automatically to avoid clipping (to adjust for the mesh around the bone) -->
+			<!-- animLayer: use this layer for limb animations (hand or finger poses for example) for this limb -->
+
+			<DefaultSetup armLength="0.51" yEffPullback="-0.03"  xEffPullback="-0.9" />
+			<LimbSetup IKHandle="RgtArm01" armLength="0.5" yEffPullback="-0.035" xEffPullback="-0.1" animLayer="8" />
+			<LimbSetup IKHandle="LftArm01" armLength="0.5" yEffPullback="-0.035" xEffPullback="-0.1" animLayer="9"/>
+			
+			<!-- If a spine handle is specified, the Procedural Object Interaction System will use it. -->
+			<!-- As with the arm length, the length for a straight spine can be manually set and can be shorter than the actual spine 
+				 to create an even stronger curvature when bending forward to increase the character's reach -->		
+			<SpineSetup IKHandle="Spine_SpineToNeck" spineLength="0.40" />
+		</IKTarget_CharacterSetup>
+
+
+
+		<Animation_Driven_IK_Targets>
+			<ADIKTarget Handle="LftArm01" Target="Bip01 Chin_IKTarget" Weight="Bip01 Chin_IKBlend"/>
+		</Animation_Driven_IK_Targets>
+		
+		
+		
+		<FeetLock_Definition>
+			<RIKHandle Handle="RgtLeg01"/>
+			<LIKHandle Handle="LftLeg01"/>
+		</FeetLock_Definition>
+		
+		
+		
+		<Recoil_Definition>
+			<RIKHandle Handle="RgtArm01"/>
+			<LIKHandle Handle="LftArm01"/>
+			<RWeaponJoint JointName="weapon_bone"/>
+			<ImpactJoints>
+				<ImpactJoint Arm="3" Delay="0.3" Weight="0.2" JointName="Bip01 Pelvis" />
+				<ImpactJoint Arm="3" Delay="0.2" Weight="0.3" JointName="Bip01 Spine"  />
+				<ImpactJoint Arm="3" Delay="0.1" Weight="0.5" JointName="Bip01 Spine1" />
+				<ImpactJoint Arm="3" Delay="0.0" Weight="1.0" JointName="Bip01 Spine2" />
+				<ImpactJoint Arm="3" Delay="0.0" Weight="1.0" JointName="Bip01 Spine3" />
+				<ImpactJoint Arm="3" Delay="0.0" Weight="1.0" JointName="Bip01 Neck" />
+
+				<ImpactJoint Arm="3" Delay="0.10" Weight="0.10" JointName="Bip01 R Thigh" />
+				<ImpactJoint Arm="3" Delay="0.05" Weight="0.05" JointName="Bip01 R Calf" />
+				<ImpactJoint Arm="3" Delay="0.10" Weight="0.10" JointName="Bip01 L Thigh" />
+				<ImpactJoint Arm="3" Delay="0.05" Weight="0.05" JointName="Bip01 L Calf" />
+
+				<ImpactJoint Arm="2" Delay="0.0" Weight="1.0" JointName="Bip01 R Clavicle" />
+				<ImpactJoint Arm="2" Delay="0.00" Weight="0.50" JointName="Bip01 R UpperArm" />
+
+				<ImpactJoint Arm="1" Delay="0.01" Weight="0.7" JointName="Bip01 L Clavicle" />
+				<ImpactJoint Arm="1" Delay="0.00" Weight="0.50" JointName="Bip01 L UpperArm" />
+			</ImpactJoints>
+		</Recoil_Definition>
+		
+		
+		
+		<LookIK_Definition>
+    			<LEyeAttachment Name="eye_left"/>
+    			<REyeAttachment Name="eye_right"/>
+ 
+    			<DirectionalBlends>
+        			<Joint AnimToken="LookPoses" ParameterJoint="Bip01 Look" StartJoint="Bip01 Look" ReferenceJoint="Bip01 Pelvis"/>
+    			</DirectionalBlends>
+
+			<DefaultLookPose name="LookPoses_sdk_Head" />
+ 
+    			<RotationList>
+        			<Rotation Additive="1" Primary="1" JointName="Bip01 Pelvis"/>
+        			<Rotation Additive="1" Primary="1" JointName="Bip01 Spine"/>
+        			<Rotation Additive="1" Primary="1" JointName="Bip01 Spine1"/>
+        			<Rotation Additive="1" Primary="1" JointName="Bip01 Spine2" />
+        			<Rotation Additive="1" Primary="1" JointName="Bip01 Spine3" />
+        			<Rotation Additive="0" Primary="1" JointName="Bip01 Neck" />
+        			<Rotation Additive="0" Primary="1" JointName="Bip01 Head" />
+        			<Rotation Additive="0" Primary="1" JointName="Bip01 Look" />
+    			</RotationList>
+ 
+    			<PositionList>
+        			<Position Additive="1" JointName="Bip01 Pelvis"/>
+    			</PositionList>
+ 
+		</LookIK_Definition>
+		
+		
+
+		<AimIK_Definition>
+			<DirectionalBlends>
+				<Joint AnimToken="AimPoses"  ParameterJoint="weapon_bone" StartJoint="Bip01 R UpperArm" ReferenceJoint="Bip01"/>
+			</DirectionalBlends>
+			
+			<RotationList>
+			  <Rotation JointName="Bip01 Spine"                  Primary="1" Additive="0" />
+			  <Rotation JointName="Bip01 Spine1"                 Primary="1" Additive="0" />
+			  <Rotation JointName="Bip01 Spine2"                 Primary="1" Additive="0" />
+			  <Rotation JointName="Bip01 Spine3"                 Primary="1" Additive="0" />
+			  <Rotation JointName="Bip01 Neck"                   Primary="1" Additive="0" />
+			  <Rotation JointName="Bip01 Head"                   Primary="0" Additive="0" />
+
+			  <Rotation JointName="Bip01 R Clavicle"             Primary="1" Additive="0" />
+			  <Rotation JointName="Bip01 R UpperArm"             Primary="1" Additive="0" />
+			  <Rotation JointName="Bip01 R ForeArm"              Primary="1" Additive="0" />
+			  <Rotation JointName="Bip01 R Hand"                 Primary="1" Additive="0" />
+			  <Rotation JointName="weapon_bone"                  Primary="1" Additive="0" />
+
+			  <Rotation JointName="Bip01 L Clavicle"             Primary="0" Additive="0" />
+			  <Rotation JointName="Bip01 L UpperArm"             Primary="0" Additive="0" />
+			  <Rotation JointName="Bip01 L ForeArm"              Primary="0" Additive="0" />
+			  <Rotation JointName="Bip01 L Hand"                 Primary="0" Additive="0" />
+			</RotationList>
+
+
+			<PositionList>
+			  <Position JointName="Bip01 R Clavicle"             />
+			  <Position JointName="weapon_bone"	                 />
+			  <Position JointName="Bip01 L Clavicle"             />
+			</PositionList>
+
+			<ProcAdjustments>
+				<Spine JointName="Bip01 Pelvis"/>
+				<Spine JointName="Bip01 Spine"/>
+				<Spine JointName="Bip01 Spine1"/>
+				<Spine JointName="Bip01 Spine2"/>
+				<Spine JointName="Bip01 Spine3"/>
+			</ProcAdjustments>
+		</AimIK_Definition>
+
+	</IK_Definition>
+	
+	
+
+
+	<AnimationList>
+		<Animation name="$AnimEventDatabase" path="animations\human_male\human_male.animevents"/>
+		<Animation name="$Include" path="objects\characters\basicPlayer.chrparams"/>
+	</AnimationList>
+
+</Params>

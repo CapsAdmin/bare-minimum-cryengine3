@@ -1,0 +1,9 @@
+<Material MtlFlags="526336" Shader="Water" GenMask="C14" StringGenMask="" SurfaceType="mat_water" MatTemplate="" Diffuse="1,1,1" Specular="1,1,1" Emissive="0,0,0" Shininess="255" Opacity="1">
+ <Textures>
+  <Texture Map="Diffuse" File="textures/terrain/river_water_color.tif" Filter="4">
+   <TexMod TexMod_UOscillatorType="2" TexMod_UOscillatorRate="0.0099999998" TexMod_UOscillatorPhase="1" TexMod_UOscillatorAmplitude="1"/>
+  </Texture>
+  <Texture Map="Environment" File="textures/cubemaps/forest_winter/environmentprobe1_cm.tif"/>
+ </Textures>
+ <PublicParams NormalsScale="0.25" SoftIntersectionFactor="1" Tilling="40" FoamCrestAmount="0" SubSurfaceScatteringScale="0.1" RipplesNormalsScale="0.5" FresnelPower="4" FoamAmount="0.050000001" DetailNormalsScale="0.1" DetailTilling="1" GradientScale="0" FresnelBias="0.25" ReflectionScale="0.5" RefractionBumpScale="0.5" FoamSoftIntersectionFactor="5" FoamTilling="5" HeightScale="0" ReflectionBumpScale="0.5" RainTilling="0.5"/>
+</Material>

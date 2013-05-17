@@ -1,0 +1,24 @@
+<Material MtlFlags="256">
+ <SubMaterials>
+  <Material Name="Forest_Ground_Branches" MtlFlags="128" Shader="Vegetation" GenMask="268566528" SurfaceType="mat_wood" Diffuse="0.5529412,0.50588238,0.43921572" Specular="0.60000002,0.60000002,0.60000002" Emissive="0,0,0" Shininess="5" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/natural/trees/thin_leave_tree/trunk_pino_old1.tif">
+     <TexMod />
+    </Texture>
+    <Texture Map="Specular" File="objects/natural/trees/thin_leave_tree/trunk_pino_old1_spec.tif">
+     <TexMod />
+    </Texture>
+    <Texture Map="Detail" File="textures/terrain/bump_detail/detail_bump_wood_005_ddn.dds">
+     <TexMod />
+    </Texture>
+   </Textures>
+   <PublicParams DetailBumpTillingU="3" DetailBumpTillingV="6" DetailBumpScale="1" DetailBlendAmount="0"/>
+  </Material>
+  <Material Name="proxy" MtlFlags="1152" Shader="Nodraw" GenMask="0" SurfaceType="mat_wood" Diffuse="1,1,1" Specular="0,0,0" Emissive="0,0,0" Shininess="10" Opacity="1">
+   <Textures />
+   <MaterialLayers />
+  </Material>
+ </SubMaterials>
+ <PublicParams AmbientMultiplier="1"/>
+ <MaterialLayers />
+</Material>

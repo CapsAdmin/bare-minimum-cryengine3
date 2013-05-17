@@ -1,0 +1,8 @@
+<Material MtlFlags="524322" Shader="Illum" GenMask="100000000" StringGenMask="%STAT_BRANCHING" SurfaceType="mat_concrete" MatTemplate="" Diffuse="0.98431373,0.98431373,0.98431373" Specular="0,0,0" Emissive="0,0,0" Shininess="10" Opacity="0.5">
+ <Textures>
+  <Texture Map="Diffuse" File="objects/default/transparent/transparent_texture.tif">
+   <TexMod />
+  </Texture>
+ </Textures>
+ <PublicParams AmbientMultiplier="1"/>
+</Material>

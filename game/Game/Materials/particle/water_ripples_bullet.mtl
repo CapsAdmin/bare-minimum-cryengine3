@@ -1,0 +1,12 @@
+<Material MtlFlags="2048" Shader="Particles" GenMask="4" SurfaceType="" Diffuse="1,1,1" Specular="0,0,0" Emissive="0,0,0" Opacity="1">
+ <Textures>
+  <Texture Map="Diffuse" File="textures/sprites/water_ripples2.tif">
+   <TexMod />
+  </Texture>
+  <Texture Map="Normalmap" File="textures/sprites/water_ripples_ddn.tif">
+   <TexMod />
+  </Texture>
+ </Textures>
+ <PublicParams RefrBumpScale="0.75599998"/>
+ <MaterialLayers />
+</Material>
