@@ -485,7 +485,6 @@ bool CGameRules::OnPromoteToServer(SHostMigrationInfo &hostMigrationInfo, uint32
 		HostMigrationRemoveDuplicateDynamicEntities();
 	}
 
-	
 	for (uint32 i = 0; i < MAX_PLAYERS; ++ i)
 	{
 		m_migratedPlayerChannels[i] = 0;

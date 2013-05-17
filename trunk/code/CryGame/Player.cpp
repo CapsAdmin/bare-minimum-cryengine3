@@ -1642,8 +1642,9 @@ void CPlayer::UpdateView(SViewParams &viewParams)
 	viewParams.position = GetEntity()->GetWorldPos() + GetEyeOffset();
 	viewParams.rotation = this->GetViewRotation();
 	viewParams.fov = DEG2RAD(75);
-
-	{return;}
+	{
+		return;
+	}
 
 	if (viewParams.groundOnly)
 	{
