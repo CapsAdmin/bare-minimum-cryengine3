@@ -479,7 +479,6 @@ class CGame :
 		typedef std::map<string, string, stl::less_stricmp<string> > TLevelMapMap;
 		TLevelMapMap m_mapNames;
 
-		CGameMechanismManager *m_pGameMechanismManager;
 		int m_cachedUserRegion;
 
 		float m_hostMigrationTimeStateChanged;			// Time when the host migration started (from timer->GetAsyncCurTime())
