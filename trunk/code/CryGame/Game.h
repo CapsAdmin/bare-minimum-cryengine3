@@ -61,7 +61,6 @@ struct SCVars;
 struct SItemStrings;
 class CItemSharedParamsList;
 class CWeaponSharedParamsList;
-class CCameraManager;
 
 // when you add stuff here, also update in CGame::RegisterGameObjectEvents
 enum ECryGameEvent
@@ -281,8 +280,6 @@ class CGame :
 			return nullptr;
 		}
 
-		// camera stuff (new tp cam)
-		CCameraManager *GetCameraManager();
 		ILINE GlobalRayCaster &GetRayCaster()
 		{
 			assert(m_pRayCaster);
@@ -482,9 +479,6 @@ class CGame :
 		typedef std::map<string, string, stl::less_stricmp<string> > TLevelMapMap;
 		TLevelMapMap m_mapNames;
 
-		// new tp camera stuff
-		CCameraManager *m_pCameraManager;
-
 		CGameMechanismManager *m_pGameMechanismManager;
 		int m_cachedUserRegion;
 
@@ -504,13 +498,6 @@ extern CGame *g_pGame;
 #define SAFE_HARDWARE_MOUSE_FUNC(func)\
 	if(gEnv->pHardwareMouse)\
 		gEnv->pHardwareMouse->func
-
-
-//////////////////////////////////////////////////////////////////////////////
-inline CCameraManager *CGame::GetCameraManager()
-{
-	return m_pCameraManager;
-}
 
 extern CGame *g_pGame;
 

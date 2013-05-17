@@ -32,7 +32,6 @@
 #include "ScriptBind_GameRules.h"
 #include "ScriptBind_Game.h"
 
-#include "Camera/CameraManager.h"
 #include "GameFactory.h"
 
 #include "ServerSynchedStorage.h"
@@ -99,7 +98,6 @@ CGame::CGame()
 	g_pGame = this;
 	m_bReload = false;
 	m_inDevMode = false;
-	m_pCameraManager = new CCameraManager();
 	m_pGameMechanismManager = new CGameMechanismManager();
 	m_pDefaultAM = 0;
 	m_pMultiplayerAM = 0;

@@ -924,7 +924,7 @@ function DeathMatch.Server:OnPlayerKilled(hit)
 	target.deathPos=target:GetWorldPos(target.deathPos);
 	
 	-- disallow ragdollization while in vehicles so they can play animations. Ragdoll will be triggered by other means
-	local bRagdoll = not hit.target or not hit.target:IsOnVehicle();
+	local bRagdoll = not hit.target
 
 	self.game:KillPlayer(hit.targetId, true, bRagdoll, hit.shooterId, hit.weaponId, hit.damage, hit.partId, hit.typeId, hit.dir, hit.projectileId or NULL_ENTITY,	hit.weaponClassId, hit.projectileClassId);
 	self:ProcessScores(hit);
