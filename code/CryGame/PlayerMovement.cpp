@@ -760,31 +760,30 @@ void inline SinCos( float radians, float *sine, float *cosine )
 void AngleVectors( const Ang3 &angles, Vec3 *forward, Vec3 *right, Vec3 *up )
 {
 	float sr, sp, sy, cr, cp, cy;
+	SinCos( DEG2RAD( angles.x ), &sy, &cy );
+	SinCos( DEG2RAD( angles.y ), &sp, &cp );
+	SinCos( DEG2RAD( angles.z ), &sr, &cr );
 
-    SinCos( DEG2RAD( angles.x ), &sy, &cy );
-    SinCos( DEG2RAD( angles.y ), &sp, &cp );
-    SinCos( DEG2RAD( angles.z ), &sr, &cr );
+	if (forward)
+	{
+		forward->x = cp * cy;
+		forward->y = cp * sy;
+		forward->z = -sp;
+	}
 
-    if (forward)
-    {
-        forward->x = cp*cy;
-        forward->y = cp*sy;
-        forward->z = -sp;
-    }
+	if (right)
+	{
+		right->x = (-1 * sr * sp * cy + -1 * cr * -sy);
+		right->y = (-1 * sr * sp * sy + -1 * cr * cy);
+		right->z = -1 * sr * cp;
+	}
 
-    if (right)
-    {
-        right->x = (-1*sr*sp*cy+-1*cr*-sy);
-        right->y = (-1*sr*sp*sy+-1*cr*cy);
-        right->z = -1*sr*cp;
-    }
-
-    if (up)
-    {
-        up->x = (cr*sp*cy+-sr*-sy);
-        up->y = (cr*sp*sy+-sr*cy);
-        up->z = cr*cp;
-    }
+	if (up)
+	{
+		up->x = (cr * sp * cy + -sr * -sy);
+		up->y = (cr * sp * sy + -sr * cy);
+		up->z = cr * cp;
+	}
 }
 
 
@@ -803,7 +802,7 @@ void AngleVectors( const Ang3 &angles, Vec3 *forward, Vec3 *right, Vec3 *up )
 void SetPlayerPos(CPlayer *player, Vec3 pos)
 {
 	CPlayer::MoveParams params(pos, player->GetViewRotation());
-	player->GetEntity()->SetWorldTM(Matrix34::Create(Vec3(1,1,1), params.rot, params.pos));
+	player->GetEntity()->SetWorldTM(Matrix34::Create(Vec3(1, 1, 1), params.rot, params.pos));
 }
 
 int TracePlayer(CPlayer *player, Vec3 start, Vec3 end, ray_hit *trace)
@@ -811,33 +810,35 @@ int TracePlayer(CPlayer *player, Vec3 start, Vec3 end, ray_hit *trace)
 	return gEnv->pPhysicalWorld->RayTraceEntity(gEnv->pPhysicalWorld->GetPhysicalEntityById(player->GetEntityId()), start, end - start, trace);
 }
 
-void Accelerate(SCharacterMoveRequest *mv, CPlayer *player, Vec3& wishdir, float wishspeed, float accel )
+void Accelerate(SCharacterMoveRequest *mv, CPlayer *player, Vec3 &wishdir, float wishspeed, float accel )
 {
-    int i;
-    float addspeed, accelspeed, currentspeed;
+	int i;
+	float addspeed, accelspeed, currentspeed;
+	// See if we are changing direction a bit
+	currentspeed = mv->velocity.Dot(wishdir);
+	// Reduce wishspeed by the amount of veer.
+	addspeed = wishspeed - currentspeed;
 
-    // See if we are changing direction a bit
-    currentspeed = mv->velocity.Dot(wishdir);
+	// If not going to add any speed, done.
+	if (addspeed <= 0)
+	{
+		return;
+	}
 
-    // Reduce wishspeed by the amount of veer.
-    addspeed = wishspeed - currentspeed;
-
-    // If not going to add any speed, done.
-    if (addspeed <= 0)
-        return;
-
-    // Determine amount of accleration.
+	// Determine amount of accleration.
 	accelspeed = accel * gEnv->pTimer->GetFrameTime() * wishspeed * SURFACE_FRICTION;
 
-    // Cap at addspeed
-    if (accelspeed > addspeed)
-        accelspeed = addspeed;
-    
-    // Adjust velocity.
-    for (i=0 ; i<3 ; i++)
-    {
-		mv->velocity[i] += accelspeed * wishdir[i];    
-    }
+	// Cap at addspeed
+	if (accelspeed > addspeed)
+	{
+		accelspeed = addspeed;
+	}
+
+	// Adjust velocity.
+	for (i = 0 ; i < 3 ; i++)
+	{
+		mv->velocity[i] += accelspeed * wishdir[i];
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -848,17 +849,14 @@ void StayOnGround( CPlayer *player, Vec3 origin )
 	Vec3 end( origin );
 	start.z += 2;
 	end.z -= STEP_SIZE;
-
 	// See how far up we can go without getting stuck
-
 	auto numhits = TracePlayer(player, start, origin, &trace);
 	start = trace.pt;
-
 	// using trace.startsolid is unreliable here, it doesn't get set when
 	// tracing bounding box vs. terrain
-
 	// Now trace down from a known safe position
 	numhits = TracePlayer(player, start, end, &trace);
+
 	if
 	(
 		numhits > 0 && // must go somewhere
@@ -887,44 +885,48 @@ void VectorMA( const Vec3 &start, float scale, const Vec3 &direction, Vec3 &dest
 	dest.z = start.z + scale * direction.z;
 }
 
-void CrossProduct (const float* v1, const float* v2, float* cross)
+void CrossProduct (const float *v1, const float *v2, float *cross)
 {
-	cross[0] = v1[1]*v2[2] - v1[2]*v2[1];
-	cross[1] = v1[2]*v2[0] - v1[0]*v2[2];
-	cross[2] = v1[0]*v2[1] - v1[1]*v2[0];
+	cross[0] = v1[1] * v2[2] - v1[2] * v2[1];
+	cross[1] = v1[2] * v2[0] - v1[0] * v2[2];
+	cross[2] = v1[0] * v2[1] - v1[1] * v2[0];
 }
 
-int ClipVelocity( Vec3& in, Vec3& normal, Vec3& out, float overbounce )
+int ClipVelocity( Vec3 &in, Vec3 &normal, Vec3 &out, float overbounce )
 {
 	float	backoff;
 	float	change;
 	float angle;
 	int		i, blocked;
-	
 	angle = normal[ 2 ];
-
 	blocked = 0x00;         // Assume unblocked.
+
 	if (angle > 0)			// If the plane that is blocking us has a positive z component, then assume it's a floor.
-		blocked |= 0x01;	// 
+	{
+		blocked |= 0x01;    //
+	}
+
 	if (!angle)				// If the plane has no Z, it is vertical (wall/step)
-		blocked |= 0x02;	// 
-	
+	{
+		blocked |= 0x02;    //
+	}
 
 	// Determine how far along plane to slide based on incoming direction.
 	backoff = in.Dot(normal) * overbounce;
 
-	for (i=0 ; i<3 ; i++)
+	for (i = 0 ; i < 3 ; i++)
 	{
-		change = normal[i]*backoff;
-		out[i] = in[i] - change; 
+		change = normal[i] * backoff;
+		out[i] = in[i] - change;
 	}
-	
+
 	// iterate once to make sure we aren't still moving through the plane
 	float adjust = out.Dot(normal );
+
 	if( adjust < 0.0f )
 	{
 		out -= ( normal * adjust );
-//		Msg( "Adjustment = %lf\n", adjust );
+		//		Msg( "Adjustment = %lf\n", adjust );
 	}
 
 	// Return blocking flags.
@@ -944,30 +946,26 @@ int TryPlayerMove( CPlayer *player, SCharacterMoveRequest *mv, Vec3 *pFirstDest 
 	ray_hit 	pm;
 	Vec3		end;
 	float		time_left, allFraction;
-	int			blocked;		
-	
+	int			blocked;
 	numbumps  = 4;           // Bump up to four times
-	
 	blocked   = 0;           // Assume not blocked
 	numplanes = 0;           //  and not sliding along any planes
-
 	VectorCopy (mv->velocity, original_velocity);  // Store original velocity
 	VectorCopy (mv->velocity, primal_velocity);
-	
 	allFraction = 0;
 	time_left = gEnv->pTimer->GetFrameTime();   // Total time for this movement operation.
-
 	new_velocity.zero();
 
-	for (bumpcount=0 ; bumpcount < numbumps; bumpcount++)
+	for (bumpcount = 0 ; bumpcount < numbumps; bumpcount++)
 	{
 		if ( mv->velocity.GetLength() == 0.0 )
+		{
 			break;
+		}
 
 		// Assume we can move all the way from the current origin to the
 		//  end point.
 		VectorMA( player->GetEntity()->GetWorldPos(), time_left, mv->velocity, end );
-
 		int numhits = 0;
 
 		// See if we can make it from origin to end point.
@@ -975,7 +973,9 @@ int TryPlayerMove( CPlayer *player, SCharacterMoveRequest *mv, Vec3 *pFirstDest 
 		{
 			// If their velocity Z is 0, then we can avoid an extra trace here during WalkMove.
 			if ( pFirstDest && end == *pFirstDest )
+			{
 				pm = *pFirstTrace;
+			}
 			else
 			{
 				numhits = TracePlayer( player, player->GetEntity()->GetWorldPos(), end, &pm );
@@ -987,24 +987,23 @@ int TryPlayerMove( CPlayer *player, SCharacterMoveRequest *mv, Vec3 *pFirstDest 
 		}
 
 		auto fraction = pm.dist / player->GetEntity()->GetWorldPos().GetDistance(pm.pt);
-
 		allFraction += fraction;
 
 		// If we started in a solid object, or we were in solid space
 		//  the whole way, zero out our velocity and return that we
 		//  are blocked by floor and wall.
 		if (numhits)
-		{	
+		{
 			// entity is trapped in another solid
 			VectorCopy (Vec3(), mv->velocity);
 			return 4;
 		}
 
 		// If we moved some portion of the total distance, then
-		//  copy the end position into the pmove.origin and 
+		//  copy the end position into the pmove.origin and
 		//  zero the plane counter.
 		if( fraction > 0 )
-		{	
+		{
 			if ( numbumps > 0 && fraction == 1 )
 			{
 				// There's a precision issue with terrain tracing that can cause a swept box to successfully trace
@@ -1013,6 +1012,7 @@ int TryPlayerMove( CPlayer *player, SCharacterMoveRequest *mv, Vec3 *pFirstDest 
 				// If we detect getting stuck, don't allow the movement
 				ray_hit stuck;
 				auto numhits = TracePlayer(player, pm.pt, pm.pt, &stuck );
+
 				if ( numhits )
 				{
 					//Msg( "Player will become stuck!!!\n" );
@@ -1031,7 +1031,7 @@ int TryPlayerMove( CPlayer *player, SCharacterMoveRequest *mv, Vec3 *pFirstDest 
 		//  and can return.
 		if (fraction == 1)
 		{
-			 break;		// moved the entire distance
+			break;		// moved the entire distance
 		}
 
 		// If the plane we hit has a high z component in the normal, then
@@ -1040,7 +1040,8 @@ int TryPlayerMove( CPlayer *player, SCharacterMoveRequest *mv, Vec3 *pFirstDest 
 		{
 			blocked |= 1;		// floor
 		}
-		// If the plane has a zero z component in the normal, then it's a 
+
+		// If the plane has a zero z component in the normal, then it's a
 		//  step or wall
 		if (!pm.n[2])
 		{
@@ -1053,29 +1054,27 @@ int TryPlayerMove( CPlayer *player, SCharacterMoveRequest *mv, Vec3 *pFirstDest 
 
 		// Did we run out of planes to clip against?
 		if (numplanes >= MAX_CLIP_PLANES)
-		{	
+		{
 			// this shouldn't really happen
 			//  Stop our movement if so.
 			VectorCopy (Vec3(), mv->velocity);
 			//Con_DPrintf("Too many planes 4\n");
-
 			break;
 		}
 
 		// Set up next clipping plane
 		VectorCopy (pm.n, planes[numplanes]);
 		numplanes++;
-
 		auto stats = player->GetActorStats();
 
 		// modify original_velocity so it parallels all of the clip planes
 		//
 
-		// reflect player velocity 
+		// reflect player velocity
 		// Only give this a try for first impact plane because you can get yourself stuck in an acute corner by jumping in place
 		//  and pressing forward and nobody was really using this bounce/reflection feature anyway...
 		if ( numplanes == 1 &&
-			stats->inAir)	
+				stats->inAir)
 		{
 			for ( i = 0; i < numplanes; i++ )
 			{
@@ -1096,7 +1095,7 @@ int TryPlayerMove( CPlayer *player, SCharacterMoveRequest *mv, Vec3 *pFirstDest 
 		}
 		else
 		{
-			for (i=0 ; i < numplanes ; i++)
+			for (i = 0 ; i < numplanes ; i++)
 			{
 				ClipVelocity (
 					original_velocity,
@@ -1104,36 +1103,42 @@ int TryPlayerMove( CPlayer *player, SCharacterMoveRequest *mv, Vec3 *pFirstDest 
 					mv->velocity,
 					1);
 
-				for (j=0 ; j<numplanes ; j++)
+				for (j = 0 ; j < numplanes ; j++)
 					if (j != i)
 					{
 						// Are we now moving against this plane?
 						if (mv->velocity.Dot(planes[j]) < 0)
-							break;	// not ok
+						{
+							break;    // not ok
+						}
 					}
+
 				if (j == numplanes)  // Didn't have to clip, so we're ok
+				{
 					break;
+				}
 			}
-			
+
 			// Did we go all the way through plane set
 			if (i != numplanes)
-			{	// go along this plane
+			{
+				// go along this plane
 				// pmove.velocity is set in clipping call, no need to set again.
-				;  
+				;
 			}
 			else
-			{	// go along the crease
+			{
+				// go along the crease
 				if (numplanes != 2)
 				{
 					VectorCopy (Vec3(), mv->velocity);
 					break;
 				}
+
 				CrossProduct (planes[0], planes[1], dir);
 				dir.Normalize();
 				d = dir.Dot(mv->velocity);
-
 				auto scaled = dir * d;
-
 				mv->velocity.Set(scaled.x, scaled.y, scaled.z);
 			}
 
@@ -1142,6 +1147,7 @@ int TryPlayerMove( CPlayer *player, SCharacterMoveRequest *mv, Vec3 *pFirstDest 
 			// to avoid tiny occilations in sloping corners
 			//
 			d = mv->velocity.Dot(primal_velocity);
+
 			if (d <= 0)
 			{
 				//Con_DPrintf("Back\n");
@@ -1158,8 +1164,8 @@ int TryPlayerMove( CPlayer *player, SCharacterMoveRequest *mv, Vec3 *pFirstDest 
 
 	// Check if they slammed into a wall
 	float fSlamVol = 0.0f;
-
 	float fLateralStoppingAmount = primal_velocity.len2() - mv->velocity.len2();
+
 	if ( fLateralStoppingAmount > PLAYER_MAX_SAFE_FALL_SPEED * 2.0f )
 	{
 		fSlamVol = 1.0f;
@@ -1168,36 +1174,29 @@ int TryPlayerMove( CPlayer *player, SCharacterMoveRequest *mv, Vec3 *pFirstDest 
 	{
 		fSlamVol = 0.85f;
 	}
-	
-	/////// fall effects here ///////
-	/////// fall effects here ///////
-	/////// fall effects here ///////
-	/////// fall effects here ///////
 
+	/////// fall effects here ///////
+	/////// fall effects here ///////
+	/////// fall effects here ///////
+	/////// fall effects here ///////
 	return blocked;
 }
 
 void StepMove(CPlayer *player, SCharacterMoveRequest *mv, Vec3 origin, Vec3 vecDestination, ray_hit trace)
 {
 	Vec3 vecEndPos(vecDestination);
-
 	// Try sliding forward both on ground and up 16 pixels
 	//  take the move that goes farthest
 	Vec3 vecPos(origin);
 	Vec3 vecVel(mv->velocity);
-	
 	// Slide move down.
 	TryPlayerMove( player, mv, &vecEndPos, &trace );
-	
 	// Down results.
 	Vec3 vecDownPos(origin);
 	Vec3 vecDownVel(mv->velocity);
-
 	// Reset original values.
 	SetPlayerPos(player, vecPos);
 	vecVel.Set(mv->velocity.x, mv->velocity.y, mv->velocity.z);
-
-	
 	// Move up a stair height.
 	VectorCopy(player->GetEntity()->GetWorldPos(), vecEndPos);
 
@@ -1215,7 +1214,6 @@ void StepMove(CPlayer *player, SCharacterMoveRequest *mv, Vec3 origin, Vec3 vecD
 
 	// Slide move up.
 	TryPlayerMove(player, mv);
-		
 	// Move down a stair (attempt to).
 	VectorCopy(player->GetEntity()->GetWorldPos(), vecEndPos);
 
@@ -1223,21 +1221,21 @@ void StepMove(CPlayer *player, SCharacterMoveRequest *mv, Vec3 origin, Vec3 vecD
 	{
 		vecEndPos.z -= STEP_SIZE + DIST_EPSILON;
 	}
-		
+
 	numhit = TracePlayer(player, origin, vecEndPos, &trace);
 
 	// If we are not on the ground any more then use the original movement attempt.
 	if ( trace.n[2] < 0.7 )
 	{
 		SetPlayerPos(player, vecDownPos);
-
 		vecDownVel.Set(mv->velocity.x, mv->velocity.y, mv->velocity.z);
-
 		float flStepDist = origin.z - vecPos.z;
+
 		if ( flStepDist > 0.0f )
 		{
 			//mv->m_outStepHeight += flStepDist; uumm
 		}
+
 		return;
 	}
 
@@ -1246,65 +1244,56 @@ void StepMove(CPlayer *player, SCharacterMoveRequest *mv, Vec3 origin, Vec3 vecD
 	{
 		SetPlayerPos(player, trace.pt);
 	}
-	
+
 	// Copy this origin to up.
 	Vec3 vecUpPos(player->GetEntity()->GetWorldPos());
-	
 	// decide which one went farther
 	float flDownDist = ( vecDownPos.x - vecPos.x ) * ( vecDownPos.x - vecPos.x ) + ( vecDownPos.y - vecPos.y ) * ( vecDownPos.y - vecPos.y );
 	float flUpDist = ( vecUpPos.x - vecPos.x ) * ( vecUpPos.x - vecPos.x ) + ( vecUpPos.y - vecPos.y ) * ( vecUpPos.y - vecPos.y );
+
 	if ( flDownDist > flUpDist )
 	{
 		SetPlayerPos(player, vecDownPos );
 		VectorCopy( vecDownVel, mv->velocity );
 	}
-	else 
+	else
 	{
 		// copy z value from slide move
 		mv->velocity.z = vecDownVel.z;
 	}
-	
+
 	float flStepDist = player->GetEntity()->GetWorldPos().z - vecPos.z;
+
 	if ( flStepDist > 0 )
 	{
 		//mv->m_outStepHeight += flStepDist; uumm
 	}
-	
 }
 
 
 void LOL(CPlayer *player, SCharacterMoveRequest *mv)
 {
 	// cryengine helpers
-
 	SMovementState params;
 	player->GetMovementController()->GetMovementState(params);
-
 	auto stats = player->GetActorStats();
 	auto origin = player->GetEntity()->GetWorldPos();
 	auto ft = gEnv->pTimer->GetFrameTime();
-
 	// source
-
 	int i;
-
 	Vec3 wishvel;
 	float spd;
 	float fmove, smove;
 	Vec3 wishdir;
 	float wishspeed;
-
 	Vec3 dest;
 	ray_hit pm;
 	Vec3 forward, right, up;
-
 	AngleVectors(Ang3(player->GetViewRotation()), &forward, &right, &up);
-
 	auto oldground = stats->onGround;
-
 	// this is the speed in inches (500, 0, will make us forward, -500, 0 will make us run backwards etc)
-	fmove = player->GetMovementController()->GetDesiredMoveDir().x; 
-	smove = player->GetMovementController()->GetDesiredMoveDir().y; 
+	fmove = player->GetMovementController()->GetDesiredMoveDir().x;
+	smove = player->GetMovementController()->GetDesiredMoveDir().y;
 
 	// Zero out z components of movement vectors
 	if ( forward[2] != 0 )
@@ -1318,14 +1307,15 @@ void LOL(CPlayer *player, SCharacterMoveRequest *mv)
 		right[2] = 0;
 		right.Normalize();
 	}
-	
+
 	// Determine x and y parts of velocity
-	for (i=0 ; i<2 ; i++)
-		wishvel[i] = forward[i]*fmove + right[i]*smove;
+	for (i = 0 ; i < 2 ; i++)
+	{
+		wishvel[i] = forward[i] * fmove + right[i] * smove;
+	}
 
 	// Zero out z part of velocity
 	wishvel[2] = 0;
-	
 	// Determine maginitude of speed of move
 	wishspeed = wishvel.GetLength();
 
@@ -1340,47 +1330,37 @@ void LOL(CPlayer *player, SCharacterMoveRequest *mv)
 	mv->velocity[2] = 0;
 	Accelerate(mv, player, wishdir, wishspeed, SV_ACCELLERATE);
 	mv->velocity[2] = 0;
-	
 	// Add in any base velocity to the current velocity.
 	mv->velocity += stats->velocity;
-
 	spd = mv->velocity.GetLength();
 
 	if ( spd < 1.0f )
 	{
 		mv->velocity.zero();
-
 		// Now pull the base velocity back out.   Base velocity is set if you are on a moving object, like a conveyor (or maybe another monster?)
 		mv->velocity -= stats->velocity;
 		return;
 	}
 
-	// first try just moving to the destination	
-	dest[0] = origin[0] + mv->velocity[0]*ft;
-	dest[1] = origin[1] + mv->velocity[1]*ft;
+	// first try just moving to the destination
+	dest[0] = origin[0] + mv->velocity[0] * ft;
+	dest[1] = origin[1] + mv->velocity[1] * ft;
 	dest[2] = origin[2];
-	
 	mv->velocity += wishdir * wishspeed;
-
 	auto numhits = TracePlayer(player, origin, dest, &pm);
-	
+
 	// If we made it all the way, then copy trace end as new player position.
 
 	if (!numhits)
 	{
 		SetPlayerPos(player, pm.pt);
-
 		// Now pull the base velocity back out.   Base velocity is set if you are on a moving object, like a conveyor (or maybe another monster?)
 		mv->velocity -= stats->velocity;
-
 		StayOnGround(player, origin);
-
 		return;
 	}
 
-
 	StepMove(player, mv, origin, dest, pm);
-
 	StayOnGround(player, origin);
 }
 
@@ -1389,13 +1369,9 @@ void LOL(CPlayer *player, SCharacterMoveRequest *mv)
 //-----------------------------------------------------------------------------------------------
 void CPlayerMovement::ProcessOnGroundOrJumping(CPlayer &player)
 {
-
 	//auto phys = m_player.GetEntity()->GetPhysics();
-
 	//LOL(&player, &m_request);
-
 	//{return;}
-
 	//process movement
 	Vec3 move(0, 0, 0);
 	/*

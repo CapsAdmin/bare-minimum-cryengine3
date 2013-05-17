@@ -200,7 +200,6 @@ bool CGame::Init(IGameFramework *pFramework)
 	}
 
 	m_pFramework->RegisterListener(this, "Game", eFLPriority_Game);
-	
 	m_pRayCaster = new GlobalRayCaster;
 	m_pRayCaster->SetQuota(6);
 	m_pIntersectionTester = new GlobalIntersectionTester;
@@ -223,7 +222,6 @@ bool CGame::Init(IGameFramework *pFramework)
 	const char *itemFolder = "scripts/entities/items/xml";
 	m_pFramework->GetIItemSystem()->Scan(itemFolder);
 	m_pWeaponSystem->Scan(itemFolder);
-
 	return true;
 }
 
@@ -318,7 +316,6 @@ string CGame::InitMapReloading()
 	}
 
 	levelFileName.append("_cryengine.cryenginejmsf");
-
 #ifndef WIN32
 	m_bReload = true; //using map command
 #else
@@ -357,7 +354,6 @@ void CGame::OnSaveGame(ISaveGame *pSaveGame)
 	IActor		*pActor = GetIGameFramework()->GetClientActor();
 	CPlayer	*pPlayer = static_cast<CPlayer *>(pActor);
 	GetGameRules()->PlayerPosForRespawn(pPlayer, true);
-
 	//save difficulty
 	pSaveGame->AddMetadata("sp_difficulty", g_pGameCVars->g_difficultyLevel);
 	pSaveGame->AddMetadata("v_altitudeLimit", g_pGameCVars->pAltitudeLimitCVar->GetString());
@@ -367,7 +363,6 @@ void CGame::OnLoadGame(ILoadGame *pLoadGame)
 {
 	int difficulty = g_pGameCVars->g_difficultyLevel;
 	pLoadGame->GetMetadata("sp_difficulty", difficulty);
-
 	// altitude limit
 	const char *v_altitudeLimit =	pLoadGame->GetMetadata("v_altitudeLimit");
 
@@ -804,7 +799,6 @@ IGame::TSaveGameName CGame::CreateSaveGameName()
 	//design wants to have different, more readable names for the savegames generated
 	int id = 0;
 	TSaveGameName saveGameName;
-
 	saveGameName = CRY_SAVEGAME_FILENAME;
 	char buffer[16];
 	itoa(id, buffer, 10);
