@@ -17,30 +17,23 @@
 #include "GameActions.h"
 
 #include "GameRules.h"
-#include "WeaponSystem.h"
 
 #include <ICryPak.h>
 #include <CryPath.h>
 #include <IActionMapManager.h>
 #include <IViewSystem.h>
 #include <ILevelSystem.h>
-#include <IItemSystem.h>
 #include <IVehicleSystem.h>
 #include <IMovieSystem.h>
 #include <IScaleformGFx.h>
 #include <IPlatformOS.h>
 
 #include "ScriptBind_Actor.h"
-#include "ScriptBind_Item.h"
-#include "ScriptBind_Weapon.h"
 #include "ScriptBind_GameRules.h"
 #include "ScriptBind_Game.h"
 
 #include "Camera/CameraManager.h"
 #include "GameFactory.h"
-
-#include "ItemSharedParams.h"
-#include "WeaponSharedParams.h"
 
 #include "ServerSynchedStorage.h"
 #include "ClientSynchedStorage.h"
@@ -53,25 +46,12 @@
 #include "IMaterialEffects.h"
 
 
-
-
-
 #include "Player.h"
 
 #include "GameMechanismManager/GameMechanismManager.h"
 #include "ICheckPointSystem.h"
 
 #include "CodeCheckpointDebugMgr.h"
-
-
-
-
-
-
-
-
-
-
 
 
 #define GAME_DEBUG_MEM  // debug memory usage
@@ -133,10 +113,6 @@ CGame::~CGame()
 	gEnv->pSystem->GetISystemEventDispatcher()->RemoveListener(this);
 	ReleaseScriptBinds();
 	//SAFE_DELETE(m_pCameraManager);
-	m_pWeaponSystem->Release();
-	SAFE_DELETE(m_pItemStrings);
-	SAFE_DELETE(m_pItemSharedParamsList);
-	SAFE_DELETE(m_pWeaponSharedParamsList);
 	SAFE_DELETE(m_pGameMechanismManager);
 	SAFE_DELETE(m_pCVars);
 	ClearGameSessionHandler(); // make sure this is cleared before the gamePointer is gone
@@ -161,10 +137,6 @@ bool CGame::Init(IGameFramework *pFramework)
 	RegisterConsoleVars();
 	RegisterConsoleCommands();
 	RegisterGameObjectEvents();
-	// Initialize static item strings
-	m_pItemStrings = new SItemStrings();
-	m_pItemSharedParamsList = new CItemSharedParamsList();
-	m_pWeaponSharedParamsList = new CWeaponSharedParamsList();
 	LoadActionMaps( ACTIONMAP_DEFAULT_PROFILE );
 	InitScriptBinds();
 	//load user levelnames for ingame text and savegames
@@ -200,6 +172,7 @@ bool CGame::Init(IGameFramework *pFramework)
 	}
 
 	m_pFramework->RegisterListener(this, "Game", eFLPriority_Game);
+	
 	m_pRayCaster = new GlobalRayCaster;
 	m_pRayCaster->SetQuota(6);
 	m_pIntersectionTester = new GlobalIntersectionTester;
@@ -218,10 +191,7 @@ bool CGame::Init(IGameFramework *pFramework)
 #ifdef GAME_DEBUG_MEM
 	DumpMemInfo("CGame::Init end");
 #endif
-	m_pWeaponSystem = new CWeaponSystem(this, GetISystem());
-	const char *itemFolder = "scripts/entities/items/xml";
-	m_pFramework->GetIItemSystem()->Scan(itemFolder);
-	m_pWeaponSystem->Scan(itemFolder);
+
 	return true;
 }
 
@@ -262,7 +232,6 @@ int CGame::Update(bool haveFocus, unsigned int updateFlags)
 {
 	bool bRun = m_pFramework->PreUpdate( true, updateFlags );
 	float frameTime = gEnv->pTimer->GetFrameTime();
-	m_pWeaponSystem->Update(frameTime);
 	m_pGameMechanismManager->Update(frameTime);
 	m_pFramework->PostUpdate( true, updateFlags );
 	return bRun ? 1 : 0;
@@ -316,6 +285,7 @@ string CGame::InitMapReloading()
 	}
 
 	levelFileName.append("_cryengine.cryenginejmsf");
+
 #ifndef WIN32
 	m_bReload = true; //using map command
 #else
@@ -354,6 +324,7 @@ void CGame::OnSaveGame(ISaveGame *pSaveGame)
 	IActor		*pActor = GetIGameFramework()->GetClientActor();
 	CPlayer	*pPlayer = static_cast<CPlayer *>(pActor);
 	GetGameRules()->PlayerPosForRespawn(pPlayer, true);
+
 	//save difficulty
 	pSaveGame->AddMetadata("sp_difficulty", g_pGameCVars->g_difficultyLevel);
 	pSaveGame->AddMetadata("v_altitudeLimit", g_pGameCVars->pAltitudeLimitCVar->GetString());
@@ -363,6 +334,7 @@ void CGame::OnLoadGame(ILoadGame *pLoadGame)
 {
 	int difficulty = g_pGameCVars->g_difficultyLevel;
 	pLoadGame->GetMetadata("sp_difficulty", difficulty);
+
 	// altitude limit
 	const char *v_altitudeLimit =	pLoadGame->GetMetadata("v_altitudeLimit");
 
@@ -528,8 +500,6 @@ void CGame::LoadActionMaps(const char *filename)
 void CGame::InitScriptBinds()
 {
 	m_pScriptBindActor = new CScriptBind_Actor(m_pFramework->GetISystem());
-	m_pScriptBindItem = new CScriptBind_Item(m_pFramework->GetISystem(), m_pFramework);
-	m_pScriptBindWeapon = new CScriptBind_Weapon(m_pFramework->GetISystem(), m_pFramework);
 	m_pScriptBindGameRules = new CScriptBind_GameRules(m_pFramework->GetISystem(), m_pFramework);
 	m_pScriptBindGame = new CScriptBind_Game(m_pFramework->GetISystem(), m_pFramework);
 }
@@ -537,8 +507,6 @@ void CGame::InitScriptBinds()
 void CGame::ReleaseScriptBinds()
 {
 	SAFE_DELETE(m_pScriptBindActor);
-	SAFE_DELETE(m_pScriptBindItem);
-	SAFE_DELETE(m_pScriptBindWeapon);
 	SAFE_DELETE(m_pScriptBindGameRules);
 	SAFE_DELETE(m_pScriptBindGame);
 }
@@ -628,15 +596,10 @@ void CGame::RegisterGameObjectEvents()
 void CGame::GetMemoryStatistics(ICrySizer *s) const
 {
 	s->Add(*this);
-	m_pWeaponSystem->GetMemoryUsage(s);
 	s->Add(*m_pScriptBindActor);
-	s->Add(*m_pScriptBindItem);
-	s->Add(*m_pScriptBindWeapon);
 	s->Add(*m_pScriptBindGameRules);
 	s->Add(*m_pScriptBindGame);
 	s->Add(*m_pGameActions);
-	m_pItemSharedParamsList->GetMemoryUsage(s);
-	m_pWeaponSharedParamsList->GetMemoryUsage(s);
 
 	if (m_pServerSynchedStorage)
 	{
@@ -799,6 +762,7 @@ IGame::TSaveGameName CGame::CreateSaveGameName()
 	//design wants to have different, more readable names for the savegames generated
 	int id = 0;
 	TSaveGameName saveGameName;
+
 	saveGameName = CRY_SAVEGAME_FILENAME;
 	char buffer[16];
 	itoa(id, buffer, 10);

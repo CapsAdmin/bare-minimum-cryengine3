@@ -23,12 +23,10 @@
 #include "Network/NetActionSync.h"
 #include "Camera/CameraManager.h"
 #include "Animation/PoseModifier/ILeanPoseModifier.h"
-#include "LookAim_Helper.h"
 
 class CPlayerMovement;
 class CPlayerRotation;
 struct IPlayerInput;
-class CVehicleClient;
 struct IDebugHistory;
 struct IDebugHistoryManager;
 class CCameraInputHelper;
@@ -91,18 +89,6 @@ struct SPlayerStats : public SActorStats
 	Vec3 upVector;
 	Vec3 groundNormal;
 
-	Vec3 FPWeaponPos;
-	Ang3 FPWeaponAngles;
-	Vec3 FPWeaponPosOffset;
-	Ang3 FPWeaponAnglesOffset;
-
-	Vec3 FPSecWeaponPos;
-	Ang3 FPSecWeaponAngles;
-	Vec3 FPSecWeaponPosOffset;
-	Ang3 FPSecWeaponAnglesOffset;
-
-	bool FPWeaponSwayOn;
-
 	Vec3 gBootsSpotNormal;
 
 	//
@@ -141,8 +127,6 @@ struct SPlayerStats : public SActorStats
 	//Force crouch
 	float forceCrouchTime;
 
-	int  grabbedHeavyEntity; //Player is grabbing two handed object(1) or NPC(2)
-
 	SPlayerStats()
 	{
 		memset(this, 0, sizeof(SPlayerStats)); // This will zero everything, fine.
@@ -173,8 +157,6 @@ struct SPlayerStats : public SActorStats
 		swimJumping = false;
 		spectatorMode = 0;
 		spectatorTarget = 0;
-		grabbedHeavyEntity = 0;
-		FPWeaponSwayOn = false;
 	}
 
 	void Serialize( TSerialize ser, unsigned aspects );
@@ -185,7 +167,6 @@ struct SPlayerParams : public SActorParams
 	float sprintMultiplier;
 	float strafeMultiplier;
 	float backwardMultiplier;
-	float grabMultiplier;
 	float afterburnerMultiplier;
 
 	float inertia;
@@ -216,7 +197,6 @@ struct SPlayerParams : public SActorParams
 		sprintMultiplier = 1.25f;
 		strafeMultiplier = 0.9f;
 		backwardMultiplier = 0.9f;
-		grabMultiplier = 0.5f;
 		afterburnerMultiplier = 1.5f;
 		inertia = 7.0f;
 		inertiaAccel = 11.0f;
@@ -396,7 +376,6 @@ class CPlayer :
 
 		static const int ASPECT_HEALTH				= eEA_GameServerStatic;
 		static const int ASPECT_FROZEN				= eEA_GameServerStatic;
-		static const int ASPECT_CURRENT_ITEM	= eEA_GameClientStatic;
 		static const int ASPECT_FALLING				= eEA_GameClientA;
 
 		// PLAYERPREDICTION
@@ -433,15 +412,7 @@ class CPlayer :
 		virtual int32 GetArmor() const;
 		virtual int32 GetMaxArmor() const;
 
-		virtual IEntity *LinkToVehicle(EntityId vehicleId);
 		virtual IEntity *LinkToEntity(EntityId entityId, bool bKeepTransformOnDetach = true);
-		virtual void LinkToMountedWeapon(EntityId weaponId);
-
-		virtual void SetViewInVehicle(Quat viewRotation);
-		virtual Vec3 GetVehicleViewDir() const
-		{
-			return m_vehicleViewDir;
-		}
 
 		virtual void SupressViewBlending()
 		{
@@ -637,7 +608,6 @@ class CPlayer :
 		virtual void UpdateStats(float frameTime);
 		virtual void UpdateSwimStats(float frameTime);
 		virtual void UpdateUWBreathing(float frameTime, Vec3 worldBreathPos);
-		virtual void UpdateWeaponRaising();
 		virtual void SetParams(SmartScriptTable &rTable, bool resetFirst);
 		virtual bool GetParams(SmartScriptTable &rTable);
 		virtual void Reset(bool toGame);
@@ -696,12 +666,6 @@ class CPlayer :
 		};
 		void MoveToSpectatorTargetPosition();
 
-		virtual void SelectNextItem(int direction, bool keepHistory, const char *category);
-		virtual void HolsterItem(bool holster, bool playSelect = true);
-		virtual void SelectLastItem(bool keepHistory, bool forceNext = false);
-		virtual void SelectItemByName(const char *name, bool keepHistory);
-		virtual void SelectItem(EntityId itemId, bool keepHistory);
-
 		virtual void RagDollize( bool fallAndPlay );
 		virtual void HandleEvent( const SGameObjectEvent &event );
 
@@ -755,7 +719,6 @@ class CPlayer :
 		virtual void SetAngles(const Ang3 &angles);
 		virtual Ang3 GetAngles();
 		virtual void PlayAction(const char *action, const char *extension, bool looping = false);
-		virtual void UpdateGrab(float frameTime);
 		virtual float GetActorStrength() const;
 		virtual void Freeze(bool freeze);
 		virtual void ProcessBonesRotation(ICharacterInstance *pCharacter, float frameTime);
@@ -774,14 +737,6 @@ class CPlayer :
 		void UpdateBreathing(float frameTime);
 		bool IsHeadUnderwater();
 		void PlayBreathingSound( EActionSoundParamValues actionSoundParam );
-
-		//Player can grab north koreans
-		virtual int GetActorSpecies()
-		{
-			return eGCT_HUMAN;
-		}
-
-		virtual EntityId	GetGrabbedEntityId() const;
 
 		IGameObjectExtension *GetInteractor();
 
@@ -863,19 +818,10 @@ class CPlayer :
 			return m_parachuteEnabled;
 		};
 
-		virtual bool UseItem(EntityId itemId);
-		virtual bool PickUpItem(EntityId itemId, bool sound, bool ignoreOffhand = false);
-		virtual bool DropItem(EntityId itemId, float impulseScale = 1.0f, bool slectNext = true, bool byDeath = false);
-
 		ILINE const Vec3 &GetEyeOffset() const
 		{
 			return m_eyeOffset;
 		}
-		ILINE const Vec3 &GetWeaponOffset() const
-		{
-			return m_weaponOffset;
-		}
-
 		void UpdateUnfreezeInput(const Ang3 &deltaRotation, const Vec3 &deltaMovement, float mult);
 
 		void SpawnParticleEffect(const char *effectName, const Vec3 &pos, const Vec3 &dir);
@@ -902,7 +848,6 @@ class CPlayer :
 			m_stats.ladderEnterLocation.t.zero();
 		};
 
-		//Pick Up Items (pos parameter is worldspace position of item to pick up)
 		bool NeedToCrouch(const Vec3 &pos);
 
 		// mines (and claymores)
@@ -956,11 +901,7 @@ class CPlayer :
 		CCameraInputHelper *GetCameraInputHelper() const;
 		void StagePlayer(bool bStage, SStagingParams *pStagingParams = 0);
 
-		void NotifyObjectGrabbed(bool bIsGrab, EntityId objectId, bool bIsNPC, bool bIsTwoHanded = false); // called from OffHand.cpp. bIsGrab always true atm
-
 		virtual void OnSoundSystemEvent( ESoundSystemCallbackEvent event, ISound *pSound );
-
-		void AutoPickUpItem(EntityId itemId);
 
 		bool GetForceNoIK() const;
 
@@ -1030,17 +971,11 @@ class CPlayer :
 
 		Vec3		m_eyeOffsetView; //this is exclusive for CPlayerView to use, do not touch it outside CPlayerView
 
-		Vec3		m_weaponOffset;
-
 		float		m_viewRoll;
 
 		Vec3		m_upVector;//using gravity boots (or when prone) is the normal of the surface where the player is standing on, otherwise is the default (0,0,1)
 
 		Vec3		m_bobOffset;
-
-		Vec3		m_FPWeaponLastDirVec;
-		Vec3		m_FPWeaponOffset;
-		Ang3		m_FPWeaponAngleOffset;
 
 		// updated by PlayerMovement for tracking time based acceleration
 		Vec3		m_velocity;
@@ -1079,15 +1014,10 @@ class CPlayer :
 
 		bool m_bRagDollHead;
 
-		CLookAim_Helper	m_lookAim;
-
 		// animation graph input ids
 		IAnimationGraph::InputID m_inputAction;
-		IAnimationGraph::InputID m_inputItem;
 		IAnimationGraph::InputID m_inputUsingLookIK;
 		IAnimationGraph::InputID m_inputAiming;
-		IAnimationGraph::InputID m_inputVehicleName;
-		IAnimationGraph::InputID m_inputVehicleSeat;
 		IAnimationGraph::InputID m_inputDesiredTurnSpeed;
 
 		// probably temporary, feel free to figure out better place
@@ -1112,9 +1042,6 @@ class CPlayer :
 		bool    m_openingParachute;
 
 		bool		m_sufferingHighLatency;
-
-		CVehicleClient *m_pVehicleClient;
-		Vec3 m_vehicleViewDir;
 
 		//sound loops that are played when we don't have a nanosuit
 		float		 m_sprintTimer;

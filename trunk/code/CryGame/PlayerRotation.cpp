@@ -2,7 +2,6 @@
 #include "PlayerRotation.h"
 #include "GameUtils.h"
 #include "GameCVars.h"
-#include "Item.h"
 
 #define ENABLE_NAN_CHECK
 
@@ -171,74 +170,7 @@ void CPlayerRotation::GetStanceAngleLimits(float &minAngle, float &maxAngle)
 		minAngle = -40.0f;
 		maxAngle = 80.0f;
 	}
-
-	if(m_stats.grabbedHeavyEntity != 0)
-	{
-		minAngle = -35.0f;  //Limit angle to prevent clipping, throw objects at feet, etc...
-	}
-
-	// SNH: additional restriction based on weapon type if prone.
-	if(m_player.GetStance() == STANCE_PRONE && g_pGameCVars->g_proneAimAngleRestrict_Enable != 0)
-	{
-		float dist = 0.0f;
-		CItem *pItem = (CItem *)(m_player.GetCurrentItem());
-
-		if(pItem)
-		{
-			dist = pItem->GetParams().raise_distance;
-		}
-
-		SMovementState movestate;
-		m_player.m_pMovementController->GetMovementState(movestate);
-		// try a cylinder intersection test
-		IPhysicalEntity *pIgnore[2];
-		pIgnore[0] = m_player.GetEntity()->GetPhysics();
-		pIgnore[1] = pItem ? pItem->GetEntity()->GetPhysics() : NULL;
-		primitives::cylinder cyl;
-		cyl.r = 0.05f;
-		cyl.axis = movestate.aimDirection;
-		cyl.hh = dist;
-		cyl.center = movestate.weaponPosition + movestate.aimDirection * cyl.hh;
-		//gEnv->pRenderer->GetIRenderAuxGeom()->DrawCylinder(cyl.center, cyl.axis, cyl.r, cyl.hh, ColorF(0.4f,1.0f,0.6f, 0.2f));
-		float n = 0.0f;
-		geom_contact *contacts;
-		intersection_params params;
-		WriteLockCond lockContacts;
-		params.bStopAtFirstTri = false;
-		params.bSweepTest = false;
-		params.bNoBorder = true;
-		params.bNoAreaContacts = true;
-		n = gEnv->pPhysicalWorld->PrimitiveWorldIntersection(primitives::cylinder::type, &cyl, Vec3(0, 0, 2),
-				ent_static | ent_terrain, &contacts, 0,
-				geom_colltype_player, &params, 0, 0, pIgnore, pIgnore[1] ? 2 : 1, lockContacts);
-		int ret = (int)n;
-		geom_contact *currentc = contacts;
-
-		for (int i = 0; i < ret; i++)
-		{
-			geom_contact *contact = currentc;
-
-			if (contact && (fabs_tpl(contact->n.z) > 0.2f))
-			{
-				Vec3 dir = contact->pt - movestate.weaponPosition;
-				dir.NormalizeSafe();
-				Vec3 horiz = dir;
-				horiz.z = 0.0f;
-				horiz.NormalizeSafe();
-				float cosangle = dir.Dot(horiz);
-				Limit(cosangle, -1.0f, 1.0f);
-				float newMin = acos_tpl(cosangle);
-				newMin = -newMin * 180.0f / gf_PI;
-				//float col[] = {1,1,1,1};
-				//gEnv->pRenderer->Draw2dLabel(100,100, 1.0f, col, false, "minangle: %.2f", newMin);
-				//gEnv->pRenderer->GetIRenderAuxGeom()->DrawSphere(contact->pt, 0.03f, ColorF(1,0,0,1));
-				minAngle = MAX(newMin, minAngle);
-			}
-
-			++currentc;
-		}
-	}
-
+	
 	minAngle *= gf_PI / 180.0f;
 	maxAngle *= gf_PI / 180.0f;
 }

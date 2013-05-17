@@ -4,11 +4,7 @@
 #include "Game.h"
 #include "GameCVars.h"
 #include "GameActions.h"
-#include "Weapon.h"
-#include "WeaponSystem.h"
 #include "IVehicleSystem.h"
-#include "OffHand.h"
-#include "Fists.h"
 #include "GameRules.h"
 #include "Camera/CameraInputHelper.h"
 
@@ -49,7 +45,6 @@ CPlayerInput::CPlayerInput( CPlayer *pPlayer ) :
 	m_fSprintTime(0),
 	m_fRestingTime(0)
 {
-	m_pPlayer->RegisterPlayerEventListener(this);
 	m_pPlayer->GetGameObject()->CaptureActions(this);
 	// Create the input helper class for the new third person camera
 	m_pCameraInputHelper = new CCameraInputHelper(m_pPlayer, this);
@@ -100,7 +95,6 @@ CPlayerInput::CPlayerInput( CPlayer *pPlayer ) :
 
 CPlayerInput::~CPlayerInput()
 {
-	m_pPlayer->UnregisterPlayerEventListener(this);
 	SAFE_DELETE(m_pCameraInputHelper);
 	m_pPlayer->GetGameObject()->ReleaseActions(this);
 }
@@ -261,176 +255,8 @@ void CPlayerInput::OnAction( const ActionId &actionId, int activationMode, float
 				}
 			}
 		}
-
-		if (!m_pPlayer->m_stats.spectatorMode)
-		{
-			IInventory *pInventory = m_pPlayer->GetInventory();
-
-			if (!pInventory)
-			{
-				return;
-			}
-
-			bool scope = false;
-			EntityId itemId = pInventory->GetCurrentItem();
-			CWeapon *pWeapon = 0;
-
-			if (itemId)
-			{
-				pWeapon = m_pPlayer->GetWeapon(itemId);
-
-				if (pWeapon)
-				{
-					scope = (pWeapon->IsZoomed() && pWeapon->GetMaxZoomSteps() > 1);
-				}
-			}
-
-			if (m_pPlayer->GetHealth() > 0 && !m_pPlayer->m_stats.isFrozen.Value() && !m_pPlayer->m_stats.inFreefall.Value() && !m_pPlayer->m_stats.isOnLadder
-					&& !m_pPlayer->m_stats.isStandingUp && m_pPlayer->GetGameObject()->GetAspectProfile(eEA_Physics) != eAP_Sleep)
-			{
-				m_pPlayer->CActor::OnAction(actionId, activationMode, value);
-
-				if ((!scope || actionId == actions.use))
-				{
-					COffHand *pOffHand = static_cast<COffHand *>(m_pPlayer->GetWeaponByClass(CItem::sOffHandClass));
-
-					if (pOffHand)
-					{
-						pOffHand->OnAction(m_pPlayer->GetEntityId(), actionId, activationMode, value);
-					}
-
-					if ((!pWeapon || !pWeapon->IsMounted()))
-					{
-						if ((actions.drop == actionId) && itemId)
-						{
-							float impulseScale = 1.0f;
-
-							if (activationMode == eAAM_OnPress)
-							{
-								m_buttonPressure = 2.5f;
-							}
-
-							if (activationMode == eAAM_OnRelease)
-							{
-								m_buttonPressure = CLAMP(m_buttonPressure, 0.0f, 2.5f);
-								impulseScale = 1.0f + (1.0f - m_buttonPressure / 2.5f) * 15.0f;
-
-								if (m_pPlayer->DropItem(itemId, impulseScale, true) && pOffHand && pOffHand->IsSelected())
-								{
-									if (EntityId fistsId = pInventory->GetItemByClass(CItem::sFistsClass))
-									{
-										m_pPlayer->SelectItem(fistsId, false);
-									}
-
-									pOffHand->PreExecuteAction(eOHA_REINIT_WEAPON, eAAM_OnPress);
-									CItem *pItem = static_cast<CItem *>(m_pPlayer->GetCurrentItem());
-
-									if (pItem)
-									{
-										pItem->SetActionSuffix("akimbo_");
-										pItem->PlayAction(g_pItemStrings->idle);
-									}
-								}
-							}
-						}
-						else if (actions.nextitem == actionId)
-						{
-							m_pPlayer->SelectNextItem(1, true, 0);
-						}
-						else if (actions.previtem == actionId)
-						{
-							m_pPlayer->SelectNextItem(-1, true, 0);
-						}
-						else if (actions.handgrenade == actionId)
-						{
-							m_pPlayer->SelectNextItem(1, true, actionId.c_str());
-						}
-						else if (actions.explosive == actionId)
-						{
-							m_pPlayer->SelectNextItem(1, true, actionId.c_str());
-						}
-						else if (actions.utility == actionId)
-						{
-							m_pPlayer->SelectNextItem(1, true, actionId.c_str());
-						}
-						else if (actions.small == actionId)
-						{
-							m_pPlayer->SelectNextItem(1, true, actionId.c_str());
-						}
-						else if (actions.medium == actionId)
-						{
-							m_pPlayer->SelectNextItem(1, true, actionId.c_str());
-						}
-						else if (actions.heavy == actionId)
-						{
-							m_pPlayer->SelectNextItem(1, true, actionId.c_str());
-						}
-						else if (actions.debug == actionId)
-						{
-							if (g_pGame)
-							{
-								if (!m_pPlayer->GetInventory()->GetItemByClass(CItem::sDebugGunClass))
-								{
-									g_pGame->GetWeaponSystem()->DebugGun(0);
-								}
-
-								if (!m_pPlayer->GetInventory()->GetItemByClass(CItem::sRefWeaponClass))
-								{
-									g_pGame->GetWeaponSystem()->RefGun(0);
-								}
-							}
-
-							m_pPlayer->SelectNextItem(1, true, actionId.c_str());
-						}
-					}
-				}
-				else
-				{
-					if (actions.handgrenade == actionId)
-					{
-						m_pPlayer->SelectNextItem(1, true, actionId.c_str());
-					}
-					else if (actions.explosive == actionId)
-					{
-						m_pPlayer->SelectNextItem(1, true, actionId.c_str());
-					}
-					else if (actions.utility == actionId)
-					{
-						m_pPlayer->SelectNextItem(1, true, actionId.c_str());
-					}
-					else if (actions.small == actionId)
-					{
-						m_pPlayer->SelectNextItem(1, true, actionId.c_str());
-					}
-					else if (actions.medium == actionId)
-					{
-						m_pPlayer->SelectNextItem(1, true, actionId.c_str());
-					}
-					else if (actions.heavy == actionId)
-					{
-						m_pPlayer->SelectNextItem(1, true, actionId.c_str());
-					}
-					else if (actions.drop == actionId && activationMode == eAAM_OnRelease && itemId)
-					{
-						m_pPlayer->DropItem(itemId, 1.0f, true);
-					}
-				}
-			}
-		}
-	}
-	bool hudFilterOut = true;
-	// FIXME: temporary method to dispatch Actions to HUD (it's not yet possible to register)
-	hudFilterOut = true;
-	//Filter must take into account offHand too
-	COffHand *pOffHand = static_cast<COffHand *>(m_pPlayer->GetWeaponByClass(CItem::sOffHandClass));
-
-	if(pOffHand && pOffHand->IsSelected())
-	{
-		filterOut = false;
 	}
 
-	//send the onAction to scripts, after filter the range of actions. for now just use and hold
-	if (filterOut && hudFilterOut)
 	{
 		FRAME_PROFILER("Script Processing", GetISystem(), PROFILE_GAME);
 		HSCRIPTFUNCTION scriptOnAction(NULL);
@@ -469,14 +295,7 @@ void CPlayerInput::OnAction( const ActionId &actionId, int activationMode, float
 
 		gEnv->pScriptSystem->ReleaseFunc(scriptOnAction);
 	}
-}
 
-void CPlayerInput::OnObjectGrabbed(IActor *pActor, bool bIsGrab, EntityId objectId, bool bIsNPC, bool bIsTwoHanded)
-{
-	if(m_pPlayer == pActor)
-	{
-		m_iCarryingObject = bIsGrab ? (bIsTwoHanded ? 2 : 1) : 0;
-	}
 }
 
 //this function basically returns a smoothed movement vector, for better movement responsivness in small spaces
@@ -539,12 +358,6 @@ void CPlayerInput::PreUpdate()
 	//these 2 could be moved to CPlayerRotation
 	mouseSensitivity *= m_pPlayer->m_params.viewSensitivity;
 	mouseSensitivity *= m_pPlayer->GetMassFactor();
-	COffHand *pOffHand = static_cast<COffHand *>(m_pPlayer->GetWeaponByClass(CItem::sOffHandClass));
-
-	if(pOffHand && (pOffHand->GetOffHandState()&eOHS_HOLDING_NPC))
-	{
-		mouseSensitivity *= pOffHand->GetObjectMassScale();
-	}
 
 	// When carrying object/enemy, adapt mouse sensitiviy to feel the weight
 	// Designers requested we ignore single-handed objects (1 == m_iCarryingObject)
@@ -1282,44 +1095,22 @@ bool CPlayerInput::OnActionToggleStance(EntityId entityId, const ActionId &actio
 
 bool CPlayerInput::OnActionProne(EntityId entityId, const ActionId &actionId, int activationMode, float value)
 {
-	//No prone if holding something
-	COffHand *pOffHand = static_cast<COffHand *>(m_pPlayer->GetWeaponByClass(CItem::sOffHandClass));
-
-	if(pOffHand && pOffHand->IsHoldingEntity())
-	{
-		return false;
-	}
-
 	if (!m_pPlayer->m_stats.spectatorMode)
 	{
 		if(!m_pPlayer->GetActorStats()->inZeroG)
 		{
 			if(activationMode == eAAM_OnPress)
-			{
-				CItem *curItem = static_cast<CItem *>(gEnv->pGame->GetIGameFramework()->GetIItemSystem()->GetItem(m_pPlayer->GetInventory()->GetCurrentItem()));
-
-				if(curItem && curItem->GetParams().prone_not_usable)
+			{			
+				if (!(m_actions & ACTION_PRONE))
 				{
-					// go crouched instead.
-					// Nope, actually do nothing
-					// 				if (!(m_actions & ACTION_CROUCH))
-					// 					m_actions |= ACTION_CROUCH;
-					// 				else
-					// 					m_actions &= ~ACTION_CROUCH;
+					if(!m_pPlayer->GetActorStats()->inAir)
+					{
+						m_actions |= ACTION_PRONE;
+					}
 				}
 				else
 				{
-					if (!(m_actions & ACTION_PRONE))
-					{
-						if(!m_pPlayer->GetActorStats()->inAir)
-						{
-							m_actions |= ACTION_PRONE;
-						}
-					}
-					else
-					{
-						m_actions &= ~ACTION_PRONE;
-					}
+					m_actions &= ~ACTION_PRONE;
 				}
 			}
 		}
@@ -1413,19 +1204,6 @@ bool CPlayerInput::OnActionUse(EntityId entityId, const ActionId &actionId, int 
 
 	if (activationMode == eAAM_OnPress)
 	{
-		COffHand *pOffHand = static_cast<COffHand *>(m_pPlayer->GetWeaponByClass(CItem::sOffHandClass));
-
-		//Drop objects/npc before enter a vehicle
-		if(pOffHand)
-		{
-			if(pOffHand->GetOffHandState() & (eOHS_HOLDING_OBJECT | eOHS_HOLDING_NPC))
-			{
-				pOffHand->OnAction(m_pPlayer->GetEntityId(), actionId, activationMode, 0);
-				return false;
-			}
-		}
-
-		//--------------------------LADDERS-----------------------------------------------
 		if(m_pPlayer->m_stats.isOnLadder)
 		{
 			m_pPlayer->RequestLeaveLadder(CPlayer::eLAT_Use);
@@ -1850,13 +1628,7 @@ void CPlayerInput::StopSprint()
 	{
 		m_speedLean = 0.0f;
 		m_pPlayer->SetSpeedLean(0.0f);
-		CItem *pItem = static_cast<CItem *>( m_pPlayer->GetCurrentItem() );
-
-		if( pItem )
-		{
-			pItem->ForcePendingActions();
-		}
-
+		
 		if ( m_fRestingTime == 0 )
 		{
 			m_fRestingTime = gEnv->pTimer->GetCurrTime();

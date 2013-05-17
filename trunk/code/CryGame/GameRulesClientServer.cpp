@@ -19,10 +19,8 @@ History:
 #include "Player.h"
 
 #include "IVehicleSystem.h"
-#include "IItemSystem.h"
 #include "IMaterialEffects.h"
 
-#include "WeaponSystem.h"
 #include "IWorldQuery.h"
 
 #include <StlUtils.h>
@@ -335,18 +333,6 @@ void CGameRules::CullEntitiesInExplosion(const ExplosionInfo &explosionInfo)
 
 			if (pEntity)
 			{
-				// don't remove if entity is held by the player
-				if (pClientActor && pEntity->GetId() == pClientActor->GetGrabbedEntityId())
-				{
-					continue;
-				}
-
-				// don't remove items/pickups
-				if (IItem *pItem = g_pGame->GetIGameFramework()->GetIItemSystem()->GetItem(pEntity->GetId()))
-				{
-					continue;
-				}
-
 				// don't remove enemies/ragdolls
 				if (IActor *pActor = g_pGame->GetIGameFramework()->GetIActorSystem()->GetActor(pEntity->GetId()))
 				{
@@ -596,13 +582,6 @@ void CGameRules::ProcessClientExplosionScreenFX(const ExplosionInfo &explosionIn
 		Vec3 eyeToExplosion = explosionInfo.pos - state.eyePosition;
 		eyeToExplosion.Normalize();
 		bool inFOV = (state.eyeDirection.Dot(eyeToExplosion) > 0.68f);
-
-		// if in a vehicle eyeDirection is wrong
-		if(pActor && pActor->GetLinkedVehicle())
-		{
-			Vec3 eyeDir = static_cast<CPlayer *>(pActor)->GetVehicleViewDir();
-			inFOV = (eyeDir.Dot(eyeToExplosion) > 0.68f);
-		}
 
 		//All explosions have radial blur (default 30m radius, to make Sean happy =))
 		float maxBlurDistance = (explosionInfo.maxblurdistance > 0.0f) ? explosionInfo.maxblurdistance : 30.0f;

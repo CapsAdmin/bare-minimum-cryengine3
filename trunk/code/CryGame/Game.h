@@ -40,9 +40,7 @@
 struct ISystem;
 struct IConsole;
 
-class	CScriptBind_Actor;
-class CScriptBind_Item;
-class CScriptBind_Weapon;
+class CScriptBind_Actor;
 class CScriptBind_GameRules;
 class CScriptBind_Game;
 
@@ -237,14 +235,6 @@ class CGame :
 		VIRTUAL CScriptBind_Actor *GetActorScriptBind()
 		{
 			return m_pScriptBindActor;
-		}
-		VIRTUAL CScriptBind_Item *GetItemScriptBind()
-		{
-			return m_pScriptBindItem;
-		}
-		VIRTUAL CScriptBind_Weapon *GetWeaponScriptBind()
-		{
-			return m_pScriptBindWeapon;
 		}
 		VIRTUAL CScriptBind_GameRules *GetGameRulesScriptBind()
 		{
@@ -460,8 +450,6 @@ class CGame :
 
 		// script binds
 		CScriptBind_Actor		*m_pScriptBindActor;
-		CScriptBind_Item		*m_pScriptBindItem;
-		CScriptBind_Weapon	*m_pScriptBindWeapon;
 		CScriptBind_GameRules *m_pScriptBindGameRules;
 		CScriptBind_Game    *m_pScriptBindGame;
 

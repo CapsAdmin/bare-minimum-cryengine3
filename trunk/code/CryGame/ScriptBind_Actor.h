@@ -113,21 +113,6 @@ class CScriptBind_Actor :
 		// Description:
 		//		Checks if the script is runnin on a local client.
 		virtual int IsLocalClient(IFunctionHandler *pH);
-		// <title GetLinkedVehicleId>
-		// Syntax: Actor.GetLinkedVehicleId()
-		// Description:
-		//		Gets the id of the vehicle linked with the actor.
-		virtual int GetLinkedVehicleId(IFunctionHandler *pH);
-		// <title LinkToVehicle>
-		// Syntax: Actor.LinkToVehicle()
-		// Description:
-		//		Links the actor to a vehicle.
-		virtual int LinkToVehicle(IFunctionHandler *pH);
-		// <title LinkToVehicleRemotely>
-		// Syntax: Actor.LinkToVehicleRemotely()
-		// Description:
-		//		Remotely links the actor to a vehicle.
-		virtual int LinkToVehicleRemotely(IFunctionHandler *pH);
 		// <title LinkToEntity>
 		// Syntax: Actor.LinkToEntity()
 		// Description:
@@ -256,35 +241,6 @@ class CScriptBind_Actor :
 		// Description:
 		//		Gets the parameters for the specified extension.
 		virtual int GetExtensionParams(IFunctionHandler *pH, const char *extension, SmartScriptTable params);
-
-
-
-		// These functions are multiplayer safe
-		// These should be called by the server to set ammo on the clients
-
-		// <title SetInventoryAmmo>
-		// Syntax: Actor.SetInventoryAmmo( const char *ammo, int amount )
-		// Arguments:
-		//		ammo	- Ammunition string name.
-		//		amount	- Amount of the specified ammunition.
-		// Description:
-		//		Sets the amount of a specified ammunition in the inventory.
-		virtual int SetInventoryAmmo(IFunctionHandler *pH, const char *ammo, int amount);
-		// <title AddInventoryAmmo>
-		// Syntax: Actor.AddInventoryAmmo( const char *ammo, int amount )
-		// Arguments:
-		//		ammo	- Ammunition string name.
-		//		amount	- Amount of the specified ammunition.
-		// Description:
-		//		Adds the amount of a specified ammunition in the inventory.
-		virtual int AddInventoryAmmo(IFunctionHandler *pH, const char *ammo, int amount);
-		// <title GetInventoryAmmo>
-		// Syntax: Actor.GetInventoryAmmo( const char *ammo )
-		// Arguments:
-		//		ammo	- Ammunition string name.
-		// Description:
-		//		Gets the amount of a specified ammunition in the inventory.
-		virtual int GetInventoryAmmo(IFunctionHandler *pH, const char *ammo);
 
 		// <title SetHealth>
 		// Syntax: Actor.SetHealth( float health )
@@ -460,67 +416,6 @@ class CScriptBind_Actor :
 		int SetForcedLookObjectId(IFunctionHandler *pH, ScriptHandle objectId);
 		int ClearForcedLookObjectId(IFunctionHandler *pH);
 
-		//------------------------------------------------------------------------
-		// ITEM STUFF
-		//------------------------------------------------------------------------
-
-		// <title CheckInventoryRestrictions>
-		// Syntax: Actor.CheckInventoryRestrictions( const char *itemClassName )
-		// Arguments:
-		//		itemClassName - Name of the item class.
-		// Description:
-		//		Checks if there is any restriction in the inventory for the specific item class.
-		virtual int CheckInventoryRestrictions(IFunctionHandler *pH, const char *itemClassName);
-		// <title CheckVirtualInventoryRestrictions>
-		// Syntax: Actor.CheckVirtualInventoryRestrictions( SmartScriptTable inventory, const char *itemClassName )
-		// Arguments:
-		//		inventory		- Inventory.
-		//		itemClassName	- Item class name.
-		// Description:
-		//		Checks if there is any restriction in the virtual inventory for the specific item class.
-		virtual int CheckVirtualInventoryRestrictions(IFunctionHandler *pH, SmartScriptTable inventory, const char *itemClassName);
-		// <title HolsterItem>
-		// Syntax: Actor.HolsterItem( bool holster )
-		// Arguments:
-		//		holster - true if the weapon has to be put back in the holster, false otherwise.
-		// Description:
-		//		Puts back/extracts the current weapon in the holster.
-		virtual int HolsterItem(IFunctionHandler *pH, bool holster);
-		// <title DropItem>
-		// Syntax: Actor.DropItem( ScriptHandle itemId )
-		// Arguments:
-		//		itemId - Identifier of the item to be dropped.
-		// Description:
-		//		Drops the specified item.
-		virtual int DropItem(IFunctionHandler *pH, ScriptHandle itemId);
-		// <title PickUpItem>
-		// Syntax: Actor.PickUpItem( ScriptHandle itemId )
-		// Arguments:
-		//		itemId - Identifier for the item to be picked up.
-		// Description:
-		//		Picks up an item
-		virtual int PickUpItem(IFunctionHandler *pH, ScriptHandle itemId);
-
-		// <title SelectItemByName>
-		// Syntax: Actor.SelectItemByName( const char *name )
-		// Arguments:
-		//		name - Item name.
-		// Description:
-		//		Selects an item using its name.
-		virtual int SelectItemByName(IFunctionHandler *pH, const char *name);
-		// <title SelectItem>
-		// Syntax: Actor.SelectItem( ScriptHandle itemId )
-		// Arguments:
-		//		itemId - Identifier for the item.
-		// Description:
-		//		Selects the specified item.
-		virtual int SelectItem(IFunctionHandler *pH, ScriptHandle itemId);
-		// <title SelectLastItem>
-		// Syntax: Actor.SelectLastItem()
-		// Description:
-		//		Selects the last item.
-		virtual int SelectLastItem(IFunctionHandler *pH);
-
 		// <title GetClosestAttachment>
 		// Syntax: Actor.GetClosestAttachment( int characterSlot, Vec3 testPos, float maxDistance, const char* suffix )
 		// Arguments:
@@ -575,16 +470,6 @@ class CScriptBind_Actor :
 		// Description:
 		//		Resets scores.
 		virtual int ResetScores(IFunctionHandler *pH);
-		// <title RenderScore>
-		// Syntax: Actor.RenderScore( ScriptHandle player, int kills, int deaths, int ping )
-		// Arguments:
-		//		player	- Player identifier.
-		//		kills	- Amount of kills.
-		//		deaths	- Amount of deaths.
-		//		ping	- .
-		// Description:
-		//		Renders the score to the HUD.
-		virtual int RenderScore(IFunctionHandler *pH, ScriptHandle player, int kills, int deaths, int ping);
 
 		// <title SetSearchBeam>
 		// Syntax: Actor.SetSearchBeam( Vec3 dir )

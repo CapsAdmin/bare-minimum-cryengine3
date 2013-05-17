@@ -6,9 +6,6 @@
 #include "Actor.h"
 #include "Player.h"
 
-#include "IVehicleSystem.h"
-#include "IItemSystem.h"
-#include "WeaponSystem.h"
 #include "IUIDraw.h"
 #include "IMovieSystem.h"
 
@@ -96,8 +93,6 @@ CGameRules::~CGameRules()
 		gEnv->pScriptSystem->ReleaseFunc(m_onCollisionFunc);
 		m_onCollisionFunc = 0;
 	}
-
-	g_pGame->GetWeaponSystem()->GetTracerManager().Reset();
 
 	if (m_pGameFramework)
 	{
@@ -323,11 +318,6 @@ void CGameRules::FullSerialize( TSerialize ser )
 			FreezeEntity(it->first, true, false, true);
 		}
 	}
-
-	if(g_pGame->GetWeaponSystem())
-	{
-		g_pGame->GetWeaponSystem()->Serialize(ser);
-	}
 }
 
 //-----------------------------------------------------------------------------------------------------
@@ -368,29 +358,6 @@ void CGameRules::Update( SEntityUpdateContext &ctx, int updateSlot )
 			{
 				next = fit;
 				++next;
-
-				// unfreeze vehicles after 750ms
-				if ((gEnv->pTimer->GetFrameStartTime() - fit->second).GetMilliSeconds() >= 750)
-				{
-					bool unfreeze = false;
-
-					if (m_pGameFramework->GetIVehicleSystem()->GetVehicle(fit->first))
-					{
-						unfreeze = true;
-					}
-					else if (IItem *pItem = m_pGameFramework->GetIItemSystem()->GetItem(fit->first))
-					{
-						if ((!pItem->GetOwnerId()) || (pItem->GetOwnerId() == pItem->GetEntityId()))
-						{
-							unfreeze = true;
-						}
-					}
-
-					if (unfreeze)
-					{
-						FreezeEntity(fit->first, false, false);
-					}
-				}
 			}
 		}
 	}
@@ -437,14 +404,12 @@ void CGameRules::ProcessEvent( SEntityEvent &event)
 
 			m_processingHit = 0;
 			// TODO: move this from here
-			g_pGame->GetWeaponSystem()->GetTracerManager().Reset();
 			m_respawns.clear();
 			m_removals.clear();
 			break;
 
 		case ENTITY_EVENT_START_GAME:
 			m_timeOfDayInitialized = false;
-			g_pGame->GetWeaponSystem()->GetTracerManager().Reset();
 
 			if (gEnv->bServer && gEnv->bMultiplayer && pTOD && pTOD->GetIVal() && g_pGame->GetIGameFramework()->IsImmersiveMPEnabled())
 			{
@@ -761,14 +726,6 @@ void CGameRules::OnClientDisconnect(int channelId, EDisconnectionCause cause, co
 		return;
 	}
 
-	if (IVehicle *pVehicle = pActor->GetLinkedVehicle())
-	{
-		if (IVehicleSeat *pSeat = pVehicle->GetSeatForPassenger(pActor->GetEntityId()))
-		{
-			pSeat->Reset();
-		}
-	}
-
 	if(pActor->GetActorClass() == CPlayer::GetActorClassType())
 	{
 		static_cast<CPlayer *>(pActor)->RemoveAllExplosives(0.0f);
@@ -844,80 +801,6 @@ void CGameRules::OnEntityRemoved(IEntity *pEntity)
 }
 
 //------------------------------------------------------------------------
-void CGameRules::OnItemDropped(EntityId itemId, EntityId actorId)
-{
-	ScriptHandle itemIdHandle(itemId);
-	ScriptHandle actorIdHandle(actorId);
-	CallScript(m_serverStateScript, "OnItemDropped", itemIdHandle, actorIdHandle);
-}
-
-//------------------------------------------------------------------------
-void CGameRules::OnItemPickedUp(EntityId itemId, EntityId actorId)
-{
-	ScriptHandle itemIdHandle(itemId);
-	ScriptHandle actorIdHandle(actorId);
-	CallScript(m_serverStateScript, "OnItemPickedUp", itemIdHandle, actorIdHandle);
-
-	if (actorId == g_pGame->GetIGameFramework()->GetClientActorId() && m_pHostMigrationClientParams)
-	{
-		if (!m_pHostMigrationClientParams->m_doneSetAmmo)
-		{
-			-- m_pHostMigrationClientParams->m_numExpectedItems;
-
-			if (!m_pHostMigrationClientParams->m_numExpectedItems)
-			{
-				CryLog("CGameRules::OnItemPickedUp, now received all expected items from host migration, setting ammo");
-				IActor *pActor = g_pGame->GetIGameFramework()->GetClientActor();
-				CRY_ASSERT(pActor);
-
-				if (pActor)
-				{
-					IInventory *pInventory = pActor->GetInventory();
-
-					for (int i = 0; i < m_pHostMigrationClientParams->m_numAmmoParams; ++ i)
-					{
-						CryLog("    %s : %i", m_pHostMigrationClientParams->m_pAmmoParams[i].m_pAmmoClass->GetName(), m_pHostMigrationClientParams->m_pAmmoParams[i].m_count);
-						// Set ammo locally so the HUD reports it correctly, we still have to tell the server though
-						pInventory->SetAmmoCount(m_pHostMigrationClientParams->m_pAmmoParams[i].m_pAmmoClass, m_pHostMigrationClientParams->m_pAmmoParams[i].m_count);
-						pInventory->RMIReqToServer_SetAmmoCount(m_pHostMigrationClientParams->m_pAmmoParams[i].m_pAmmoClass->GetName(), m_pHostMigrationClientParams->m_pAmmoParams[i].m_count);
-					}
-
-					EntityId currItemId = pInventory->GetCurrentItem();
-					IItem *pItem = g_pGame->GetIGameFramework()->GetIItemSystem()->GetItem(currItemId);
-
-					if (pItem && pItem->GetIWeapon())
-					{
-						// todo: ui
-					}
-
-					if (m_pHostMigrationClientParams->m_pHolsteredItemClass)
-					{
-						CryLog("  player had holstered item, class = '%s'", m_pHostMigrationClientParams->m_pHolsteredItemClass->GetName());
-						EntityId holsteredItemId = pInventory->GetItemByClass(m_pHostMigrationClientParams->m_pHolsteredItemClass);
-
-						if (holsteredItemId)
-						{
-							pInventory->SetHolsteredItem(holsteredItemId);
-						}
-						else
-						{
-							CryLog("  ERROR: holstered item not in inventory");
-						}
-					}
-				}
-
-				m_pHostMigrationClientParams->m_doneSetAmmo = true;
-
-				if (m_pHostMigrationClientParams->IsDone())
-				{
-					SAFE_DELETE(m_pHostMigrationClientParams);
-				}
-			}
-		}
-	}
-}
-
-//------------------------------------------------------------------------
 void CGameRules::OnTextMessage(ETextMessageType type, const char *msg,
 							   const char *p0, const char *p1, const char *p2, const char *p3)
 {
@@ -989,62 +872,6 @@ void CGameRules::OnKill(CActor *pActor, EntityId shooterId, const char *weaponCl
 {
 	ScriptHandle handleEntity(pActor->GetEntityId()), handleShooter(shooterId);
 	CallScript(m_clientStateScript, "OnKill", handleEntity, handleShooter, weaponClassName, damage, material, hit_type);
-}
-
-//------------------------------------------------------------------------
-void CGameRules::OnReviveInVehicle(CActor *pActor, EntityId vehicleId, int seatId, int teamId)
-{
-	SGameObjectEvent evt(eCGE_ActorRevive, eGOEF_ToAll, IGameObjectSystem::InvalidExtensionID, (void *)pActor);
-	ScriptHandle handle(pActor->GetEntityId());
-	ScriptHandle vhandle(pActor->GetEntityId());
-	CallScript(m_clientScript, "OnReviveInVehicle", handle, vhandle, seatId, teamId);
-}
-
-//------------------------------------------------------------------------
-void CGameRules::OnVehicleDestroyed(EntityId id)
-{
-	RemoveMinimapEntity(id);
-	RemoveSpawnGroup(id);
-
-	if (gEnv->bServer)
-	{
-		CallScript(m_serverScript, "OnVehicleDestroyed", ScriptHandle(id));
-	}
-
-	if (gEnv->IsClient())
-	{
-		CallScript(m_clientScript, "OnVehicleDestroyed", ScriptHandle(id));
-	}
-}
-
-//------------------------------------------------------------------------
-void CGameRules::OnVehicleSubmerged(EntityId id, float ratio)
-{
-	RemoveSpawnGroup(id);
-
-	if (gEnv->bServer)
-	{
-		CallScript(m_serverScript, "OnVehicleSubmerged", ScriptHandle(id), ratio);
-	}
-
-	if (gEnv->IsClient())
-	{
-		CallScript(m_clientScript, "OnVehicleSubmerged", ScriptHandle(id), ratio);
-	}
-}
-
-//------------------------------------------------------------------------
-void CGameRules::OnVehicleFlipped(EntityId id)
-{
-	if (gEnv->bServer)
-	{
-		CallScript(m_serverScript, "OnVehicleFlipped", ScriptHandle(id));
-	}
-
-	if (gEnv->IsClient())
-	{
-		CallScript(m_clientScript, "OnVehicleFlipped", ScriptHandle(id));
-	}
 }
 
 //------------------------------------------------------------------------
@@ -1165,23 +992,6 @@ CActor *CGameRules::ChangePlayerClass(int channelId, const char *className)
 //------------------------------------------------------------------------
 void CGameRules::RevivePlayer(CActor *pActor, const Vec3 &pos, const Ang3 &angles, int teamId, bool clearInventory)
 {
-	// get out of vehicles before reviving
-	if (IVehicle *pVehicle = pActor->GetLinkedVehicle())
-	{
-		if (IVehicleSeat *pSeat = pVehicle->GetSeatForPassenger(pActor->GetEntityId()))
-		{
-			pSeat->Exit(false);
-		}
-	}
-
-	// stop using any mounted weapons before reviving
-	if (CItem *pItem = static_cast<CItem *>(pActor->GetCurrentItem()))
-	{
-		if (pItem->IsMounted())
-		{
-			pItem->StopUse(pActor->GetEntityId());
-		}
-	}
 
 	if (IsFrozen(pActor->GetEntityId()))
 	{
@@ -1207,92 +1017,11 @@ void CGameRules::RevivePlayer(CActor *pActor, const Vec3 &pos, const Ang3 &angle
 	pActor->GetEntity()->SetWorldTM(tm);
 	pActor->SetAngles(angles);
 
-	if (clearInventory)
-	{
-		pActor->GetGameObject()->InvokeRMI(CActor::ClClearInventory(), CActor::NoParams(),
-										   eRMI_ToAllClients | eRMI_NoLocalCalls);
-		IInventory *pInventory = pActor->GetInventory();
-		pInventory->Destroy();
-		pInventory->Clear();
-	}
-
 	pActor->NetReviveAt(pos, Quat(angles), teamId);
 	// PLAYERPREDICTION
 	pActor->GetGameObject()->InvokeRMI(CActor::ClRevive(), CActor::ReviveParams(pos, angles, teamId, pActor->GetNetPhysCounter()),
 									   eRMI_ToAllClients | eRMI_NoLocalCalls);
 	// ~PLAYERPREDICTION
-
-	// re-enable player
-	if ( pActor->GetEntity()->GetAI() && !pActor->GetEntity()->GetAI()->IsEnabled() )
-	{
-		pActor->GetEntity()->GetAI()->Event(AIEVENT_ENABLE, NULL);
-	}
-
-	m_pGameplayRecorder->Event(pActor->GetEntity(), GameplayEvent(eGE_Revive));
-}
-
-//------------------------------------------------------------------------
-void CGameRules::RevivePlayerInVehicle(CActor *pActor, EntityId vehicleId, int seatId, int teamId/* =0 */, bool clearInventory/* =true */)
-{
-	// might get here with an invalid (-ve) seat id if all seats are currently occupied.
-	// In that case we use the seat exit code to find a valid position to spawn at.
-	if(seatId < 0)
-	{
-		IVehicle *pSpawnVehicle = g_pGame->GetIGameFramework()->GetIVehicleSystem()->GetVehicle(vehicleId);
-		Vec3 pos = ZERO;
-
-		if(pSpawnVehicle && pSpawnVehicle->GetExitPositionForActor(pActor, pos, true))
-		{
-			Ang3 angles = pSpawnVehicle->GetEntity()->GetWorldAngles();	// face same direction as vehicle.
-			RevivePlayer(pActor, pos, angles, teamId, clearInventory);
-			return;
-		}
-	}
-
-	if (IVehicle *pVehicle = pActor->GetLinkedVehicle())
-	{
-		if (IVehicleSeat *pSeat = pVehicle->GetSeatForPassenger(pActor->GetEntityId()))
-		{
-			pSeat->Exit(false);
-		}
-	}
-
-	// stop using any mounted weapons before reviving
-	if (CItem *pItem = static_cast<CItem *>(pActor->GetCurrentItem()))
-	{
-		if (pItem->IsMounted())
-		{
-			pItem->StopUse(pActor->GetEntityId());
-		}
-	}
-
-	if (IsFrozen(pActor->GetEntityId()))
-	{
-		FreezeEntity(pActor->GetEntityId(), false, false);
-	}
-
-	pActor->SetHealth(100);
-	pActor->SetMaxHealth(100);
-
-	if (!m_pGameFramework->IsChannelOnHold(pActor->GetChannelId()))
-	{
-		pActor->GetGameObject()->SetAspectProfile(eEA_Physics, eAP_Alive);
-	}
-
-	if (clearInventory)
-	{
-		pActor->GetGameObject()->InvokeRMI(CActor::ClClearInventory(), CActor::NoParams(),
-										   eRMI_ToAllClients | eRMI_NoLocalCalls);
-		IInventory *pInventory = pActor->GetInventory();
-		pInventory->Destroy();
-		pInventory->Clear();
-	}
-
-	pActor->NetReviveInVehicle(vehicleId, seatId, teamId);
-	pActor->GetGameObject()->InvokeRMI(CActor::ClReviveInVehicle(),
-									   CActor::ReviveInVehicleParams(vehicleId, seatId, teamId), eRMI_ToAllClients | eRMI_NoLocalCalls);
-	// "soft" reset the AI
-	gEnv->pAISystem->Reset(IAISystem::RESET_ENTER_GAME);
 
 	// re-enable player
 	if ( pActor->GetEntity()->GetAI() && !pActor->GetEntity()->GetAI()->IsEnabled() )
@@ -1403,41 +1132,11 @@ void CGameRules::KillPlayer(IActor *pActor, const bool inDropItem, const bool in
 	}
 
 	CActor *pCActor = static_cast<CActor *>(pActor);
-	IInventory *pInventory = pActor->GetInventory();
-	EntityId itemId = pInventory ? pInventory->GetCurrentItem() : 0;
 
-	if (itemId && !pActor->GetLinkedVehicle())
-	{
-		CItem *pItem = pCActor->GetItem(itemId);
-
-		if (pItem && pItem->IsMounted() && pItem->IsUsed())
-		{
-			pItem->StopUse(pActor->GetEntityId());
-		}
-		else if (pItem && inDropItem)
-		{
-			pActor->DropItem(itemId, 1.0f, false, true);
-		}
-	}
-
-	uint16 weaponClassId = 0;
-	const char *weaponClassName = "";
-
-	if (IEntity *pEntity = gEnv->pEntitySystem->GetEntity(inHitInfo.weaponId))
-	{
-		weaponClassName = pEntity->GetClass()->GetName();
-		m_pGameFramework->GetNetworkSafeClassId(weaponClassId, weaponClassName);
-		assert(weaponClassId != 0);
-	}
-
-	pActor->GetInventory()->Destroy();
 	CActor::KillParams params;
 	params.shooterId = inHitInfo.shooterId;
 	params.targetId = inHitInfo.targetId;
 	params.weaponId = inHitInfo.weaponId;
-	params.projectileId = inHitInfo.projectileId;
-	params.itemIdToDrop = itemId;
-	params.weaponClassId = inHitInfo.weaponClassId;
 	params.damage = inHitInfo.damage;
 	params.material = -1;
 	params.hit_type = inHitInfo.type;
@@ -1457,7 +1156,7 @@ void CGameRules::KillPlayer(IActor *pActor, const bool inDropItem, const bool in
 		pActor->GetGameObject()->SetAspectProfile(eEA_Physics, eAP_Ragdoll);
 	}
 
-	pCActor->NetKill(inHitInfo.shooterId, weaponClassId, (int)inHitInfo.damage, inHitInfo.material, inHitInfo.type);
+	pCActor->NetKill(inHitInfo.shooterId, 0, (int)inHitInfo.damage, inHitInfo.material, inHitInfo.type);
 	pActor->GetGameObject()->InvokeRMI(CActor::ClKill(), params, eRMI_ToAllClients | eRMI_NoLocalCalls);
 	m_pGameplayRecorder->Event(pActor->GetEntity(), GameplayEvent(eGE_Death));
 
@@ -3661,13 +3360,6 @@ bool CGameRules::OnCollision(const SGameCollision &event)
 				m_ignoreEntityNextCollision = 0;
 				return false;
 			}
-			else if(IActor *pClient = g_pGame->GetIGameFramework()->GetClientActor())
-			{
-				if(pTarget->GetId() == pClient->GetGrabbedEntityId())
-				{
-					return false;
-				}
-			}
 		}
 	}
 
@@ -3687,12 +3379,6 @@ bool CGameRules::OnCollision(const SGameCollision &event)
 	{
 		pSrcClass = event.pSrcEntity->GetClass();
 
-		// filter out any projectile collisions
-		if (g_pGame->GetWeaponSystem()->GetProjectile(event.pSrcEntity->GetId()))
-		{
-			return true;
-		}
-
 		srcClassFilter = (pSrcClass == s_pBasicEntityClass || pSrcClass == s_pDefaultClass);
 
 		if (srcClassFilter && !event.pTrgEntity)
@@ -3705,12 +3391,6 @@ bool CGameRules::OnCollision(const SGameCollision &event)
 
 	if (event.pTrgEntity)
 	{
-		// filter out any projectile collisions
-		if (g_pGame->GetWeaponSystem()->GetProjectile(event.pTrgEntity->GetId()))
-		{
-			return true;
-		}
-
 		pTrgClass = event.pTrgEntity->GetClass();
 		trgClassFilter = (pTrgClass == s_pBasicEntityClass || pTrgClass == s_pDefaultClass);
 
@@ -4200,7 +3880,6 @@ void CGameRules::NextLevel()
 //------------------------------------------------------------------------
 void CGameRules::ResetEntities()
 {
-	g_pGame->GetWeaponSystem()->GetTracerManager().Reset();
 	ResetFrozen();
 
 	while (!m_queuedExplosions.empty())
@@ -4523,12 +4202,6 @@ void CGameRules::FreezeInput(bool freeze)
 				pWeapon->StopFire(pClientActor->GetEntityId());
 		}
 		*/
-}
-
-//------------------------------------------------------------------------
-bool CGameRules::IsProjectile(EntityId id) const
-{
-	return g_pGame->GetWeaponSystem()->GetProjectile(id) != 0;
 }
 
 //------------------------------------------------------------------------

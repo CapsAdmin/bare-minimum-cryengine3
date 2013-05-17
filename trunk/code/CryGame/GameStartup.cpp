@@ -202,7 +202,7 @@ IGameRef CGameStartup::Init(SSystemInitParams &startupParams)
 		CryLogAlways("failed to find ISystem to register error observer");
 		assert(0);
 	}
-
+	
 	if (gEnv->IsDedicated())
 	{
 		STARTUPINFO si;
@@ -228,22 +228,32 @@ IGameRef CGameStartup::Init(SSystemInitParams &startupParams)
 		}
 
 		client_process = pi.hProcess;
+		
 		const char *map = "blank";
+
 		//gEnv->pConsole->ExecuteString("map blank");
-		gEnv->pSystem->GetISystemEventDispatcher()->OnSystemEvent( ESYSTEM_EVENT_LEVEL_LOAD_PREPARE, 0, 0 );
+		gEnv->pSystem->GetISystemEventDispatcher()->OnSystemEvent( ESYSTEM_EVENT_LEVEL_LOAD_PREPARE,0,0 );
 		gEnv->pCryPak->TouchDummyFile("startlevelload");
 		gEnv->pCryPak->GetFileReadSequencer()->StartSection(map);
+
+
 		gEnv->pGameFramework->StartedGameContext();
 		gEnv->pGameFramework->GetIGameSessionHandler();
+
 		gEnv->pGameFramework->GetILevelSystem()->PrepareNextLevel(map);
+
 		SGameContextParams ctx;
-		ctx.gameRules = "DeathMatch";
-		ctx.levelName = map;
+			ctx.gameRules = "DeathMatch";
+			ctx.levelName = map;
+
 		SGameStartParams params;
-		params.flags = eGSF_Server;
-		params.pContextParams = &ctx;
-		params.port = 64080;
-		params.maxPlayers = 512;
+
+			params.flags = eGSF_Server;
+			params.pContextParams = &ctx;
+
+			params.port = 64080;
+			params.maxPlayers = 512;
+
 		gEnv->pGameFramework->StartGameContext(&params);
 	}
 	else
@@ -252,10 +262,14 @@ IGameRef CGameStartup::Init(SSystemInitParams &startupParams)
 		{
 			auto window = (HWND)gEnv->pSystem->GetHWND();
 			RECT workarea;
+
 			SystemParametersInfo(SPI_GETWORKAREA, 0, &workarea, 0);
+
 			gEnv->pRenderer->ChangeResolution(workarea.right - workarea.left, workarea.bottom - workarea.top, gEnv->pRenderer->GetColorBpp(), 0, false, false);
+
 			SetWindowLong(window, GWL_STYLE, WS_VISIBLE | WS_POPUP | WS_SYSMENU | WS_MINIMIZEBOX);
 			SetWindowLong(window, GWL_EXSTYLE, WS_EX_APPWINDOW);
+
 			SetWindowPos(window, NULL, workarea.left, workarea.top, workarea.right - workarea.left, workarea.bottom - workarea.top, SWP_FRAMECHANGED | SWP_NOZORDER);
 		}
 
@@ -269,10 +283,14 @@ IGameRef CGameStartup::Init(SSystemInitParams &startupParams)
 
 		gEnv->pNetwork->GetService("GameSpy");
 		gEnv->pGameFramework->EndGameContext();
+
 		SGameStartParams params;
-		params.hostname = "localhost";
-		params.port = 64080;
-		params.flags = eGSF_Client;
+
+			params.hostname = "localhost";
+			params.port = 64080;
+
+			params.flags = eGSF_Client;
+
 		gEnv->pGameFramework->StartGameContext(&params);
 	}
 
@@ -798,9 +816,9 @@ LRESULT CALLBACK CGameStartup::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARA
 
 			return  0;
 
-			/*case WM_HOTKEY:
-			case WM_SYSCHAR:	// prevent ALT + key combinations from creating 'ding' sounds
-				return  0;*/
+		/*case WM_HOTKEY:
+		case WM_SYSCHAR:	// prevent ALT + key combinations from creating 'ding' sounds
+			return  0;*/
 
 		case WM_CHAR:
 			{
@@ -824,40 +842,40 @@ LRESULT CALLBACK CGameStartup::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARA
 			}
 			break;
 
-			/*case WM_SYSKEYDOWN:	// prevent ALT-key entering menu loop
-				if (wParam != VK_RETURN && wParam != VK_F4)
+		/*case WM_SYSKEYDOWN:	// prevent ALT-key entering menu loop
+			if (wParam != VK_RETURN && wParam != VK_F4)
+			{
+				return 0;
+			}
+			else
+			{
+				if (wParam == VK_RETURN)	// toggle fullscreen
 				{
-					return 0;
-				}
-				else
-				{
-					if (wParam == VK_RETURN)	// toggle fullscreen
+					if (gEnv && gEnv->pRenderer && gEnv->pRenderer->GetRenderType() != eRT_DX11)
 					{
-						if (gEnv && gEnv->pRenderer && gEnv->pRenderer->GetRenderType() != eRT_DX11)
-						{
-							ICVar *pVar = gEnv->pConsole->GetCVar("r_Fullscreen");
+						ICVar *pVar = gEnv->pConsole->GetCVar("r_Fullscreen");
 
-							if (pVar)
-							{
-								int fullscreen = pVar->GetIVal();
-								pVar->Set((int)(fullscreen == 0));
-							}
+						if (pVar)
+						{
+							int fullscreen = pVar->GetIVal();
+							pVar->Set((int)(fullscreen == 0));
 						}
 					}
-
-					// let the F4 pass through to default handler (it will send an WM_CLOSE)
 				}
 
-				break;*/
+				// let the F4 pass through to default handler (it will send an WM_CLOSE)
+			}
 
-			/*case WM_SETCURSOR:
-				if(g_pGame)
-				{
-					HCURSOR hCursor = LoadCursor(GetModuleHandle(0), MAKEINTRESOURCE(DEFAULT_CURSOR_RESOURCE_ID));
-					::SetCursor(hCursor);
-				}
+			break;*/
 
-				return 0;*/
+		/*case WM_SETCURSOR:
+			if(g_pGame)
+			{
+				HCURSOR hCursor = LoadCursor(GetModuleHandle(0), MAKEINTRESOURCE(DEFAULT_CURSOR_RESOURCE_ID));
+				::SetCursor(hCursor);
+			}
+
+			return 0;*/
 
 		case WM_MOUSEMOVE:
 			if(gEnv && gEnv->pHardwareMouse)

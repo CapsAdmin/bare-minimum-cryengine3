@@ -68,11 +68,9 @@ class CPlayerView
 			float params_viewFoVScale;
 			Vec3 params_viewPivot;
 			float params_viewDistance;
-			float params_weaponInertiaMultiplier;
 			Ang3 params_hudAngleOffset;
 			Vec3 params_hudOffset;
 			float params_viewHeightOffset;
-			float params_weaponBobbingMultiplier;
 
 			bool bIsThirdPerson;
 			Vec3 vEntityWorldPos;
@@ -101,7 +99,6 @@ class CPlayerView
 			//--- temporaries - FirstThird shared
 			bool bUsePivot;
 			float bobMul;
-			Quat viewQuatForWeapon;	// First Person view matrix before bobbing has been applied
 			Vec3 eyeOffsetViewGoal;
 			//--- temporaries - view shared
 			Ang3 wAngles;
@@ -114,19 +111,12 @@ class CPlayerView
 			Quat viewQuat;
 			Quat baseQuat;				// Output IF: in vehicle or following the character head (ViewFollowCharacterFirstPerson)
 
-			Ang3 stats_FPWeaponAngles;
-			Vec3 stats_FPWeaponPos;
-			Ang3 stats_FPSecWeaponAngles;
-			Vec3 stats_FPSecWeaponPos;
 			//SViewShake viewShake;
 			Vec3 eyeOffsetView;
 			float stats_bobCycle;
 			float stats_smoothViewZ;
 			uint8 stats_smoothZType;
 
-			Ang3 vFPWeaponAngleOffset;
-			Vec3 vFPWeaponLastDirVec;
-			Vec3 vFPWeaponOffset;
 			Vec3 bobOffset;
 			Ang3 angleOffset;
 			Ang3 viewAngleOffset;
@@ -153,8 +143,6 @@ class CPlayerView
 		void ViewDeathCamTarget(SViewParams &viewParams);
 
 		void ViewExternalControlPostProcess(CPlayer &rPlayer, SViewParams &viewParams);
-	public:
-		void FirstPersonWeaponPostProcess(CPlayer &rPlayer, SViewParams &viewParams);
 	protected:
 		void ViewShakePostProcess(CPlayer &rPlayer, SViewParams &viewParams);
 		void HudPostProcess(CPlayer &rPlayer, SViewParams &viewParams);

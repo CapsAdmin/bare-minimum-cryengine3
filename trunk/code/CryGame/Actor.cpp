@@ -21,26 +21,18 @@
 #include "GameUtils.h"
 #include <ICryAnimation.h>
 #include <IGameTokens.h>
-#include <IItemSystem.h>
 #include <IInteractor.h>
-#include "Item.h"
-#include "Weapon.h"
 #include "Player.h"
 #include "GameRules.h"
 #include <IMaterialEffects.h>
 
 #include "IVehicleSystem.h"
-#include "OffHand.h"
 #include "IAgent.h"
 #include "IPlayerInput.h"
 
 #include "IFacialAnimation.h"
 #include "IAIActor.h"
 
-#include "AmmoParams.h"
-#include "WeaponSystem.h"
-
-IItemSystem *CActor::m_pItemSystem = 0;
 IGameFramework	*CActor::m_pGameFramework = 0;
 IGameplayRecorder	*CActor::m_pGameplayRecorder = 0;
 
@@ -186,34 +178,6 @@ void SIKLimb::Update(IEntity *pOwner, float frameTime)
 	}
 }
 
-//--------------------
-IVehicle *SLinkStats::GetLinkedVehicle()
-{
-	if (linkID)
-	{
-		if (g_pGame)
-		{
-			if (IGameFramework *pGameFramework = g_pGame->GetIGameFramework())
-			{
-				if (IVehicleSystem *pVehicleSystem = pGameFramework->GetIVehicleSystem())
-				{
-					IVehicle *pVehicle = pVehicleSystem->GetVehicle(linkID);
-
-					// if the vehicle doesn't exist and this is supposed to be a vehicle linking, forget about it.
-					if (!pVehicle && (flags & LINKED_VEHICLE))
-					{
-						UnLink();
-					}
-
-					return pVehicle;
-				}
-			}
-		}
-	}
-
-	return NULL;
-}
-
 void SLinkStats::Serialize(TSerialize ser)
 {
 	assert(ser.GetSerializationTarget() != eST_Network);
@@ -274,15 +238,11 @@ CActor::CActor()
 	, m_bHasHUD(false)
 	, m_inCombat(false)
 	, m_enterCombat(false)
-	, m_pGrabHandler(NULL)
 	,	m_teamId(0)
-	,	m_lastItemId(0)
-	, m_pInventory(0)
 	, m_sleepTimer(0.0f)
 	, m_sleepTimerOrg(0.0f)
 	, m_currentFootID(BONE_FOOT_L)
 	, m_lostHelmet(0)
-	, m_pWeaponAM(0)
 	, m_healthAsRoundedPercentage(100)
 {
 	m_currentPhysProfile = GetDefaultProfile(eEA_Physics);
@@ -291,7 +251,6 @@ CActor::CActor()
 	m_timeImpulseRecover = 0.0f;
 	m_airResistance = 0.0f;
 	m_airControl = 1.0f;
-	m_netLastSelectablePickedUp = 0;
 	// PLAYERPREDICTION
 	m_netPhysCounter = 0;
 	// ~PLAYERPREDICTION
@@ -300,20 +259,8 @@ CActor::CActor()
 //------------------------------------------------------------------------
 CActor::~CActor()
 {
-	ClearExtensionCache();
 	GetGameObject()->SetMovementController(NULL);
 	SAFE_RELEASE(m_pMovementController);
-	IInventory *pInventory = GetInventory();
-
-	if (pInventory)
-	{
-		if (gEnv->bServer)
-		{
-			pInventory->Destroy();
-		}
-
-		GetGameObject()->ReleaseExtension("Inventory");
-	}
 
 	GetGameObject()->EnablePhysicsEvent( false, eEPE_OnPostStepImmediate );
 
@@ -336,9 +283,6 @@ CActor::~CActor()
 		g_pGame->GetIGameFramework()->GetIActorSystem()->RemoveActor( GetEntityId() );
 	}
 
-	SAFE_DELETE(m_pGrabHandler);
-	SAFE_DELETE(m_pWeaponAM);
-
 	// stop sound
 	if (m_cachedAIValues.GetReadabilitySoundID() != INVALID_SOUNDID)
 	{
@@ -354,14 +298,6 @@ CActor::~CActor()
 	m_cachedAIValues.SetReadabilitySoundID(INVALID_SOUNDID);
 }
 
-void CActor::ClearExtensionCache()
-{
-	if (m_pInventory)
-	{
-		GetGameObject()->ReleaseExtension("Inventory");
-		m_pInventory = 0;
-	}
-}
 //------------------------------------------------------------------------
 void CActor::CrapDollize()
 {
@@ -413,7 +349,6 @@ bool CActor::Init( IGameObject *pGameObject )
 	{
 		m_pGameFramework = g_pGame->GetIGameFramework();
 		m_pGameplayRecorder = g_pGame->GetIGameFramework()->GetIGameplayRecorder();
-		m_pItemSystem = m_pGameFramework->GetIItemSystem();
 	}
 
 	GetGameObject()->EnablePrePhysicsUpdate(  ePPU_Always );
@@ -432,41 +367,6 @@ void CActor::PostInit( IGameObject *pGameObject )
 {
 	pGameObject->EnableUpdateSlot( this, 0 );
 	pGameObject->EnablePostUpdates( this );
-	/*
-	if(gEnv->bMultiplayer)
-	{
-		ICharacterInstance *pCharacter = GetEntity()->GetCharacter(0);
-		if (pCharacter)
-			pCharacter->GetISkeletonPose()->SetAimIKFadeOut(0);
-	}
-	*/
-	InitActorAttachments();
-}
-
-//----------------------------------------------------------------------
-void CActor::InitActorAttachments()
-{
-	if(m_pWeaponAM)
-	{
-		SAFE_DELETE(m_pWeaponAM);
-	}
-
-	//Weapon attachments stuff
-	m_pWeaponAM = new CWeaponAttachmentManager(this);
-
-	if(!m_pWeaponAM->Init())
-	{
-		SAFE_DELETE(m_pWeaponAM);
-	}
-}
-
-//------------------------------------------------------------------------
-void CActor::HideAllAttachments(bool isHiding)
-{
-	if (m_pWeaponAM)
-	{
-		m_pWeaponAM->HideAllAttachments(isHiding);
-	}
 }
 
 //------------------------------------------------------------------------
@@ -490,7 +390,6 @@ void CActor::Revive( bool fromInit )
 	}
 
 	m_linkStats = SLinkStats();
-	ClearExtensionCache();
 
 	if (fromInit)
 	{
@@ -553,11 +452,6 @@ void CActor::Revive( bool fromInit )
 
 	m_zoomSpeedMultiplier = 1.0f;
 
-	if (m_pGrabHandler)
-	{
-		m_pGrabHandler->Reset();
-	}
-
 	m_sleepTimer = 0.0f;
 	m_inCombat = false;
 	m_enterCombat = false;
@@ -588,8 +482,6 @@ void CActor::Revive( bool fromInit )
 		m_pAnimatedCharacter->SetParams( m_pAnimatedCharacter->GetParams().ModifyFlags(eACF_EnableMovementProcessing, 0));
 	}
 
-	ResetHelmetAttachment();
-
 	if (ICharacterInstance *pCharacter = GetEntity()->GetCharacter(0))
 	{
 		pCharacter->EnableProceduralFacialAnimation(GetMaxHealth() > 0);
@@ -599,12 +491,6 @@ void CActor::Revive( bool fromInit )
 	{
 		Script::CallMethod(pScriptTable, "OnRevive");
 	}
-}
-
-IGrabHandler *CActor::CreateGrabHanlder()
-{
-	m_pGrabHandler = new CBaseGrabHandler(this);
-	return m_pGrabHandler;
 }
 
 //------------------------------------------------------------------------
@@ -1022,24 +908,6 @@ void CActor::Fall(Vec3 hitPos, float sleepTime /*=0.0f*/)
 		GetGameObject()->SetAspectProfile(eEA_Physics, eAP_Sleep);
 	}
 
-	//Do we want this for the player? (Sure not for AI)
-	if(IsPlayer() && dropWeapon && !inVehicle)
-	{
-		DropItem(GetCurrentItemId(), 1.0f, false);
-
-		if (GetCurrentItemId(false))
-		{
-			HolsterItem(true);
-		}
-	}
-
-	// stop shooting
-	if ( EntityId currentItem = GetCurrentItemId(true) )
-		if ( CWeapon *pWeapon = GetWeapon(currentItem) )
-		{
-			pWeapon->StopFire();
-		}
-
 	//add some twist
 	if(!IsClient() && hitPos.len() && !inVehicle)
 	{
@@ -1241,79 +1109,6 @@ void CActor::SetStance(EStance desiredStance)
 	*/
 }
 
-
-//------------------------------------------------------
-IEntity *CActor::LinkToVehicle(EntityId vehicleId)
-{
-	// did this link actually change, or are we just re-linking?
-	bool changed = ((m_linkStats.linkID != vehicleId) || gEnv->pSystem->IsSerializingFile()) ? true : false;
-	m_linkStats = SLinkStats(vehicleId, LINKED_VEHICLE);
-	IVehicle *pVehicle = m_linkStats.GetLinkedVehicle();
-	IEntity *pLinked = pVehicle ? pVehicle->GetEntity() : NULL;
-
-	if (m_pAnimatedCharacter)
-	{
-		SAnimatedCharacterParams params = m_pAnimatedCharacter->GetParams();
-		bool enabled = pLinked ? true : false;
-
-		if (enabled)
-		{
-			//			params.flags &= ~eACF_EnableMovementProcessing;
-			params.flags |= eACF_NoLMErrorCorrection;
-		}
-		else
-		{
-			//			params.flags |= eACF_EnableMovementProcessing;
-			params.flags &= ~eACF_NoLMErrorCorrection;
-		}
-
-		if(gEnv->bServer)
-		{
-			if(enabled)
-			{
-				if (changed)
-				{
-					GetGameObject()->SetAspectProfile(eEA_Physics, eAP_Linked);
-				}
-			}
-			else if(IPhysicalEntity *pPhys = GetEntity()->GetPhysics())
-			{
-				pe_type type = pPhys->GetType();
-
-				if(type == PE_LIVING)
-				{
-					GetGameObject()->SetAspectProfile(eEA_Physics, eAP_Alive);
-				}
-				else if(type == PE_ARTICULATED)
-				{
-					GetGameObject()->SetAspectProfile(eEA_Physics, eAP_Ragdoll);
-				}
-			}
-		}
-
-		m_pAnimatedCharacter->SetParams( params );
-		m_pAnimatedCharacter->ForceRefreshPhysicalColliderMode();
-		m_pAnimatedCharacter->RequestPhysicalColliderMode(enabled ? eColliderMode_Disabled : eColliderMode_Undefined, eColliderModeLayer_Game, "Actor::LinkToVehicle");
-	}
-
-	if (pLinked)
-	{
-		pLinked->AttachChild(GetEntity(), ENTITY_XFORM_USER | IEntity::ATTACHMENT_KEEP_TRANSFORMATION);
-	}
-	else
-	{
-		GetEntity()->DetachThis(IEntity::ATTACHMENT_KEEP_TRANSFORMATION,/*ENTITY_XFORM_USER*/0);
-	}
-
-	return pLinked;
-}
-
-IEntity *CActor::LinkToVehicleRemotely(EntityId vehicleId)
-{
-	m_linkStats = SLinkStats(vehicleId, LINKED_VEHICLE);
-	return m_linkStats.GetLinked();
-}
-
 IEntity *CActor::LinkToEntity(EntityId entityId, bool bKeepTransformOnDetach)
 {
 	m_linkStats = SLinkStats(entityId, LINKED_FREELOOK);
@@ -1358,36 +1153,9 @@ void CActor::ProcessEvent(SEntityEvent &event)
 	{
 		case ENTITY_EVENT_HIDE:
 		case ENTITY_EVENT_INVISIBLE:
-			{
-				IItem *pItem = GetCurrentItem();
-
-				if (pItem)
-				{
-					pItem->GetEntity()->Hide(true);
-				}
-
-				if(!IsPlayer() && m_pWeaponAM)
-				{
-					m_pWeaponAM->HideAllAttachments(true);
-				}
-			}
-			break;
-
 		case ENTITY_EVENT_UNHIDE:
 		case ENTITY_EVENT_VISIBLE:
 			{
-				IItem *pItem = GetCurrentItem();
-
-				if (pItem)
-				{
-					pItem->GetEntity()->Hide(false);
-				}
-
-				if(!IsPlayer() && m_pWeaponAM)
-				{
-					m_pWeaponAM->HideAllAttachments(false);
-				}
-
 				GetGameObject()->RequestRemoteUpdate(eEA_Physics | eEA_GameClientDynamic | eEA_GameServerDynamic | eEA_GameClientStatic | eEA_GameServerStatic);
 			}
 			break;
@@ -1479,13 +1247,6 @@ void CActor::Update(SEntityUpdateContext &ctx, int slot)
 						SetHealth(0);
 						CreateScriptEvent("kill", 0);
 						CrapDollize();
-						// drop item is not managed inside kill event
-						IItem *currentItem = GetCurrentItem();
-
-						if(currentItem)
-						{
-							DropItem(currentItem->GetEntityId());
-						}
 					}
 					else
 					{
@@ -1580,23 +1341,6 @@ void CActor::Update(SEntityUpdateContext &ctx, int slot)
 	if (!(!m_actorStats))
 	{
 		UpdateScriptStats(m_actorStats);
-	}
-
-	EntityId currentItemId = GetCurrentItemId();
-
-	if (currentItemId != m_lastItemId)
-	{
-		HSCRIPTFUNCTION pfnCurrentItemChanged = 0;
-		IScriptTable *pTable = GetEntity()->GetScriptTable();
-
-		if (pTable && (pTable->GetValueType("CurrentItemChanged") == svtFunction) &&
-				pTable->GetValue("CurrentItemChanged", pfnCurrentItemChanged))
-		{
-			Script::CallMethod(pTable, pfnCurrentItemChanged, ScriptHandle(currentItemId), ScriptHandle(m_lastItemId));
-			gEnv->pScriptSystem->ReleaseFunc(pfnCurrentItemChanged);
-		}
-
-		m_lastItemId = currentItemId;
 	}
 
 	UpdateCachedAIValues();
@@ -1734,12 +1478,6 @@ void CActor::SetStats(SmartScriptTable &rTable)
 //------------------------------------------------------------------------
 void CActor::OnAction(const ActionId &actionId, int activationMode, float value)
 {
-	IItem *pItem = GetCurrentItem();
-
-	if (pItem)
-	{
-		pItem->OnAction(GetGameObject()->GetEntityId(), actionId, activationMode, value);
-	}
 }
 
 //------------------------------------------------------------------------
@@ -1782,25 +1520,7 @@ bool CActor::CreateCodeEvent(SmartScriptTable &rTable)
 		return false;
 	}
 
-	if (!strcmp(event, "grabObject"))
-	{
-		if (!m_pGrabHandler)
-		{
-			CreateGrabHanlder();
-		}
-
-		if (m_pGrabHandler)
-		{
-			return m_pGrabHandler->SetGrab(rTable);
-		}
-	}
-	else if (!strcmp(event, "dropObject"))
-	{
-		if (m_pGrabHandler)
-		{
-			return m_pGrabHandler->SetDrop(rTable);
-		}
-	}
+	
 	else if (!strcmp(event, "replaceMaterial"))
 	{
 		const char *strMat = NULL;
@@ -1887,33 +1607,12 @@ void CActor::FullSerialize( TSerialize ser )
 	ser.EndGroup();
 	m_linkStats.Serialize(ser);
 
-	// NOTE Okt 13, 2007: <pvl> if we're reading and we already have a handler
-	// let's get rid of it now.  If a handler is in the save we're loading then
-	// 'serializeGrab' will be true and with m_pGrabHandler==0 it will get recreated.
-	if (ser.IsReading () && m_pGrabHandler)
-	{
-		SAFE_DELETE (m_pGrabHandler);
-	}
-
-	bool serializeGrab(m_pGrabHandler ? true : false);
-	ser.Value("serializeGrab", serializeGrab);
 	m_serializeLostHelmet = m_lostHelmet;
 	ser.Value("LostHelmet", m_serializeLostHelmet);
 	m_serializelostHelmetObj = m_lostHelmetObj;
 	ser.Value("LostHelmetObj", m_serializelostHelmetObj);
 	ser.Value("LostHelmetAttachmentPosition", m_lostHelmetPos);
 	ser.Value("LostHelmetMaterial", m_lostHelmetMaterial);
-
-	//FIXME:not sure how safe this is
-	if (ser.IsReading() && serializeGrab && !m_pGrabHandler)
-	{
-		CreateGrabHanlder();
-	}
-
-	if (m_pGrabHandler)
-	{
-		m_pGrabHandler->Serialize(ser);
-	}
 }
 
 void CActor::PostSerialize()
@@ -1951,10 +1650,6 @@ void CActor::PostSerialize()
 			{
 				LooseHelmet();
 			}
-		}
-		else if(m_lostHelmet && !m_serializeLostHelmet)
-		{
-			ResetHelmetAttachment();
 		}
 	}
 	else if(m_lostHelmet)	//reset material for dropped helmets
@@ -2012,17 +1707,6 @@ void CActor::SetHealth( float health )
 	int prevHealth = (int)m_health;
 	m_health = float(min(health, m_maxHealth));
 	m_healthAsRoundedPercentage = int_round( m_health * 100.0f / m_maxHealth);
-
-	if (m_health != prevHealth && m_health <= 0)
-	{
-		IItem *pItem = GetCurrentItem();
-		IWeapon *pWeapon = pItem ? pItem->GetIWeapon() : NULL;
-
-		if (pWeapon)
-		{
-			pWeapon->StopFire();
-		}
-	}
 
 	//m_pGameplayRecorder->Event(GetEntity(), GameplayEvent(eGE_HealthChanged, 0, m_health, 0));
 }
@@ -2236,8 +1920,6 @@ void CActor::SetParams(SmartScriptTable &rTable, bool resetFirst)
 
 	if (pParams)
 	{
-		rTable->GetValue("maxGrabMass", pParams->maxGrabMass);
-		rTable->GetValue("maxGrabVolume", pParams->maxGrabVolume);
 		rTable->GetValue("nanoSuitActive", pParams->nanoSuitActive);
 		const char *lookAtSimpleHeadBoneName = 0;
 
@@ -2255,16 +1937,6 @@ void CActor::SetParams(SmartScriptTable &rTable, bool resetFirst)
 		{
 			pParams->lookFOVRadians = DEG2RAD(pParams->lookFOVRadians);
 		}
-
-		if (rTable->GetValue("lookInVehicleFOV", pParams->lookInVehicleFOVRadians))
-		{
-			pParams->lookInVehicleFOVRadians = DEG2RAD(pParams->lookInVehicleFOVRadians);
-		}
-		else
-		{
-			pParams->lookInVehicleFOVRadians = pParams->lookFOVRadians;
-		}
-
 		SmartScriptTable props;
 
 		if(GetEntity()->GetScriptTable()->GetValue("Properties", props))
@@ -3026,171 +2698,6 @@ void CActor::ProcessBonesRotation(ICharacterInstance *pCharacter, float frameTim
 	}
 }
 
-// when these rules change,the method CheckVirtualInventoryRestrictions needs to be updated as well
-bool CActor::CheckInventoryRestrictions(const char *itemClassName)
-{
-	bool noLimit = false;
-
-	if(g_pGameCVars->g_inventoryNoLimits != 0)
-	{
-		noLimit = true;
-	}
-
-	const char *itemCategory = m_pItemSystem->GetItemCategory(itemClassName);
-
-	if (!itemCategory)
-	{
-		GameWarning("Item class %s has no category", itemClassName);
-		return false;
-	}
-
-	if (!strcmp(itemCategory, "medium") || !strcmp(itemCategory, "heavy"))
-	{
-		IInventory *pInventory = GetInventory();
-
-		if (pInventory)
-		{
-			int mediumCount = pInventory->GetCountOfCategory("medium");
-			int heavyCount = pInventory->GetCountOfCategory("heavy");
-
-			if ((mediumCount + heavyCount) >= 2 && !noLimit)
-			{
-				if (pInventory->GetCountOfClass(itemClassName) == 0)
-				{
-					return false;
-				}
-			}
-		}
-	}
-
-	return true;
-}
-
-bool CActor::CheckVirtualInventoryRestrictions(const std::vector<string> &inventory, const char *itemClassName)
-{
-	bool noLimit = false;
-
-	if(g_pGameCVars->g_inventoryNoLimits != 0)
-	{
-		noLimit = true;
-	}
-
-	const char *itemCategory = m_pItemSystem->GetItemCategory(itemClassName);
-
-	if (!itemCategory)
-	{
-		GameWarning("Item class %s has no category", itemClassName);
-		return false;
-	}
-
-	if (!strcmp(itemCategory, "medium") || !strcmp(itemCategory, "heavy"))
-	{
-		int mediumCount = 0;
-		int heavyCount = 0;
-
-		for (std::vector<string>::const_iterator it = inventory.begin(); it != inventory.end(); ++it)
-		{
-			const char *category = m_pItemSystem->GetItemCategory(*it);
-
-			if (!stricmp(category, "medium"))
-			{
-				++mediumCount;
-			}
-			else if (!stricmp(category, "heavy"))
-			{
-				++heavyCount;
-			}
-		}
-
-		if ((mediumCount + heavyCount) >= 2 && !noLimit)
-		{
-			return false;
-		}
-	}
-
-	return true;
-}
-
-
-//grabbing and such
-bool CActor::CanPickUpObject(IEntity *obj, float &heavyness, float &volume)
-{
-	if (!obj)
-	{
-		return false;
-	}
-
-	if (InZeroG())
-	{
-		return true;
-	}
-
-	IPhysicalEntity *pEnt(obj->GetPhysics());
-
-	if (!pEnt)
-	{
-		return false;
-	}
-
-	float mass(0);
-	pe_status_dynamics dynStat;
-
-	if (pEnt->GetStatus(&dynStat))
-	{
-		mass = dynStat.mass;
-	}
-
-	/*pe_simulation_params sp;
-	if (pEnt->GetParams(&sp))
-		mass = sp.mass;	*/
-	AABB lBounds;
-	obj->GetLocalBounds(lBounds);
-	Vec3 delta(lBounds.min - lBounds.max);
-	volume = fabs(delta.x * delta.y * delta.z);
-	bool canPickUp = false;
-	float strength(GetActorStrength());
-	SActorParams *pParams(GetActorParams());
-
-	if (pParams && mass <= pParams->maxGrabMass * strength && volume <= pParams->maxGrabVolume)
-	{
-		canPickUp = true;
-		heavyness = 0.3f;
-
-		if(mass > 30.0f)
-		{
-			heavyness = 0.6f;
-		}
-	}
-
-	return canPickUp;
-}
-
-bool CActor::CanPickUpObject(float mass, float volume)
-{
-	float strength(GetActorStrength());
-	SActorParams *pParams(GetActorParams());
-
-	if (pParams && mass <= pParams->maxGrabMass * strength && volume <= pParams->maxGrabVolume * strength)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-float CActor::GetActorStrength() const
-{
-	return g_pGameCVars->cl_strengthscale;
-}
-
-void CActor::UpdateGrab(float frameTime)
-{
-	if (m_pGrabHandler)
-	{
-		m_pGrabHandler->Update(frameTime);
-	}
-}
-
 //IK stuff
 void CActor::SetIKPos(const char *pLimbName, const Vec3 &goalPos, int priority)
 {
@@ -3246,11 +2753,6 @@ void CActor::ProcessIKLimbs(ICharacterInstance *pCharacter, float frameTime)
 	{
 		m_IKLimbs[i].Update(GetEntity(), frameTime);
 	}
-
-	if (m_pGrabHandler)
-	{
-		m_pGrabHandler->ProcessIKLimbs(pCharacter);
-	}
 }
 
 IAnimationGraphState *CActor::GetAnimationGraphState()
@@ -3288,455 +2790,6 @@ Vec3 CActor::GetAIAttentionPos()
 	}
 
 	return ZERO;
-}
-
-//------------------------------------------------------------------------
-void CActor::SelectNextItem(int direction, bool keepHistory, const char *category)
-{
-	IInventory *pInventory = GetInventory();
-
-	if (!pInventory)
-	{
-		return;
-	}
-
-	if (pInventory->GetCount() < 1)
-	{
-		return;
-	}
-
-	int startSlot = -1;
-	int delta = direction;
-	EntityId currentItemId = pInventory->GetCurrentItem();
-
-	if (currentItemId)
-	{
-		startSlot = pInventory->FindItem(currentItemId);
-	}
-
-	int skip = pInventory->GetCount(); // maximum number of interactions
-
-	while(skip)
-	{
-		int slot = startSlot + delta;
-
-		if (slot < 0)
-		{
-			slot = pInventory->GetCount() - 1;
-		}
-		else if (slot >= pInventory->GetCount())
-		{
-			slot = 0;
-		}
-
-		if (startSlot == slot)
-		{
-			return;
-		}
-
-		EntityId itemId = pInventory->GetItem(slot);
-		IItem *pItem = m_pItemSystem->GetItem(itemId);
-
-		if (pItem && pItem->CanSelect() && !pItem->GetDualWieldMasterId() && (!category || !strcmp(m_pItemSystem->GetItemCategory(pItem->GetEntity()->GetClass()->GetName()), category)))
-		{
-			SelectItem(pItem->GetEntityId(), true);
-			return;
-		}
-
-		startSlot = slot;
-		--skip;
-	}
-}
-
-//------------------------------------------------------------------------
-CItem *CActor::GetItem(EntityId itemId) const
-{
-	return static_cast<CItem *>(m_pItemSystem->GetItem(itemId));
-}
-
-//------------------------------------------------------------------------
-CItem *CActor::GetItemByClass(IEntityClass *pClass) const
-{
-	IInventory *pInventory = GetInventory();
-
-	if (pInventory)
-	{
-		return static_cast<CItem *>(m_pItemSystem->GetItem(pInventory->GetItemByClass(pClass)));
-	}
-
-	return 0;
-}
-
-//------------------------------------------------------------------------
-CWeapon *CActor::GetWeapon(EntityId itemId) const
-{
-	CItem *pItem = static_cast<CItem *>(m_pItemSystem->GetItem(itemId));
-
-	if (pItem)
-	{
-		return static_cast<CWeapon *>(pItem->GetIWeapon());
-	}
-
-	return 0;
-}
-
-//------------------------------------------------------------------------
-CWeapon *CActor::GetWeaponByClass(IEntityClass *pClass) const
-{
-	CItem *pItem = GetItemByClass(pClass);
-
-	if (pItem)
-	{
-		return static_cast<CWeapon *>(pItem->GetIWeapon());
-	}
-
-	return 0;
-}
-
-
-//------------------------------------------------------------------------
-void CActor::SelectLastItem(bool keepHistory, bool forceNext /* = false */)
-{
-	IInventory *pInventory = GetInventory();
-
-	if (!pInventory)
-	{
-		return;
-	}
-
-	EntityId itemId = pInventory->GetLastItem();
-	IItem *pItem = m_pItemSystem->GetItem(itemId);
-
-	if (pItem)
-	{
-		SelectItem(pItem->GetEntityId(), keepHistory);
-	}
-	else if(forceNext)
-	{
-		SelectNextItem(1, keepHistory, NULL);    //Prevent binoculars to get stuck under certain circumstances
-	}
-	else
-	{
-		m_pItemSystem->SetActorItem(this, (EntityId)0, keepHistory);
-	}
-}
-
-//------------------------------------------------------------------------
-void CActor::SelectItemByName(const char *name, bool keepHistory)
-{
-	IInventory *pInventory = GetInventory();
-
-	if (!pInventory)
-	{
-		return;
-	}
-
-	if (pInventory->GetCount() < 1)
-	{
-		return;
-	}
-
-	IEntityClass *pClass = gEnv->pEntitySystem->GetClassRegistry()->FindClass(name);
-	EntityId itemId = pInventory->GetItemByClass(pClass);
-	IItem *pItem = m_pItemSystem->GetItem(itemId);
-
-	if (pItem)
-	{
-		SelectItem(pItem->GetEntityId(), keepHistory);
-	}
-}
-
-//------------------------------------------------------------------------
-void CActor::SelectItem(EntityId itemId, bool keepHistory)
-{
-	if (IItem *pItem = m_pItemSystem->GetItem(itemId))
-	{
-		IInventory *pInventory = GetInventory();
-
-		if (!pInventory)
-		{
-			return;
-		}
-
-		if (pInventory->GetCount() < 1)
-		{
-			return;
-		}
-
-		if (pInventory->FindItem(itemId) < 0)
-		{
-			//GameWarning("Trying to select an item which is not in %s's inventory!", GetEntity()->GetName());
-			return;
-		}
-
-		if(pItem->GetEntityId() == pInventory->GetHolsteredItem()) //unholster selected weapon
-		{
-			pInventory->HolsterItem(false);
-		}
-
-		m_pItemSystem->SetActorItem(this, pItem->GetEntityId());
-	}
-}
-
-//------------------------------------------------------------------------
-void CActor::HolsterItem(bool holster, bool playSelect)
-{
-	IInventory *pInventory = GetInventory();
-
-	if (!pInventory)
-	{
-		return;
-	}
-
-	pInventory->HolsterItem(holster);
-}
-
-//------------------------------------------------------------------------
-bool CActor::UseItem(EntityId itemId)
-{
-	if (GetHealth() <= 0)
-	{
-		return false;
-	}
-
-	CItem *pItem = GetItem(itemId);
-
-	if (!pItem)
-	{
-		return false;
-	}
-
-	if (!pItem->CanUse(GetEntityId()))
-	{
-		return false;
-	}
-
-	if (gEnv->bServer || (pItem->GetEntity()->GetFlags() & (ENTITY_FLAG_CLIENT_ONLY | ENTITY_FLAG_SERVER_ONLY)))
-	{
-		pItem->Use(GetEntityId());
-	}
-	else
-	{
-		GetGameObject()->InvokeRMI(SvRequestUseItem(), ItemIdParam(itemId), eRMI_ToServer);
-	}
-
-	return true;
-}
-
-//------------------------------------------------------------------------
-bool CActor::PickUpItem(EntityId itemId, bool sound, bool ignoreOffhand)
-{
-	IItem *pItem = m_pItemSystem->GetItem(itemId);
-
-	if (!pItem || GetHealth() <= 0)
-	{
-		return false;
-	}
-
-	if(IsClient() && !ignoreOffhand)
-	{
-		if(EntityId offHandId = GetInventory()->GetItemByClass(CItem::sOffHandClass))
-		{
-			if(IItem *pOffItem = GetItem(offHandId))
-			{
-				COffHand *pOffHand = static_cast<COffHand *> (pOffItem);
-
-				if(pOffHand->GetOffHandState() != eOHS_PICKING_ITEM2)
-				{
-					return false;
-				}
-			}
-		}
-	}
-
-	float heavyness(0); //this is used to select a strength-sound intensity based on mass/volume (not well designed)
-	float volume(0);
-
-	if (pItem->GetEntity()->GetPhysics() && !CanPickUpObject(pItem->GetEntity(), heavyness, volume))  //try to pick up ...
-	{
-		pItem->PickUp(GetEntityId(), true);
-		DropItem(pItem->GetEntityId(), false);
-		return false;
-	}
-
-	if (gEnv->bServer || (pItem->GetEntity()->GetFlags() & (ENTITY_FLAG_CLIENT_ONLY | ENTITY_FLAG_SERVER_ONLY)))
-	{
-		pItem->PickUp(GetEntityId(), true);
-		m_pGameplayRecorder->Event(GetEntity(), GameplayEvent(eGE_ItemPickedUp, 0, 0, (void *)pItem->GetEntityId()));
-	}
-	else
-	{
-		GetGameObject()->InvokeRMI(SvRequestPickUpItem(), ItemIdParam(itemId), eRMI_ToServer);
-	}
-
-	return true;
-}
-
-//------------------------------------------------------------------------
-bool CActor::DropItem(EntityId itemId, float impulseScale, bool selectNext, bool bydeath)
-{
-	CItem *pItem = static_cast<CItem *>(m_pItemSystem->GetItem(itemId));
-
-	if (!pItem)
-	{
-		return false;
-	}
-
-	//Fix editor reseting issue
-	//Player dies - Don't drop weapon
-	//m_noDrop is only true when leaving the game mode into the editor (see EVENT_RESET in Item.cpp)
-	if(IsClient() && gEnv->IsEditor() && ((GetHealth() <= 0) || pItem->m_noDrop))
-	{
-		return false;
-	}
-
-	if(IsClient())
-	{
-		if(COffHand *pOffHand = static_cast<COffHand *>(GetItemByClass(CItem::sOffHandClass)))
-			if(pOffHand->GetOffHandState() & (eOHS_SWITCHING_GRENADE | eOHS_TRANSITIONING | eOHS_HOLDING_GRENADE | eOHS_THROWING_GRENADE))
-			{
-				return false;
-			}
-	}
-
-	bool bOK = false;
-
-	if (pItem->CanDrop())
-	{
-		bool performCloakFade = IsCloaked();
-
-		if (pItem->IsDualWield())
-		{
-			performCloakFade = false;
-		}
-
-		if (gEnv->bServer)
-		{
-			EntityId slaveId = pItem->GetDualWieldSlaveId();
-			pItem->Drop(impulseScale, selectNext, bydeath);
-
-			if (!bydeath)
-			{
-				// send game event
-				// check also if the dropped item was actually the slave (akimbo guns)
-				m_pGameplayRecorder->Event(GetEntity(), GameplayEvent(eGE_ItemDropped, 0, 0, (void *)(slaveId ? slaveId : itemId)));
-			}
-		}
-		else
-		{
-			GetGameObject()->InvokeRMI(SvRequestDropItem(), DropItemParams(itemId, impulseScale, selectNext, bydeath), eRMI_ToServer);
-		}
-
-		if (performCloakFade)
-		{
-			pItem->CloakEnable(false, true);
-		}
-
-		bOK = true;
-	}
-
-	return bOK;
-}
-
-//---------------------------------------------------------------------
-void CActor::DropAttachedItems()
-{
-	//Drop weapons attached to the back
-	if(gEnv->bServer && GetWeaponAttachmentManager())
-	{
-		CWeaponAttachmentManager::TAttachedWeaponsList weaponList = GetWeaponAttachmentManager()->GetAttachedWeapons();
-		CWeaponAttachmentManager::TAttachedWeaponsList::iterator it = weaponList.begin();
-
-		while(it != weaponList.end())
-		{
-			CItem *pItemBack = static_cast<CItem *>(m_pItemSystem->GetItem(*it));
-
-			if(pItemBack)
-			{
-				pItemBack->Drop(1.0f, false, true);
-				m_pGameplayRecorder->Event(GetEntity(), GameplayEvent(eGE_ItemDropped, 0, 0, (void *)pItemBack->GetEntityId()));
-			}
-
-			it++;
-		}
-	}
-}
-//------------------------------------------------------------------------
-IItem *CActor::GetCurrentItem(bool includeVehicle/*=false*/) const
-{
-	if (EntityId itemId = GetCurrentItemId(includeVehicle))
-	{
-		return m_pItemSystem->GetItem(itemId);
-	}
-
-	return 0;
-}
-
-//------------------------------------------------------------------------
-EntityId CActor::GetCurrentItemId(bool includeVehicle/*=false*/) const
-{
-	if (includeVehicle)
-	{
-		if (IVehicle *pVehicle = GetLinkedVehicle())
-		{
-			if (EntityId itemId = pVehicle->GetCurrentWeaponId(GetEntityId()))
-			{
-				return itemId;
-			}
-		}
-	}
-
-	IInventory *pInventory = GetInventory();
-
-	if (!pInventory)
-	{
-		return 0;
-	}
-
-	return pInventory->GetCurrentItem();
-}
-
-//------------------------------------------------------------------------
-IItem *CActor::GetHolsteredItem() const
-{
-	IInventory *pInventory = GetInventory();
-
-	if (!pInventory)
-	{
-		return 0;
-	}
-
-	return m_pItemSystem->GetItem(pInventory->GetHolsteredItem());
-}
-
-//------------------------------------------------------------------------
-IInventory *CActor::GetInventory() const
-{
-	if (!m_pInventory)
-	{
-		m_pInventory = (IInventory *) GetGameObject()->AcquireExtension("Inventory");
-	}
-
-	return m_pInventory;
-}
-
-//------------------------------------------------------------------------
-EntityId CActor::NetGetCurrentItem() const
-{
-	IInventory *pInventory = GetInventory();
-
-	if (!pInventory)
-	{
-		return 0;
-	}
-
-	return pInventory->GetCurrentItem();
-}
-
-//------------------------------------------------------------------------
-void CActor::NetSetCurrentItem(EntityId id)
-{
-	SelectItem(id, false);
 }
 
 void CActor::InitLocalPlayer()
@@ -3796,13 +2849,6 @@ void CActor::ReplaceMaterial(const char *strMaterial)
 				}
 			}
 		}
-
-		CItem *curItem = static_cast<CItem *>(gEnv->pGame->GetIGameFramework()->GetIItemSystem()->GetItem(GetInventory()->GetCurrentItem()));
-
-		if (curItem)
-		{
-			curItem->Cloak(true, mat);
-		}
 	}
 	//restore original material
 	else
@@ -3819,16 +2865,8 @@ void CActor::ReplaceMaterial(const char *strMaterial)
 				}
 			}
 		}
-
-		CItem *curItem =  static_cast<CItem *>(gEnv->pGame->GetIGameFramework()->GetIItemSystem()->GetItem(GetInventory()->GetCurrentItem()));
-
-		if (curItem)
-		{
-			curItem->Cloak(false);
-		}
-
+		
 		m_testOldMats.clear();
-		m_attchObjMats.clear();
 	}
 
 	m_pReplacementMaterial = mat;
@@ -3872,24 +2910,6 @@ void CActor::SetMaterialRecursive(ICharacterInstance *charInst, bool undo, IMate
 			if (obj)
 			{
 				SetMaterialRecursive(obj->GetICharacterInstance(), undo, newMat);
-
-				if (/*!obj->GetICharacterInstance() &&*/ ((!undo && m_attchObjMats.find(obj) == m_attchObjMats.end()) || undo && m_attchObjMats.find(obj) != m_attchObjMats.end()))
-				{
-					if (undo)
-					{
-						obj->SetMaterial(NULL);
-					}
-					else
-					{
-						IMaterial *oldMat = obj->GetMaterial();
-
-						if (oldMat != newMat)
-						{
-							m_attchObjMats[obj] = obj->GetMaterial();
-							obj->SetMaterial(newMat);
-						}
-					}
-				}
 			}
 		}
 	}
@@ -3899,11 +2919,6 @@ void CActor::SetMaterialRecursive(ICharacterInstance *charInst, bool undo, IMate
 void CActor::SerializeSpawnInfo(TSerialize ser )
 {
 	ser.Value("teamId", m_teamId, 'team');
-}
-
-void CActor::SerializeLevelToLevel( TSerialize &ser )
-{
-	GetInventory()->SerializeInventoryForLevelChange(ser);
 }
 
 //------------------------------------------------------------------------
@@ -3933,64 +2948,6 @@ void CActor::SetSleepTimer(float timer)
 }
 
 
-//------------------------------------------------------------------------
-IMPLEMENT_RMI(CActor, SvRequestDropItem)
-{
-	CItem *pItem = GetItem(params.itemId);
-
-	if (!pItem)
-	{
-		GameWarning("[gamenet] Failed to drop item. Item not found!");
-		return false;
-	}
-
-	//CryLogAlways("%s::SvRequestDropItem(%s)", GetEntity()->GetName(), pItem->GetEntity()->GetName());
-	pItem->Drop(params.impulseScale, params.selectNext, params.byDeath);
-	return true;
-}
-
-//------------------------------------------------------------------------
-IMPLEMENT_RMI(CActor, SvRequestPickUpItem)
-{
-	CItem *pItem = GetItem(params.itemId);
-
-	if (!pItem)
-	{
-		// this may occur if the item has been deleted but the client has not yet been informed
-		GameWarning("[gamenet] Failed to pickup item. Item not found!");
-		return true;
-	}
-
-	if (GetHealth() <= 0)
-	{
-		return true;
-	}
-
-	/*
-		// probably should check for ownerId==clientChannelOwnerId
-		IActor *pChannelActor=m_pGameFramework->GetIActorSystem()->GetActorByChannelId(m_pGameFramework->GetGameChannelId(pNetChannel));
-		assert(pChannelActor);
-	*/
-	EntityId ownerId = pItem->GetOwnerId();
-
-	if (!ownerId)
-	{
-		pItem->PickUp(GetEntityId(), true);
-	}
-
-	return true;
-}
-
-//------------------------------------------------------------------------
-IMPLEMENT_RMI(CActor, SvRequestUseItem)
-{
-	if (!IsFrozen())
-	{
-		UseItem(params.itemId);
-	}
-
-	return true;
-}
 
 //------------------------------------------------------------------------
 void CActor::NetReviveAt(const Vec3 &pos, const Quat &rot, int teamId)
@@ -4000,18 +2957,6 @@ void CActor::NetReviveAt(const Vec3 &pos, const Quat &rot, int teamId)
 		if (IVehicleSeat *pSeat = pVehicle->GetSeatForPassenger(GetEntityId()))
 		{
 			pSeat->Exit(false);
-		}
-	}
-
-	// stop using any mounted weapons before reviving
-	CItem *pItem = static_cast<CItem *>(GetCurrentItem());
-
-	if (pItem)
-	{
-		if (pItem->IsMounted())
-		{
-			pItem->StopUse(GetEntityId());
-			pItem = 0;
 		}
 	}
 
@@ -4027,26 +2972,8 @@ void CActor::NetReviveAt(const Vec3 &pos, const Quat &rot, int teamId)
 	}
 
 	// ~PLAYERPREDICTION
+
 	GetEntity()->SetWorldTM(Matrix34::Create(Vec3(1, 1, 1), rot, pos));
-	// This will cover the case when the ClPickup RMI comes in before we're revived
-	{
-		if (m_netLastSelectablePickedUp)
-		{
-			pItem = static_cast<CItem *>(m_pItemSystem->GetItem(m_netLastSelectablePickedUp));
-		}
-
-		m_netLastSelectablePickedUp = 0;
-
-		if (pItem)
-		{
-			bool soundEnabled = pItem->IsSoundEnabled();
-			pItem->EnableSound(false);
-			pItem->Select(false);
-			pItem->EnableSound(soundEnabled);
-			m_pItemSystem->SetActorItem(this, (EntityId)0);
-			SelectItem(pItem->GetEntityId(), true);
-		}
-	}
 
 	if (IsClient())
 	{
@@ -4054,77 +2981,11 @@ void CActor::NetReviveAt(const Vec3 &pos, const Quat &rot, int teamId)
 	}
 }
 
-//------------------------------------------------------------------------
-void CActor::NetReviveInVehicle(EntityId vehicleId, int seatId, int teamId)
-{
-	// stop using any mounted weapons before reviving
-	CItem *pItem = static_cast<CItem *>(GetCurrentItem());
-
-	if (pItem)
-	{
-		if (pItem->IsMounted())
-		{
-			pItem->StopUse(GetEntityId());
-			pItem = 0;
-		}
-	}
-
-	SetHealth(GetMaxHealth());
-	m_teamId = teamId;
-	g_pGame->GetGameRules()->OnReviveInVehicle(this, vehicleId, seatId, m_teamId);
-	Revive();
-
-	// fix our physicalization, since it's need for some vehicle stuff, and it will be set correctly before the end of the frame
-	// make sure we are alive, for when we transition from ragdoll to linked...
-	if (!GetEntity()->GetPhysics() || GetEntity()->GetPhysics()->GetType() != PE_LIVING)
-	{
-		Physicalize();
-	}
-
-	IVehicle *pVehicle = m_pGameFramework->GetIVehicleSystem()->GetVehicle(vehicleId);
-	assert(pVehicle);
-
-	if(pVehicle)
-	{
-		IVehicleSeat *pSeat = pVehicle->GetSeatById(seatId);
-
-		if (pSeat && (!pSeat->GetPassenger() || pSeat->GetPassenger() == GetEntityId()))
-		{
-			pSeat->Enter(GetEntityId(), false);
-		}
-	}
-
-	// This will cover the case when the ClPickup RMI comes in before we're revived
-	if (m_netLastSelectablePickedUp)
-	{
-		pItem = static_cast<CItem *>(m_pItemSystem->GetItem(m_netLastSelectablePickedUp));
-	}
-
-	m_netLastSelectablePickedUp = 0;
-
-	if (pItem)
-	{
-		bool soundEnabled = pItem->IsSoundEnabled();
-		pItem->EnableSound(false);
-		pItem->Select(false);
-		pItem->EnableSound(soundEnabled);
-		m_pItemSystem->SetActorItem(this, (EntityId)0);
-		SelectItem(pItem->GetEntityId(), true);
-	}
-
-	if (IsClient())
-	{
-		SupressViewBlending(); // no view bleding when respawning // CActor::Revive resets it.
-	}
-}
-
-//------------------------------------------------------------------------
 void CActor::NetKill(EntityId shooterId, uint16 weaponClassId, int damage, int material, int hit_type)
 {
 	static char weaponClassName[129] = {0};
 	m_pGameFramework->GetNetworkSafeClassName(weaponClassName, 128, weaponClassId);
 	g_pGame->GetGameRules()->OnKill(this, shooterId, weaponClassName, damage, material, hit_type);
-	m_netLastSelectablePickedUp = 0;
 
 	if (GetHealth() > 0)
 	{
@@ -4356,67 +3217,15 @@ bool CActor::LooseHelmet(Vec3 hitDir, Vec3 hitPos)
 	return false;
 }
 
-//------------------------------------------------------------------------
-void CActor::ResetHelmetAttachment()
-{
-	//reattach old helmet to entity if possible
-	if(m_lostHelmet)
-	{
-		ICharacterInstance *pCharacter = GetEntity()->GetCharacter(0);
-		IAttachmentManager *pAttachmentManager = pCharacter->GetIAttachmentManager();
-		IAttachment *pAttachment = pAttachmentManager->GetInterfaceByName(m_lostHelmetPos.c_str());
-
-		if(pAttachment)
-		{
-			if(!pAttachment->GetIAttachmentObject())
-			{
-				IStatObj *pStatObj = gEnv->p3DEngine->LoadStatObj(m_lostHelmetObj.c_str());
-
-				if(pStatObj)
-				{
-					CCGFAttachment *pStatObjAttachment = new CCGFAttachment;
-					pStatObjAttachment->pObj = pStatObj;
-					pAttachment->AddBinding(pStatObjAttachment);
-
-					if(IMaterial *pMat = gEnv->p3DEngine->GetMaterialManager()->LoadMaterial(m_lostHelmetMaterial.c_str()))
-					{
-						pStatObjAttachment->SetMaterial(pMat);
-					}
-
-					IAttachment *pHairAttachment = pAttachmentManager->GetInterfaceByName("hair");
-
-					if(pHairAttachment)
-					{
-						if(!pHairAttachment->IsAttachmentHidden())
-						{
-							pHairAttachment->HideAttachment(1);
-						}
-					}
-				}
-			}
-		}
-
-		m_lostHelmet = 0;
-	}
-}
-
 //-----------------------------------------------------------------------
 bool CActor::CanRagDollize() const
 {
-	const SActorStats *pStats = GetActorStats();
-
-	if(!gEnv->bMultiplayer && !m_isClient && pStats && pStats->isGrabbed)
-	{
-		return false;
-	}
-
 	return true;
 }
 //------------------------------------------------------------------------
 void CActor::GetActorMemoryStatistics(ICrySizer *s) const
 {
 	s->AddContainer(m_testOldMats);
-	s->AddContainer(m_attchObjMats);
 }
 
 //------------------------------------------------------------------------
@@ -4444,13 +3253,6 @@ IMPLEMENT_RMI(CActor, ClRevive)
 }
 
 //------------------------------------------------------------------------
-IMPLEMENT_RMI(CActor, ClReviveInVehicle)
-{
-	NetReviveInVehicle(params.vehicleId, params.seatId, params.teamId);
-	return true;
-}
-
-//------------------------------------------------------------------------
 IMPLEMENT_RMI(CActor, ClKill)
 {
 	NetKill(params.shooterId, params.weaponClassId, (int)params.damage, params.material, params.hit_type);
@@ -4468,111 +3270,6 @@ IMPLEMENT_RMI(CActor, ClSimpleKill)
 IMPLEMENT_RMI(CActor, ClMoveTo)
 {
 	GetEntity()->SetWorldTM(Matrix34::Create(Vec3(1, 1, 1), params.rot, params.pos));
-	return true;
-}
-
-//------------------------------------------------------------------------
-IMPLEMENT_RMI(CActor, ClSetAmmo)
-{
-	IInventory *pInventory = GetInventory();
-
-	if (pInventory)
-	{
-		IEntityClass *pClass = gEnv->pEntitySystem->GetClassRegistry()->FindClass(params.ammo.c_str());
-		assert(pClass);
-		int capacity = pInventory->GetAmmoCapacity(pClass);
-		int current = pInventory->GetAmmoCount(pClass);
-	}
-
-	return true;
-}
-
-//------------------------------------------------------------------------
-IMPLEMENT_RMI(CActor, ClAddAmmo)
-{
-	IInventory *pInventory = GetInventory();
-
-	if (pInventory)
-	{
-		IEntityClass *pClass = gEnv->pEntitySystem->GetClassRegistry()->FindClass(params.ammo.c_str());
-		assert(pClass);
-		int capacity = pInventory->GetAmmoCapacity(pClass);
-		int current = pInventory->GetAmmoCount(pClass);
-
-		if((!gEnv->IsEditor()) && (pInventory->GetAmmoCount(pClass) + params.count > capacity))
-		{
-			//If still there's some place, full inventory to maximum...
-			pInventory->SetAmmoCount(pClass, capacity);
-		}
-		else
-		{
-			pInventory->SetAmmoCount(pClass, pInventory->GetAmmoCount(pClass) + params.count);
-		}
-	}
-
-	return true;
-}
-
-//------------------------------------------------------------------------
-IMPLEMENT_RMI(CActor, ClPickUp)
-{
-	if (CItem *pItem = GetItem(params.itemId))
-	{
-		pItem->PickUp(GetEntityId(), params.sound, params.select);
-		const char *displayName = pItem->GetDisplayName();
-
-		if (params.select)
-		{
-			m_netLastSelectablePickedUp = params.itemId;
-		}
-	}
-
-	return true;
-}
-
-//------------------------------------------------------------------------
-IMPLEMENT_RMI(CActor, ClClearInventory)
-{
-	GetInventory()->Clear();
-	return true;
-}
-
-//------------------------------------------------------------------------
-IMPLEMENT_RMI(CActor, ClDrop)
-{
-	CItem *pItem = GetItem(params.itemId);
-
-	if (pItem)
-	{
-		pItem->Drop(params.impulseScale, params.selectNext, params.byDeath);
-	}
-
-	return true;
-}
-
-//------------------------------------------------------------------------
-IMPLEMENT_RMI(CActor, ClStartUse)
-{
-	CItem *pItem = GetItem(params.itemId);
-
-	if (pItem)
-	{
-		pItem->StartUse(GetEntityId());
-	}
-
-	return true;
-}
-
-//------------------------------------------------------------------------
-IMPLEMENT_RMI(CActor, ClStopUse)
-{
-	CItem *pItem = GetItem(params.itemId);
-
-	if (pItem)
-	{
-		pItem->StopUse(GetEntityId());
-	}
-
 	return true;
 }
 
@@ -4610,18 +3307,6 @@ void CActor::DumpActorInfo()
 		}
 	}
 
-	if (IVehicle *pVehicle = GetLinkedVehicle())
-	{
-		CryLog("Vehicle: %s (destroyed: %i)", pVehicle->GetEntity()->GetName(), pVehicle->IsDestroyed());
-		IVehicleSeat *pSeat = pVehicle->GetSeatForPassenger(GetEntityId());
-		CryLog("Seat %i", pSeat ? pSeat->GetSeatId() : 0);
-	}
-
-	if (IItem *pItem = GetCurrentItem())
-	{
-		CryLog("Item: %s", pItem->GetEntity()->GetName());
-	}
-
 	CryLog("=====================================");
 }
 
@@ -4635,39 +3320,8 @@ Vec3 CActor::GetWeaponOffsetWithLean(EStance stance, float lean, float peekOver,
 		return GetStanceInfo(stance)->GetWeaponOffsetWithLean(lean, peekOver);
 	}
 
-	EntityId itemId = GetInventory()->GetCurrentItem();
-
-	if(itemId)
-	{
-		if(CWeapon *weap = GetWeapon(itemId))
-		{
-			if(weap->AIUseEyeOffset())
-			{
-				return eyeOffset;
-			}
-
-			Vec3	overrideOffset;
-
-			if(weap->AIUseOverrideOffset(stance, lean, peekOver, overrideOffset))
-			{
-				return overrideOffset;
-			}
-		}
-	}
-
 	return GetStanceInfo(stance)->GetWeaponOffsetWithLean(lean, peekOver);
 }
-
-//-------------------------------------------------------------------
-//This function is called from Equipment Manager only for the client actor
-void CActor::NotifyInventoryAmmoChange(IEntityClass *pAmmoClass, int amount)
-{
-	if(!pAmmoClass)
-	{
-		return;
-	}
-}
-
 
 bool CActor::IsFriendlyEntity( EntityId entityId ) const
 {
@@ -4798,14 +3452,6 @@ void CActor::FillHitInfoFromKillParams(const CActor::KillParams &killParams, Hit
 	hitInfo.impulseScale			= killParams.impulseScale;
 	hitInfo.forceLocalKill = killParams.forceLocalKill;
 	// Get some needed parameters on the HitInfo structure
-	char projectileClassName[129] = {0};
-
-	if (g_pGame->GetIGameFramework()->GetNetworkSafeClassName(projectileClassName, 128, killParams.projectileClassId))
-	{
-		IEntityClass *pProjectileClass = gEnv->pEntitySystem->GetClassRegistry()->FindClass(projectileClassName);
-		const SAmmoParams *pAmmoParams = g_pGame->GetWeaponSystem()->GetAmmoParams(pProjectileClass);
-		hitInfo.bulletType = pAmmoParams ? pAmmoParams->bulletType : 1;
-	}
 
 	ICharacterInstance *pCharacter = NULL;
 

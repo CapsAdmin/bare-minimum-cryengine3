@@ -19,13 +19,9 @@
 #include "StdAfx.h"
 #include "Game.h"
 #include "Player.h"
-#include "Item.h"
-
-#include "Weapon.h"
 
 #include "GameRules.h"
 
-#include <IItemSystem.h>
 #include <IVehicleSystem.h>
 #include <IGameRulesSystem.h>
 
@@ -79,7 +75,6 @@ void InitGameFactory(IGameFramework *pFramework)
 	REGISTER_FACTORY(pFramework, "NullAI", CPlayer, true);
 	HIDE_FROM_EDITOR("NullAI");
 	REGISTER_FACTORY(pFramework, "Player", CPlayer, false);
-	REGISTER_FACTORY(pFramework, "Item", CItem, false);
 	REGISTER_FACTORY(pFramework, "GameRules", CGameRules, false);
 	CGameRulesManager::GetInstance()->Init();
 }

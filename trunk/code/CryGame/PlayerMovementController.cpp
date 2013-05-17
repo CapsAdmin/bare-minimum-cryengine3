@@ -4,10 +4,8 @@
 #include "GameUtils.h"
 #include "ITimer.h"
 #include "IVehicleSystem.h"
-#include "IItemSystem.h"
 #include "GameCVars.h"
 #include "NetInputChainDebug.h"
-#include "Item.h"
 #include "IPlayerInput.h"
 
 #define ENABLE_NAN_CHECK
@@ -742,18 +740,6 @@ bool CPlayerMovementController::UpdateNormal( float frameTime, SActorFrameMoveme
 			if (rayHitAny)
 			{
 				m_state.SetStance(STANCE_CROUCH);
-			}
-
-			// also don't allow prone for hurricane/LAW type weapons.
-			if(g_pGameCVars->g_proneNotUsableWeapon_FixType == 2)
-			{
-				if(CItem *pItem = (CItem *)(m_pPlayer->GetCurrentItem()))
-				{
-					if(pItem->GetParams().prone_not_usable)
-					{
-						m_state.SetStance(STANCE_CROUCH);
-					}
-				}
 			}
 		}
 	}
@@ -1564,7 +1550,6 @@ void CPlayerMovementController::UpdateMovementState( SMovementState &state )
 		state.eyePosition = entityPos + lookRot.TransformVector(m_pPlayer->GetEyeOffset());
 		Matrix33	aimRot;
 		aimRot.SetRotationVDir(constrainedAimDir);
-		state.weaponPosition = entityPos + aimRot.TransformVector(m_pPlayer->GetWeaponOffset());
 		state.upDirection = orientation.GetColumn2();
 		state.eyeDirection = (m_lookTarget - state.eyePosition).GetNormalizedSafe(forward);
 		state.aimDirection = (m_aimTarget - state.weaponPosition).GetNormalizedSafe((m_lookTarget - state.weaponPosition).GetNormalizedSafe(forward));
@@ -1609,12 +1594,6 @@ void CPlayerMovementController::UpdateMovementState( SMovementState &state )
 				EntityId currentWeaponId = 0;
 				IAIObject *pAIObject = m_pPlayer->GetEntity()->GetAI();
 				IAIActorProxy *pAIProxy = pAIObject ? pAIObject->GetProxy() : NULL;
-				IWeapon *pMGWeapon = pAIProxy ? pAIProxy->GetCurrentWeapon(currentWeaponId) : NULL;
-
-				if(pMGWeapon)
-				{
-					state.weaponPosition = pMGWeapon->GetFiringPos( m_fireTarget );
-				}
 
 				// need to recalculate aimDirection, since weaponPos is changed
 				state.aimDirection = (m_aimTarget - state.weaponPosition).GetNormalizedSafe((m_lookTarget - state.weaponPosition).GetNormalizedSafe(forward)); //pEntity->GetRotation() * dirWeapon;

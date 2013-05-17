@@ -84,17 +84,6 @@ class CScriptBind_GameRules :
 		// Description:
 		//		Revives the player.
 		int RevivePlayer(IFunctionHandler *pH, ScriptHandle playerId, Vec3 pos, Vec3 angles, int teamId, bool clearInventory);
-		// <title RevivePlayerInVehicle>
-		// Syntax: GameRules.RevivePlayerInVehicle( ScriptHandle playerId, ScriptHandle vehicleId, int seatId, int teamId, bool clearInventory )
-		// Arguments:
-		//		playerId		- Player identifier.
-		//		vehicleId		- Vehicle identifier.
-		//		seatId			- Seat identifier.
-		//		teamId			- Team identifier.
-		//		clearInventory	- True to clean the inventory, false otherwise.
-		// Description:
-		//		Revives a player inside a vehicle.
-		int RevivePlayerInVehicle(IFunctionHandler *pH, ScriptHandle playerId, ScriptHandle vehicleId, int seatId, int teamId, bool clearInventory);
 		// <title RenamePlayer>
 		// Syntax: GameRules.RenamePlayer( ScriptHandle playerId, const char *name )
 		// Arguments:
@@ -165,13 +154,6 @@ class CScriptBind_GameRules :
 		// Description:
 		//		Checks if the specified player is in game.
 		int IsPlayerInGame(IFunctionHandler *pH, ScriptHandle playerId);
-		// <title IsProjectile>
-		// Syntax: GameRules.IsProjectile(entityId)
-		// Arguments:
-		//		entityId - Entity identifier.
-		// Description:
-		//		Checks if the specified entity is a projectile.
-		int IsProjectile(IFunctionHandler *pH, ScriptHandle entityId);
 		// <title IsSameTeam>
 		// Syntax: GameRules.IsSameTeam(entityId0,entityId1)
 		// Arguments:

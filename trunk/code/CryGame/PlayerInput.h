@@ -13,7 +13,7 @@
 class CPlayer;
 struct SPlayerStats;
 
-class CPlayerInput : public IPlayerInput, public IActionListener, public IPlayerEventListener
+class CPlayerInput : public IPlayerInput, public IActionListener
 {
 	public:
 
@@ -39,10 +39,6 @@ class CPlayerInput : public IPlayerInput, public IActionListener, public IPlayer
 		// IActionListener
 		virtual void OnAction( const ActionId &action, int activationMode, float value );
 		// ~IActionListener
-
-		// IPlayerEventListener
-		virtual void OnObjectGrabbed(IActor *pActor, bool bIsGrab, EntityId objectId, bool bIsNPC, bool bIsTwoHanded);
-		// ~IPlayerEventListener
 
 		virtual void SetState( const SSerializedPlayerInput &input );
 		virtual void GetState( SSerializedPlayerInput &input );

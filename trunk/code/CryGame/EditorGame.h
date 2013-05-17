@@ -53,7 +53,6 @@ class CEditorGame :
 
 		VIRTUAL IFlowSystem *GetIFlowSystem();
 		VIRTUAL IGameTokenSystem *GetIGameTokenSystem();
-		VIRTUAL IEquipmentSystemInterface *GetIEquipmentSystemInterface();
 
 		VIRTUAL bool SupportsMultiplayerGameRules()
 		{
@@ -86,6 +85,8 @@ class CEditorGame :
 
 		static ICVar  *s_pEditorGameMode;
 		static CEditorGame *s_pEditorGame;
+
+		virtual IEquipmentSystemInterface* GetIEquipmentSystemInterface() {return nullptr;};
 };
 
 

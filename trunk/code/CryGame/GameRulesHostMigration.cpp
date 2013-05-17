@@ -13,7 +13,6 @@ History:
 #include "StdAfx.h"
 #include "GameRules.h"
 #include "Player.h"
-#include "WeaponSystem.h"
 #include "IDeferredCollisionEvent.h"
 #include "GameCVars.h"
 #include "PlayerMovementController.h"
@@ -158,12 +157,6 @@ void CGameRules::OnHostMigrationStateChanged()
 		}
 
 		CallOnForbiddenAreas("OnHostMigrationFinished");
-		CWeaponSystem *pWeaponSystem = g_pGame->GetWeaponSystem();
-
-		if (pWeaponSystem)
-		{
-			pWeaponSystem->OnResumeAfterHostMigration();
-		}
 
 		// Migration has finished, if we've still got client params then they won't be valid anymore
 		SAFE_DELETE(m_pHostMigrationClientParams);
@@ -341,45 +334,10 @@ bool CGameRules::OnInitiate(SHostMigrationInfo &hostMigrationInfo, uint32 &state
 				CryLog("    velocity={%f,%f,%f}", m_pHostMigrationClientParams->m_velocity.x, m_pHostMigrationClientParams->m_velocity.y, m_pHostMigrationClientParams->m_velocity.z);
 			}
 
-			IInventory *pInventory = pPlayer->GetInventory();
-			m_pHostMigrationClientParams->m_numExpectedItems = pInventory->GetCount();
-			int numAmmoTypes = pInventory->GetAmmoTypesCount();
-			m_pHostMigrationClientParams->m_pAmmoParams = new SHostMigrationClientControlledParams::SAmmoParams[numAmmoTypes];
-			m_pHostMigrationClientParams->m_numAmmoParams = numAmmoTypes;
-			CryLog("  player has %i different ammo types", numAmmoTypes);
-
-			for (int i = 0; i < numAmmoTypes; ++ i)
-			{
-				IEntityClass *pAmmoType = pInventory->GetAmmoType(i);
-				int ammoCount = pInventory->GetAmmoCount(pAmmoType);
-				m_pHostMigrationClientParams->m_pAmmoParams[i].m_pAmmoClass = pAmmoType;
-				m_pHostMigrationClientParams->m_pAmmoParams[i].m_count = ammoCount;
-				CryLog("    %s : %i", pAmmoType->GetName(), ammoCount);
-			}
-
-			EntityId holseredItemId = pInventory->GetHolsteredItem();
-
-			if (holseredItemId)
-			{
-				IEntity *pHolsteredEntity = gEnv->pEntitySystem->GetEntity(holseredItemId);
-
-				if (pHolsteredEntity)
-				{
-					m_pHostMigrationClientParams->m_pHolsteredItemClass = pHolsteredEntity->GetClass();
-				}
-			}
-
 			IMovementController *pMovementController = pPlayer->GetMovementController();
 			SMovementState movementState;
 			pMovementController->GetMovementState(movementState);
 			m_pHostMigrationClientParams->m_aimDirection = movementState.aimDirection;
-			CItem *pItem = static_cast<CItem *>(pPlayer->GetCurrentItem());
-
-			if (pItem)
-			{
-				m_pHostMigrationClientParams->m_pSelectedItemClass = pItem->GetEntity()->GetClass();
-				CryLog("  currently using item '%s", pItem->GetEntity()->GetName());
-			}
 		}
 		else
 		{
@@ -421,7 +379,6 @@ bool CGameRules::OnDemoteToClient(SHostMigrationInfo &hostMigrationInfo, uint32 
 //------------------------------------------------------------------------
 void CGameRules::HostMigrationFindDynamicEntities(TEntityIdVec &results)
 {
-	IItemSystem *pItemSystem = g_pGame->GetIGameFramework()->GetIItemSystem();
 	IEntityItPtr pEntityIt = gEnv->pEntitySystem->GetEntityIterator();
 
 	while (IEntity *pEntity = pEntityIt->Next())
@@ -430,16 +387,6 @@ void CGameRules::HostMigrationFindDynamicEntities(TEntityIdVec &results)
 		{
 			results.push_back(pEntity->GetId());
 			CryLog("    found dynamic entity %i '%s'", pEntity->GetId(), pEntity->GetName());
-		}
-		else
-		{
-			CItem *pItem = static_cast<CItem *>(pItemSystem->GetItem(pEntity->GetId()));
-
-			if (pItem)
-			{
-				// Need to reset owner on static items since they will be given to players again once we've rejoined
-				pItem->SetOwnerId(0);
-			}
 		}
 	}
 }
@@ -485,12 +432,12 @@ bool CGameRules::OnPromoteToServer(SHostMigrationInfo &hostMigrationInfo, uint32
 		HostMigrationRemoveDuplicateDynamicEntities();
 	}
 
+	
 	for (uint32 i = 0; i < MAX_PLAYERS; ++ i)
 	{
 		m_migratedPlayerChannels[i] = 0;
 	}
 
-	IItemSystem *pItemSystem = g_pGame->GetIGameFramework()->GetIItemSystem();
 	IEntityItPtr it = gEnv->pEntitySystem->GetEntityIterator();
 	it->MoveFirst();
 
@@ -501,54 +448,20 @@ bool CGameRules::OnPromoteToServer(SHostMigrationInfo &hostMigrationInfo, uint32
 
 	uint32 itemIndex = 0;
 	IEntity *pEntity = NULL;
+	
+	// Tell entities that we're host migrating
+	// - Currently only used by ForbiddenArea but may well be needed for other entities later
+	// - Currently only called on the new server, add to OnDemoteToClient if we need to use this on a client
+	IScriptTable *pScript = pEntity->GetScriptTable();
 
-	while (pEntity = it->Next())
+	if (pScript != NULL && pScript->GetValueType("OnHostMigration") == svtFunction)
 	{
-		IItem *pItem = pItemSystem->GetItem(pEntity->GetId());
-
-		if (pItem)
-		{
-			if (pItem->GetOwnerId())
-			{
-				IEntity *pOwner = gEnv->pEntitySystem->GetEntity(pItem->GetOwnerId());
-
-				if (pOwner)
-				{
-					EntityId currentItemId = 0;
-					IActor *pOwnerActor = g_pGame->GetIGameFramework()->GetIActorSystem()->GetActor(pOwner->GetId());
-
-					if (pOwnerActor)
-					{
-						IItem *pCurrentItem = pOwnerActor->GetCurrentItem();
-						currentItemId = pCurrentItem ? pCurrentItem->GetEntityId() : 0;
-					}
-
-					CryLog("[CG] Item '%s' is owned by '%s'", pEntity->GetName(), pOwner->GetName());
-					//m_pHostMigrationItemInfo[itemIndex].Set(pEntity->GetId(), pOwner->GetId(), pItem->IsUsed(), (pItem->GetEntityId() == currentItemId));
-					itemIndex ++;
-
-					if (itemIndex >= m_hostMigrationItemMaxCount)
-					{
-						CRY_ASSERT(itemIndex < m_hostMigrationItemMaxCount);
-						break;
-					}
-				}
-			}
-		}
-
-		// Tell entities that we're host migrating
-		// - Currently only used by ForbiddenArea but may well be needed for other entities later
-		// - Currently only called on the new server, add to OnDemoteToClient if we need to use this on a client
-		IScriptTable *pScript = pEntity->GetScriptTable();
-
-		if (pScript != NULL && pScript->GetValueType("OnHostMigration") == svtFunction)
-		{
-			m_pScriptSystem->BeginCall(pScript, "OnHostMigration");
-			m_pScriptSystem->PushFuncParam(pScript);
-			m_pScriptSystem->PushFuncParam(true);
-			m_pScriptSystem->EndCall();
-		}
+		m_pScriptSystem->BeginCall(pScript, "OnHostMigration");
+		m_pScriptSystem->PushFuncParam(pScript);
+		m_pScriptSystem->PushFuncParam(true);
+		m_pScriptSystem->EndCall();
 	}
+	
 
 	// This needs initialising on the new server otherwise the respawn timer will be counting down
 	// from uninitialised data.  Likewise for the pre-round timer.

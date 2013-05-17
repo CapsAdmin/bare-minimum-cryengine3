@@ -13,16 +13,11 @@
 #include "StdAfx.h"
 #include "GameCVars.h"
 #include "GameRules.h"
-#include "ItemSharedParams.h"
-#include "WeaponSharedParams.h"
 
 #include <INetwork.h>
 #include <IGameObject.h>
 #include <IActorSystem.h>
-#include <IItemSystem.h>
-#include "WeaponSystem.h"
 #include "ServerSynchedStorage.h"
-#include "ItemString.h"
 #include "NetInputChainDebug.h"
 #include "INetworkService.h"
 
@@ -377,7 +372,6 @@ void SCVars::InitCVars(IConsole *pConsole)
 	REGISTER_CVAR(cl_shallowWaterSpeedMulAI, 0.8f, VF_CHEAT, "Shallow water speed multiplier (AI only)");
 	REGISTER_CVAR(cl_shallowWaterDepthLo, 0.3f, VF_CHEAT, "Shallow water depth low (below has zero slowdown)");
 	REGISTER_CVAR(cl_shallowWaterDepthHi, 1.0f, VF_CHEAT, "Shallow water depth high (above has full slowdown)");
-	REGISTER_INT("g_grabLog", 0, VF_NULL, "verbosity for grab logging (0-2)");
 	REGISTER_CVAR(pl_inputAccel, 30.0f, VF_NULL, "Movement input acceleration");
 	REGISTER_INT("cl_actorsafemode", 0, VF_CHEAT, "Enable/disable actor safe mode")->SetOnChangeCallback(BroadcastChangeSafeMode);
 	REGISTER_CVAR(g_enableSpeedLean, 0, VF_NULL, "Enables player-controlled curve leaning in speed mode.");
@@ -657,9 +651,6 @@ void SCVars::InitCVars(IConsole *pConsole)
 	REGISTER_CVAR(g_proneNotUsableWeapon_FixType, 1, VF_NULL, "Test various fixes for not selecting hurricane while prone");
 	REGISTER_CVAR(g_proneAimAngleRestrict_Enable, 1, VF_NULL, "Test fix for matching aim restrictions between 1st and 3rd person");
 	REGISTER_CVAR(ctrl_input_smoothing, 0.0f, VF_NULL, "Smooths rotation input in GDC demo.");
-	REGISTER_CVAR(g_disable_throw, 0, VF_NULL, "Disable object throwing");
-	REGISTER_CVAR(g_disable_pickup, 0, VF_NULL, "Disable picking objects up");
-	REGISTER_CVAR(g_disable_grab, 0, VF_NULL, "Disable NPC grabbing");
 	REGISTER_CVAR(g_tpview_control, 0, VF_NULL, "Enables control of 3rd person view switching through cvar (F1 will be disabled!)");
 	REGISTER_CVAR(g_tpview_enable, 0, VF_NULL, "Enables 3rd person view if precedent cvar is true");
 	REGISTER_CVAR(g_tpview_force_goc, 0, VF_NULL, "Forces 'Gears of Crysis' (tm) when in 3rd person view");
@@ -937,9 +928,6 @@ void SCVars::ReleaseCVars()
 	pConsole->UnregisterVariable("aim_assistCrosshairDebug", true);
 	pConsole->UnregisterVariable("g_ColorGradingBlendTime", true);
 	pConsole->UnregisterVariable("ctrl_input_smoothing", true);
-	pConsole->UnregisterVariable("g_disable_throw", true);
-	pConsole->UnregisterVariable("g_disable_pickup", true);
-	pConsole->UnregisterVariable("g_disable_grab", true);
 	pConsole->UnregisterVariable("g_tpview_enable", true);
 	pConsole->UnregisterVariable("g_tpview_control", true);
 	pConsole->UnregisterVariable("g_tpview_force_goc", true);
@@ -1036,14 +1024,6 @@ void CmdEndVideoCapture(IConsoleCmdArgs *pArgs)
 {
 	CaptureVideo(false, pArgs);
 }
-
-
-//------------------------------------------------------------------------
-void CmdDumpItemNameTable(IConsoleCmdArgs *pArgs)
-{
-	SharedString::CSharedString::DumpNameTable();
-}
-
 
 //------------------------------------------------------------------------
 void CmdGoto(IConsoleCmdArgs *pArgs)
@@ -1231,7 +1211,6 @@ void CGame::RegisterConsoleCommands()
 	REGISTER_COMMAND("sv_say", CmdSay, VF_NULL, "Broadcasts a message to all clients.");
 	REGISTER_COMMAND("i_reload", CmdReloadItems, VF_NULL, "Reloads item scripts.");
 	REGISTER_COMMAND("dumpss", CmdDumpSS, VF_NULL, "test synched storage.");
-	REGISTER_COMMAND("dumpnt", CmdDumpItemNameTable, VF_NULL, "Dump ItemString table.");
 	REGISTER_COMMAND("g_reloadGameRules", CmdReloadGameRules, VF_NULL, "Reload GameRules script");
 	REGISTER_COMMAND("g_quickGame", CmdQuickGame, VF_NULL, "Quick connect to good server.");
 	REGISTER_COMMAND("g_quickGameStop", CmdQuickGameStop, VF_NULL, "Cancel quick game search.");
@@ -1288,11 +1267,6 @@ void CGame::CmdLastInv(IConsoleCmdArgs *pArgs)
 	if (!gEnv->IsClient())
 	{
 		return;
-	}
-
-	if (CActor *pClientActor = static_cast<CActor *>(g_pGame->GetIGameFramework()->GetClientActor()))
-	{
-		pClientActor->SelectLastItem(true);
 	}
 }
 
@@ -1519,16 +1493,11 @@ void CGame::CmdRestartGame(IConsoleCmdArgs *pArgs)
 //------------------------------------------------------------------------
 void CGame::CmdDumpAmmoPoolStats(IConsoleCmdArgs *pArgs)
 {
-	g_pGame->GetWeaponSystem()->DumpPoolSizes();
 }
 
 //------------------------------------------------------------------------
 void CGame::CmdReloadItems(IConsoleCmdArgs *pArgs)
 {
-	g_pGame->GetItemSharedParamsList()->Reset();
-	g_pGame->GetWeaponSharedParamsList()->Reset();
-	g_pGame->GetIGameFramework()->GetIItemSystem()->Reload();
-	g_pGame->GetWeaponSystem()->Reload();
 }
 
 //------------------------------------------------------------------------
