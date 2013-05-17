@@ -6,7 +6,6 @@
 #include "IAIActor.h"
 
 // PLAYERPREDICTION
-#include "Utility/CryWatch.h"
 #include "Cry_GeoDistance.h"
 // ~PLAYERPREDICTION
 
@@ -79,11 +78,6 @@ void CNetPlayerInput::InitialiseInterpolation(f32 netPosDist, const Vec3 &desPos
 	//--- would be moving against the local player's velocity
 	bool isStatic = (m_pPlayer->GetActorStats()->onGround > 0.1f) && ((m_netDesiredSpeed < k_staticSpeed) || (desPosOffset.Dot(desiredVelocity) < 0.0f));
 	const float minDist = isStatic ? k_minDistStatic : k_minDistMoving;
-
-	if (g_pGameCVars->pl_debugInterpolation)
-	{
-		CryWatch("NewInterp NetPosDist: %f MinDist: %f)", netPosDist, minDist);
-	}
 
 	m_netLastUpdate = curTime;
 
@@ -197,34 +191,6 @@ void CNetPlayerInput::UpdateInterpolation()
 	{
 		m_passedPredictionPos = true;
 	}
-
-#if !defined(_RELEASE)
-
-	if (g_pGameCVars->pl_debugInterpolation)
-	{
-		CryWatch("Cur: (%f, %f, %f) Des: (%f, %f, %f) Pred: (%f, %f, %f) ", entPos.x, entPos.y, entPos.z, desiredPosition.x, desiredPosition.y, desiredPosition.z, m_predictedPosition.x, m_predictedPosition.y, m_predictedPosition.z);
-		CryWatch("BlockTime: (%f) PredictTime (%f) LastNetTime (%f) CurTime (%f)", m_blockedTime, dt, m_netLastUpdate.GetSeconds(), curTime.GetSeconds());
-		CryWatch("Lerp Speed: (%f) Passed pred pos (%d) Passed net pos (%d)", m_netLerpSpeed, m_passedPredictionPos, m_passedNetPos);
-		CryWatch("InputSpeed: (%f, %f, %f) ", desiredVelocity.x, desiredVelocity.y, desiredVelocity.z);
-		IRenderAuxGeom *pRender = gEnv->pRenderer->GetIRenderAuxGeom();
-		SAuxGeomRenderFlags flags = pRender->GetRenderFlags();
-		SAuxGeomRenderFlags oldFlags = pRender->GetRenderFlags();
-		flags.SetDepthWriteFlag(e_DepthWriteOff);
-		flags.SetDepthTestFlag(e_DepthTestOff);
-		pRender->SetRenderFlags(flags);
-		pRender->DrawSphere(desiredPosition + Vec3(0.0f, 0.0f, 0.035f), 0.07f, ColorB(255, 0, 0, 255));
-		pRender->DrawSphere(m_predictedPosition + Vec3(0.0f, 0.0f, 0.025f), 0.05f, ColorB(255, 255, 255, 255));
-		pRender->SetRenderFlags(oldFlags);
-		ColorF ballCol = m_passedPredictionPos ? ColorF(1.0f, 1.0f, 0.0f, 0.75f) : (m_passedNetPos ? ColorF(1.0f, 1.0f, 1.0f, 0.75f) : ColorF(0.0f, 1.0f, 0.0f, 0.75f));
-		g_pGame->GetIGameFramework()->GetIPersistantDebug()->Begin("INTERPOLATION TRAIL", false);
-		g_pGame->GetIGameFramework()->GetIPersistantDebug()->AddSphere(desiredPosition + Vec3(0.0f, 0.0f, 0.1f),  0.04f, ColorF(1.0f, 0.0f, 0.0f, 0.75f), 30.f);
-		g_pGame->GetIGameFramework()->GetIPersistantDebug()->AddSphere(m_predictedPosition + Vec3(0.0f, 0.0f, 0.1f),  0.03f, ColorF(0.0f, 0.0f, 1.0f, 0.8f), 30.f);
-		ballCol.a = 1.0f;
-		g_pGame->GetIGameFramework()->GetIPersistantDebug()->AddSphere(entPos + Vec3(0.0f, 0.0f, 0.1f),  0.02f, ballCol, 30.f);
-		g_pGame->GetIGameFramework()->GetIPersistantDebug()->AddLine(entPos + Vec3(0.0f, 0.0f, 0.1f), m_predictedPosition + Vec3(0.0f, 0.0f, 0.1f), ballCol, 30.f);
-	}
-
-#endif //!_RELEASE
 }
 
 void CNetPlayerInput::UpdateMoveRequest()
@@ -563,11 +529,6 @@ void CNetPlayerInput::GetDesiredVel(const Vec3 &pos, Vec3 &vel) const
 			Vec3	parallelVel		= m_initialDir * parallelSpeed;
 			Vec3  pathCorrection = vel - parallelVel;
 			vel = parallelVel + (g_pGameCVars->pl_velocityInterpPathCorrection * pathCorrection);
-
-			if (g_pGameCVars->pl_debugInterpolation)
-			{
-				CryWatch("Offset: (%f, %f, %f) InitDir: (%f, %f, %f) DesiredVel: (%f, %f, %f)", offset.x, offset.y, offset.z, m_initialDir.x, m_initialDir.y, m_initialDir.z, vel.x, vel.y, vel.z);
-			}
 		}
 	}
 }
