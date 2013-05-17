@@ -5,7 +5,6 @@
 #include "GameCVars.h"
 #include "PlayerInput.h"
 #include "GameActions.h"
-#include "NetInputChainDebug.h"
 
 #undef CALL_PLAYER_EVENT_LISTENERS
 #define CALL_PLAYER_EVENT_LISTENERS(func) \
@@ -100,8 +99,6 @@ void CPlayerMovement::Commit( CPlayer &player )
 	{
 		m_request.allowStrafe = m_movement.allowStrafe;
 		m_request.prediction = m_movement.prediction;
-		NETINPUT_TRACE(m_player.GetEntityId(), m_request.rotation * FORWARD_DIRECTION);
-		NETINPUT_TRACE(m_player.GetEntityId(), m_request.velocity);
 		m_request.jumping = m_stats.jumped;
 		m_player.DebugGraph_AddValue("ReqVelo", m_request.velocity.GetLength());
 		m_player.DebugGraph_AddValue("ReqVeloX", m_request.velocity.x);
@@ -125,9 +122,6 @@ void CPlayerMovement::Commit( CPlayer &player )
 	{
 		player.CreateScriptEvent("jumped", 0);
 	}
-
-	NETINPUT_TRACE(m_player.GetEntityId(), m_velocity);
-	NETINPUT_TRACE(m_player.GetEntityId(), m_jumped);
 
 	// Reset ground timer to prevent ground time before the jump to be inherited
 	// and incorrectly/prematurely used to identify landing in mid air in MP.
@@ -1481,10 +1475,6 @@ void CPlayerMovement::ProcessOnGroundOrJumping(CPlayer &player)
 			// this leaves the decision of whether or not to use sprinting with the original code
 			paramsSprintMul = pPlayerStanceInfo->sprintSpeed / pPlayerStanceInfo->runSpeed;
 		}
-
-		NETINPUT_TRACE(m_player.GetEntityId(), backwardMul);
-		NETINPUT_TRACE(m_player.GetEntityId(), strafeMul);
-
 		if (customScale > 0.0f)
 		{
 			desiredVelocityClamped.Normalize();
@@ -1512,10 +1502,8 @@ void CPlayerMovement::ProcessOnGroundOrJumping(CPlayer &player)
 			}
 		}
 
-		NETINPUT_TRACE(m_player.GetEntityId(), moveModule);
 		//move *= m_animParams.runSpeed/GetStanceMaxSpeed(m_stance);
 		bool speedMode = false;
-		NETINPUT_TRACE(m_player.GetEntityId(), sprintMult);
 
 		if (gEnv->bMultiplayer)
 		{
@@ -1552,8 +1540,6 @@ void CPlayerMovement::ProcessOnGroundOrJumping(CPlayer &player)
 	{
 		move *= scale;
 	}
-
-	NETINPUT_TRACE(m_player.GetEntityId(), scale);
 
 	//when using gravity boots speed can be slowed down
 	if (m_player.GravityBootsOn())
@@ -1807,19 +1793,6 @@ void CPlayerMovement::ProcessOnGroundOrJumping(CPlayer &player)
 		}
 	}
 
-	/*
-		{
-			Vec3 slideDirection = m_stats.groundNormal;
-			slideDirection.z = 0.0f;
-
-			ISurfaceType* pSurface = gEnv->p3DEngine->GetMaterialManager()->GetSurfaceTypeManager()->GetSurfaceType(m_stats.groundMaterialIdx);
-			const ISurfaceType::SPhysicalParams& params = pSurface->GetPhyscalParams();
-
-			float slideScale = 4.0f * (1.0f - CLAMP((params.friction - 0.1f) / 0.3f, 0.0f, 1.0f));
-			desiredVel += slideScale * slideDirection;
-		}
-	*/
-	NETINPUT_TRACE(m_player.GetEntityId(), jumpVec);
 	m_request.velocity = desiredVel + jumpVec;
 
 	if(!m_stats.inZeroG && (m_movement.jump && (g_pGameCVars->dt_enable && m_stats.inAir > 0.3f)) && m_request.velocity.len() > 22.0f)	//cap maximum velocity when jumping (limits speed jump length)
@@ -1850,7 +1823,6 @@ void CPlayerMovement::AdjustMovementForEnvironment( Vec3 &move, bool sprinting )
 {
 	//player is slowed down by carrying heavy objects (max. 33%)
 	float massFactor = m_player.GetMassFactor();
-	NETINPUT_TRACE(m_player.GetEntityId(), massFactor);
 	move *= massFactor;
 }
 

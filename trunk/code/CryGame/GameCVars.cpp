@@ -18,7 +18,6 @@
 #include <IGameObject.h>
 #include <IActorSystem.h>
 #include "ServerSynchedStorage.h"
-#include "NetInputChainDebug.h"
 #include "INetworkService.h"
 
 #include <IPathfinder.h>
@@ -686,7 +685,6 @@ void SCVars::InitCVars(IConsole *pConsole)
 	REGISTER_CVAR(g_animatorDebug, false, 0, "Animator Debug Info");
 	REGISTER_CVAR(g_forceItemRespawnTimer, 0.f, 0, "Override the amount of time it takes to respawn an item (0=disable override)");
 	REGISTER_CVAR(g_defaultItemRespawnTimer, 5.f, 0, "Default amount of time to respawn an item - used if the actual timer length is lost in a host migration");
-	NetInputChainInitCVars();
 	InitAIPerceptionCVars(pConsole);
 }
 
