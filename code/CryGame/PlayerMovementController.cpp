@@ -5,7 +5,6 @@
 #include "ITimer.h"
 #include "IVehicleSystem.h"
 #include "GameCVars.h"
-#include "NetInputChainDebug.h"
 #include "IPlayerInput.h"
 
 #define ENABLE_NAN_CHECK
@@ -888,9 +887,6 @@ bool CPlayerMovementController::UpdateNormal( float frameTime, SActorFrameMoveme
 			}
 
 			float stanceSpeed = m_pPlayer->GetStanceMaxSpeed(m_pPlayer->GetStance());
-			NETINPUT_TRACE(m_pPlayer->GetEntityId(), desiredSpeed);
-			NETINPUT_TRACE(m_pPlayer->GetEntityId(), stanceSpeed);
-			NETINPUT_TRACE(m_pPlayer->GetEntityId(), desiredMovement);
 
 			if ((desiredSpeed > MIN_DESIRED_SPEED) && stanceSpeed > 0.001f)
 			{
@@ -1440,10 +1436,6 @@ bool CPlayerMovementController::UpdateNormal( float frameTime, SActorFrameMoveme
 		}
 	}
 
-	NETINPUT_TRACE(m_pPlayer->GetEntityId(), params.desiredVelocity);
-	NETINPUT_TRACE(m_pPlayer->GetEntityId(), params.desiredLean);
-	NETINPUT_TRACE(m_pPlayer->GetEntityId(), Vec3(params.deltaAngles));
-	NETINPUT_TRACE(m_pPlayer->GetEntityId(), params.sprint);
 	return true;
 }
 
