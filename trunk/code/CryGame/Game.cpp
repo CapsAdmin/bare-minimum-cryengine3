@@ -47,11 +47,7 @@
 
 #include "Player.h"
 
-#include "GameMechanismManager/GameMechanismManager.h"
 #include "ICheckPointSystem.h"
-
-#include "CodeCheckpointDebugMgr.h"
-
 
 #define GAME_DEBUG_MEM  // debug memory usage
 #undef  GAME_DEBUG_MEM
@@ -98,7 +94,6 @@ CGame::CGame()
 	g_pGame = this;
 	m_bReload = false;
 	m_inDevMode = false;
-	m_pGameMechanismManager = new CGameMechanismManager();
 	m_pDefaultAM = 0;
 	m_pMultiplayerAM = 0;
 	GetISystem()->SetIGame( this );
@@ -111,7 +106,6 @@ CGame::~CGame()
 	gEnv->pSystem->GetISystemEventDispatcher()->RemoveListener(this);
 	ReleaseScriptBinds();
 	//SAFE_DELETE(m_pCameraManager);
-	SAFE_DELETE(m_pGameMechanismManager);
 	SAFE_DELETE(m_pCVars);
 	ClearGameSessionHandler(); // make sure this is cleared before the gamePointer is gone
 	g_pGame = 0;
@@ -230,7 +224,6 @@ int CGame::Update(bool haveFocus, unsigned int updateFlags)
 {
 	bool bRun = m_pFramework->PreUpdate( true, updateFlags );
 	float frameTime = gEnv->pTimer->GetFrameTime();
-	m_pGameMechanismManager->Update(frameTime);
 	m_pFramework->PostUpdate( true, updateFlags );
 	return bRun ? 1 : 0;
 }
