@@ -18,22 +18,16 @@ History:
 #include "PlayerView.h"
 #include "GameUtils.h"
 
-#include "Weapon.h"
-#include "WeaponSystem.h"
-#include "OffHand.h"
-#include "Fists.h"
 #include "GameRules.h"
 
 #include "Camera/CameraManager.h"
 #include "Camera/CameraView.h"
 
 #include <IViewSystem.h>
-#include <IItemSystem.h>
 #include <IPhysics.h>
 #include <ICryAnimation.h>
 #include "IAISystem.h"
 #include "IAgent.h"
-#include <IVehicleSystem.h>
 #include <ISerialize.h>
 #include <ISound.h>
 #include "IMaterialEffects.h"
@@ -199,7 +193,6 @@ CPlayer::CPlayer(): m_pInteractor(NULL),
 	m_bDemoModeSpectator(false),
 	m_nParachuteSlot(0),
 	m_fParachuteMorph(0.0f),
-	m_pVehicleClient(NULL),
 	m_pVoiceListener(NULL),
 	m_forcedLookDir(ZERO),
 	m_forcedLookObjectId(0),
@@ -216,7 +209,6 @@ CPlayer::CPlayer(): m_pInteractor(NULL),
 	m_viewQuatFinal(IDENTITY),
 	m_baseQuat(IDENTITY),
 	m_eyeOffset(ZERO),
-	m_weaponOffset(ZERO),
 	m_pDebugHistoryManager(NULL),
 	m_pSoundProxy(NULL),
 	m_bVoiceSoundPlaying(false),
@@ -231,7 +223,6 @@ CPlayer::CPlayer(): m_pInteractor(NULL),
 		m_sounds[i] = 0;
 	}
 
-	m_vehicleViewDir.Set(0, 1, 0);
 	s_globPlayerList.push_back(this);
 }
 
@@ -372,11 +363,8 @@ void CPlayer::BindInputs( IAnimationGraphState *pAGState )
 	if (pAGState)
 	{
 		m_inputAction = pAGState->GetInputId("Action");
-		m_inputItem = pAGState->GetInputId("Item");
 		m_inputUsingLookIK = pAGState->GetInputId("UsingLookIK");
 		m_inputAiming = pAGState->GetInputId("Aiming");
-		m_inputVehicleName = pAGState->GetInputId("Vehicle");
-		m_inputVehicleSeat = pAGState->GetInputId("VehicleSeat");
 		m_inputDesiredTurnSpeed = pAGState->GetInputId("DesiredTurnSpeed");
 	}
 
@@ -391,10 +379,7 @@ void CPlayer::ResetAnimGraph()
 
 		if (pAGState != NULL)
 		{
-			pAGState->SetInput( m_inputItem, "nw" );
 			m_pAnimatedCharacter->GetAnimationGraphState()->SetInput( m_inputSignal, "none" );
-			m_pAnimatedCharacter->GetAnimationGraphState()->SetInput( m_inputVehicleName, "none" );
-			m_pAnimatedCharacter->GetAnimationGraphState()->SetInput( m_inputVehicleSeat, 0 );
 			m_pAnimatedCharacter->GetAnimationGraphState()->SetInput( m_inputWaterLevel, 0 );
 		}
 
@@ -578,136 +563,6 @@ void CPlayer::Draw(bool draw)
 //MR: thats true, check especially client/server
 void CPlayer::UpdateFirstPersonEffects(float frameTime)
 {
-	//===========================Stop firing weapon while sprinting/prone moving==============
-	if(IItem *pItem = GetCurrentItem())
-	{
-		if(pItem->GetIWeapon() && !CanFire())
-		{
-			pItem->GetIWeapon()->StopFire();
-		}
-	}
-
-	//========================================================================================
-	CFists *pFists = static_cast<CFists *>(GetItemByClass(CItem::sFistsClass));
-	COffHand *pOffHand = static_cast<COffHand *>(GetItemByClass(CItem::sOffHandClass));
-	//update freefall/parachute effects
-	bool freefallChanged(m_stats.inFreefallLast != m_stats.inFreefall.Value());
-
-	if (m_stats.inFreefall && pFists)
-	{
-		char buff[32];
-		buff[0] = 0;
-
-		if (m_stats.inFreefall.Value() == 1)
-			if (freefallChanged)
-			{
-				strcpy(buff, "freefall_start");
-
-				if(pOffHand && pOffHand->IsSelected())
-				{
-					if(pOffHand->GetOffHandState() & (eOHS_HOLDING_OBJECT | eOHS_THROWING_OBJECT))
-					{
-						//Force drop object
-						pOffHand->OnAction(GetEntityId(), "zoom", eAAM_OnPress, 0);
-						pOffHand->OnAction(GetEntityId(), "zoom", eAAM_OnRelease, 0);
-					}
-					else if(pOffHand->GetOffHandState() & (eOHS_HOLDING_NPC | eOHS_THROWING_NPC))
-					{
-						//Force throw (we don't have drop for NPC's)
-						pOffHand->OnAction(GetEntityId(), "use", eAAM_OnPress, 0);
-						pOffHand->OnAction(GetEntityId(), "use", eAAM_OnRelease, 0);
-					}
-					else if(pOffHand->GetOffHandState()&eOHS_HOLDING_GRENADE)
-					{
-						pOffHand->CancelAction();
-						pFists->SetActionSuffix("");
-					}
-				}
-			}
-			else
-			{
-				strcpy(buff, "freefall_idle");
-			}
-		else if (m_stats.inFreefall.Value() == 2)
-			if (freefallChanged)
-			{
-				strcpy(buff, "parachute_start");
-			}
-			else
-			{
-				strcpy(buff, "parachute_idle");
-			}
-
-		pFists->EnterFreeFall(true);
-
-		if (freefallChanged && m_stats.inFreefall.Value() == 1)
-		{
-			CItem *currentItem = (CItem *)GetCurrentItem();
-
-			if (!currentItem || pFists->GetEntityId() != currentItem->GetEntityId())
-			{
-				if (currentItem)
-				{
-					GetInventory()->SetLastItem(currentItem->GetEntityId());
-				}
-
-				// we have another item selected
-				if(pFists->GetEntity()->GetCharacter(0))
-				{
-					pFists->GetEntity()->GetCharacter(0)->GetISkeletonPose()->SetDefaultPose();
-				}
-
-				// deselect it
-				if (currentItem)
-				{
-					currentItem->PlayAction(g_pItemStrings->deselect, CItem::eIPAF_FirstPerson, false, CItem::eIPAF_Default | CItem::eIPAF_RepeatLastFrame);
-				}
-
-				// schedule to start swimming after deselection is finished
-				pFists->EnableAnimations(false);
-				gEnv->pGame->GetIGameFramework()->GetIItemSystem()->SetActorItem(this, pFists->GetEntityId());
-				pFists->EnableAnimations(true);
-				//fists->SetBusy(true);
-			}
-			else
-			{
-				// we already have the fists up
-				GetInventory()->SetLastItem(pFists->GetEntityId());
-				//fists->SetBusy(true);
-			}
-		}
-
-		//play animation
-		pFists->SetDefaultIdleAnimation(eIGS_FirstPerson, buff);
-		pFists->PlayAction(buff);
-	}
-	else if (freefallChanged && !m_stats.inFreefall && pFists)
-	{
-		//fists->SetBusy(false);
-
-		//reactivate last item
-		if(!GetLinkedVehicle())
-		{
-			EntityId lastItemId = GetInventory()->GetLastItem();
-			CItem *lastItem = (CItem *)gEnv->pGame->GetIGameFramework()->GetIItemSystem()->GetItem(lastItemId);
-			pFists->PlayAction(g_pItemStrings->idle);
-			pFists->SetDefaultIdleAnimation(eIGS_FirstPerson, g_pItemStrings->idle);
-			pFists->ResetAnimation();
-			pFists->GetScheduler()->Reset();
-			pFists->EnterFreeFall(false);
-
-			if (lastItemId && lastItem && lastItemId != pFists->GetEntityId() && !GetInventory()->GetCurrentItem() && !m_stats.isOnLadder)
-			{
-				lastItem->ResetAnimation();
-
-				if(!pOffHand || (pOffHand->GetOffHandState() == eOHS_INIT_STATE))
-				{
-					gEnv->pGame->GetIGameFramework()->GetIItemSystem()->SetActorItem(this, lastItemId);
-				}
-			}
-		}
-	}
-
 	m_stats.inFreefallLast = m_stats.inFreefall.Value();
 	m_bUnderwater = (m_stats.headUnderWaterTimer > 0.0f);
 }
@@ -920,8 +775,6 @@ void CPlayer::Update(SEntityUpdateContext &ctx, int updateSlot)
 		}
 	}
 
-	UpdateWeaponRaising();
-
 	// if spectating, send health of the spectator target to our client when it changes
 	if(gEnv->bServer && gEnv->bMultiplayer && g_pGame->GetGameRules() && m_stats.spectatorMode == CActor::eASM_Follow)
 	{
@@ -978,9 +831,6 @@ void CPlayer::UpdateSounds(float fFrameTime)
 		{
 			bConcentration = true;
 		}
-
-		// Don't set concentration sound mood while binoculars are used
-		IItem *pCurrentItem = GetCurrentItem();
 
 		if(bConcentration != m_bConcentration)
 		{
@@ -1049,59 +899,6 @@ void CPlayer::UpdateParachute(float frameTime)
 	else if (m_stats.inFreefall.Value() == -1)
 	{
 		ChangeParachuteState(0);
-	}
-}
-
-//-------------------------------------------------------------------
-void CPlayer::UpdateWeaponRaising()
-{
-	uint8 pose = (uint8)eWeaponRaisedPose_None;
-	EntityId currentItem = GetCurrentItemId(true);
-	CWeapon *pWeapon = GetWeapon(currentItem);
-
-	if (pWeapon != NULL)
-	{
-		bool raised = false;
-
-		if (pWeapon->IsDualWield())
-		{
-			CWeapon *pWeaponMaster = static_cast<CWeapon *>(pWeapon->GetDualWieldMaster());
-			CWeapon *pWeaponSlave = static_cast<CWeapon *>(pWeapon->GetDualWieldSlave());
-
-			if (pWeaponMaster == NULL)
-			{
-				pWeaponMaster = pWeapon;
-			}
-
-			if (pWeaponSlave && pWeaponSlave->IsWeaponRaised())
-			{
-				pose |= (uint8)eWeaponRaisedPose_DualLft;
-			}
-
-			if (pWeaponMaster && pWeaponMaster->IsWeaponRaised())
-			{
-				pose |= (uint8)eWeaponRaisedPose_DualRgt;
-			}
-
-			if (pose != eWeaponRaisedPose_None)
-			{
-				raised = true;
-			}
-		}
-		else if (pWeapon->IsWeaponRaised())
-		{
-			raised = true;
-		}
-
-		if (raised)
-		{
-			pose |= pWeapon->GetRaisePose();
-		}
-	}
-
-	if(m_pAnimatedCharacter)
-	{
-		m_pAnimatedCharacter->SetWeaponRaisedPose((EWeaponRaisedPose)pose);
 	}
 }
 
@@ -1283,11 +1080,6 @@ void CPlayer::PrePhysicsUpdate()
 
 	bool client(IsClient());
 	float frameTime = gEnv->pTimer->GetFrameTime();
-
-	if (IVehicle *vehicle = GetLinkedVehicle())
-	{
-		vehicle->UpdatePassenger(frameTime, GetEntityId());
-	}
 
 	//FIXME:
 	// make first person ignore animation speed, and everything else use it
@@ -1478,10 +1270,6 @@ void CPlayer::PrePhysicsUpdate()
 				{
 					SetStance(STANCE_SWIM);
 				}
-				else if (m_stats.grabbedHeavyEntity == 2) //Holding and NPC
-				{
-					SetStance(STANCE_STAND);
-				}
 				else if(m_stats.forceCrouchTime > 0.0f)
 				{
 					SetStance(STANCE_CROUCH);
@@ -1489,20 +1277,7 @@ void CPlayer::PrePhysicsUpdate()
 				else if (frameMovementParams.stance != STANCE_NULL)
 				{
 					//Check if it's possible to change to prone (most probably we come from crouch here)
-					if(frameMovementParams.stance == STANCE_PRONE)
-					{
-						CItem *pItem = static_cast<CItem *>(GetCurrentItem());
-
-						if(m_stats.grabbedHeavyEntity || (pItem && pItem->GetParams().prone_not_usable))
-						{
-							SetStance(STANCE_CROUCH);
-						}
-						else
-						{
-							SetStance(frameMovementParams.stance);
-						}
-					}
-					else
+					if(frameMovementParams.stance != STANCE_PRONE)
 					{
 						SetStance(frameMovementParams.stance);
 					}
@@ -1521,7 +1296,7 @@ void CPlayer::PrePhysicsUpdate()
 				m_pMovementController->PostUpdate(frameTime);
 			}
 
-			if (m_linkStats.CanDoIK() || (gEnv->bMultiplayer && GetLinkedVehicle()))
+			if (m_linkStats.CanDoIK())
 			{
 				SetIK(frameMovementParams);
 			}
@@ -1586,30 +1361,6 @@ void CPlayer::SetIK( const SActorFrameMovementParams &frameMovementParams )
 	SMovementState curMovementState;
 	m_pMovementController->GetMovementState(curMovementState);
 	pGraph->SetInput( m_inputUsingLookIK, int(frameMovementParams.lookIK || frameMovementParams.aimIK) );
-	// -----------------------------------
-	// LOOKING
-	// -----------------------------------
-	bool lookEnabled = frameMovementParams.lookIK && !m_stats.isGrabbed && m_pAnimatedCharacter->IsLookIkAllowed();
-
-	if (!lookEnabled || IsClient() || !GetLinkedVehicle())
-	{
-		// Normal case
-		m_lookAim.UpdateLook( this, pCharacter, lookEnabled, GetLookFOV(m_params), frameMovementParams.lookTarget );
-	}
-	else
-	{
-		// Special case for non-clients in vehicles
-		// don't allow spine to move in vehicles else the hands won't be on the wheel
-		float lookIKBlends[5];
-		lookIKBlends[0] = 0.00f;		// spine 1
-		lookIKBlends[1] = 0.00f;		// spine 2
-		lookIKBlends[2] = 0.00f;		// spine 3
-		lookIKBlends[3] = 0.00f;		// neck
-		lookIKBlends[4] = 0.7f;		// head
-		// look in 'vehicleviewdir' (NOTE: this code should probably be somewhere else, including the vehicleViewDir concept)
-		Vec3 target = curMovementState.eyePosition + 5.0f * m_vehicleViewDir;
-		m_lookAim.UpdateLook( this, pCharacter, true, GetLookFOV(m_params), target, lookIKBlends );
-	}
 
 	// -----------------------------------
 	// AIMING
@@ -1642,9 +1393,8 @@ void CPlayer::UpdateView(SViewParams &viewParams)
 	viewParams.position = GetEntity()->GetWorldPos() + GetEyeOffset();
 	viewParams.rotation = this->GetViewRotation();
 	viewParams.fov = DEG2RAD(75);
-	{
-		return;
-	}
+
+	{return;}
 
 	if (viewParams.groundOnly)
 	{
@@ -1694,15 +1444,6 @@ void CPlayer::UpdateView(SViewParams &viewParams)
 			}
 
 			m_lastAnimControlled = animControlled;
-
-			if (CItem *pItem = GetItem(GetInventory()->GetCurrentItem()))
-			{
-				if (pItem->FilterView(viewParams))
-				{
-					assert( viewParams.rotation.IsValid() );
-					m_baseQuat = m_viewQuat = m_viewQuatFinal = viewParams.rotation;
-				}
-			}
 		}
 
 		viewParams.blend = m_viewBlending;
@@ -1724,27 +1465,6 @@ void CPlayer::UpdateView(SViewParams &viewParams)
 
 void CPlayer::PostUpdateView(SViewParams &viewParams)
 {
-	Vec3 shakeVec(viewParams.currentShakeShift * 0.85f);
-	m_stats.FPWeaponPos = viewParams.position + m_stats.FPWeaponPosOffset + shakeVec;;
-	Quat wQuat(viewParams.rotation * Quat::CreateRotationXYZ(m_stats.FPWeaponAnglesOffset * gf_PI / 180.0f));
-	wQuat *= Quat::CreateSlerp(viewParams.currentShakeQuat, IDENTITY, 0.5f);
-	wQuat.NormalizeSafe();
-	m_stats.FPWeaponAngles = Ang3(wQuat);
-	m_stats.FPSecWeaponPos = m_stats.FPWeaponPos;
-	m_stats.FPSecWeaponAngles = m_stats.FPWeaponAngles;
-
-	if (CItem *pItem = GetItem(GetInventory()->GetCurrentItem()))
-	{
-		pItem->PostFilterView(viewParams);
-	}
-
-	//Update grabbed NPC if needed
-	COffHand *pOffHand = static_cast<COffHand *>(GetWeaponByClass(CItem::sOffHandClass));
-
-	if(pOffHand && (pOffHand->GetOffHandState() & (eOHS_GRABBING_NPC | eOHS_HOLDING_NPC | eOHS_THROWING_NPC)))
-	{
-		pOffHand->PostFilterView(viewParams);
-	}
 }
 
 void CPlayer::RegisterPlayerEventListener(IPlayerEventListener *pPlayerEventListener)
@@ -1755,60 +1475,6 @@ void CPlayer::RegisterPlayerEventListener(IPlayerEventListener *pPlayerEventList
 void CPlayer::UnregisterPlayerEventListener(IPlayerEventListener *pPlayerEventListener)
 {
 	stl::find_and_erase(m_playerEventListeners, pPlayerEventListener);
-}
-
-IEntity *CPlayer::LinkToVehicle(EntityId vehicleId)
-{
-	IEntity *pLinkedEntity = CActor::LinkToVehicle(vehicleId);
-
-	if (pLinkedEntity)
-	{
-		CHECKQNAN_VEC(m_modelOffset);
-		m_modelOffset.Set(0, 0, 0);
-		GetAnimatedCharacter()->SetExtraAnimationOffset(QuatT(m_modelOffset, IDENTITY));
-		CHECKQNAN_VEC(m_modelOffset);
-		//		ResetAnimations();
-		IVehicle *pVehicle = gEnv->pGame->GetIGameFramework()->GetIVehicleSystem()->GetVehicle(vehicleId);
-
-		if (IVehicleSeat *pSeat = pVehicle->GetSeatForPassenger(GetEntity()->GetId()))
-		{
-			CALL_PLAYER_EVENT_LISTENERS(OnEnterVehicle(this, pVehicle->GetEntity()->GetClass()->GetName(), pSeat->GetSeatName(), m_stats.isThirdPerson));
-		}
-
-		// don't interpolate to vehicle camera (otherwise it intersects the vehicle)
-		if(IsClient())
-		{
-			SupressViewBlending();
-
-			if(!IsThirdPerson())
-			{
-				ToggleThirdPerson();
-			}
-		}
-	}
-	else
-	{
-		if (IsThirdPerson() && !g_pGameCVars->goc_enable)
-		{
-			ToggleThirdPerson();
-		}
-
-		if (g_pGameCVars->goc_enable && !IsThirdPerson())
-		{
-			ToggleThirdPerson();
-		}
-
-		CALL_PLAYER_EVENT_LISTENERS(OnExitVehicle(this));
-		m_vehicleViewDir.Set(0, 1, 0);
-
-		// don't interpolate back from vehicle camera (otherwise you see your own legs)
-		if(IsClient())
-		{
-			SupressViewBlending();
-		}
-	}
-
-	return pLinkedEntity;
 }
 
 IEntity *CPlayer::LinkToEntity(EntityId entityId, bool bKeepTransformOnDetach)
@@ -1842,39 +1508,6 @@ IEntity *CPlayer::LinkToEntity(EntityId entityId, bool bKeepTransformOnDetach)
 	}
 
 	return pLinkedEntity;
-}
-
-void CPlayer::LinkToMountedWeapon(EntityId weaponId)
-{
-	m_stats.mountedWeaponID = weaponId;
-
-	if(!m_pAnimatedCharacter)
-	{
-		return;
-	}
-
-	SAnimatedCharacterParams params = m_pAnimatedCharacter->GetParams();
-
-	if (weaponId)
-	{
-		if (!IsClient())
-		{
-			params.flags &= ~eACF_EnableMovementProcessing;
-		}
-
-		params.flags |= eACF_NoLMErrorCorrection;
-	}
-	else
-	{
-		if (!IsClient())
-		{
-			params.flags |= eACF_EnableMovementProcessing;
-		}
-
-		params.flags &= ~eACF_NoLMErrorCorrection;
-	}
-
-	m_pAnimatedCharacter->SetParams( params );
 }
 
 // PLAYERPREDICTION
@@ -1977,29 +1610,9 @@ void CPlayer::SufferingHighLatency(bool highLatency)
 		{
 			m_pPlayerInput->Reset();
 		}
-
-		if (IVehicle *pVehicle = GetLinkedVehicle())
-		{
-			if (IActor *pActor = pVehicle->GetDriver())
-			{
-				if (pActor->GetEntityId() == GetEntityId())
-				{
-					if (IVehicleMovement *pMovement = pVehicle->GetMovement())
-					{
-						pMovement->ResetInput();
-					}
-				}
-			}
-		}
 	}
 
 	m_sufferingHighLatency = highLatency;
-}
-
-void CPlayer::SetViewInVehicle(Quat viewRotation)
-{
-	m_vehicleViewDir = viewRotation * Vec3(0, 1, 0);
-	GetGameObject()->ChangedNetworkState(IPlayerInput::INPUT_ASPECT);
 }
 
 void CPlayer::StanceChanged(EStance last)
@@ -2101,7 +1714,6 @@ void CPlayer::SetParams(SmartScriptTable &rTable, bool resetFirst)
 	params.GetValue("sprintMultiplier", m_params.sprintMultiplier);
 	params.GetValue("strafeMultiplier", m_params.strafeMultiplier);
 	params.GetValue("backwardMultiplier", m_params.backwardMultiplier);
-	params.GetValue("grabMultiplier", m_params.grabMultiplier);
 	params.GetValue("afterburnerMultiplier", m_params.afterburnerMultiplier);
 	params.GetValue("inertia", m_params.inertia);
 	params.GetValue("inertiaAccel", m_params.inertiaAccel);
@@ -2139,7 +1751,6 @@ bool CPlayer::GetParams(SmartScriptTable &rTable)
 	params.SetValue("sprintMultiplier", m_params.sprintMultiplier);
 	params.SetValue("strafeMultiplier", m_params.strafeMultiplier);
 	params.SetValue("backwardMultiplier", m_params.backwardMultiplier);
-	params.SetValue("grabMultiplier", m_params.grabMultiplier);
 	params.SetValue("jumpHeight", m_params.jumpHeight);
 	params.SetValue("leanShift", m_params.leanShift);
 	params.SetValue("leanAngle", m_params.leanAngle);
@@ -2208,11 +1819,6 @@ bool CPlayer::ShouldSwim()
 	}
 
 	if ((m_stats.velocity.z < -1.0f) && (m_stats.relativeWaterLevel > 0.0f) && (m_stats.inWaterTimer < -2.0f))
-	{
-		return false;
-	}
-
-	if (GetLinkedVehicle() != NULL)
 	{
 		return false;
 	}
@@ -2293,12 +1899,6 @@ void CPlayer::UpdateSwimStats(float frameTime)
 
 	Vec3 worldHeadPos = GetEntity()->GetWorldPos() + localHeadPos;
 	float headWaterLevel = worldHeadPos.z - surfacePos.z;
-
-	// when inside a vehicle (like a boat or amphibious APC) we always assume to be 'above water'
-	if (GetLinkedVehicle())
-	{
-		headWaterLevel = 0.3f;
-	}
 
 	if (headWaterLevel < 0.0f)
 	{
@@ -2570,21 +2170,7 @@ void CPlayer::UpdateStats(float frameTime)
 	{
 		return;
 	}
-
-	if (gEnv->IsDedicated() && GetLinkedVehicle())
-	{
-		// leipzig: force inactive (was active on ded. servers)
-		pe_player_dynamics paramsGet;
-
-		if (pPhysEnt->GetParams(&paramsGet))
-		{
-			if (paramsGet.bActive && m_pAnimatedCharacter)
-			{
-				m_pAnimatedCharacter->RequestPhysicalColliderMode(eColliderMode_Disabled, eColliderModeLayer_Game, "Player::UpdateStats");
-			}
-		}
-	}
-
+	
 	bool isPlayer(IsPlayer());
 	// Update always the logical representation.
 	// [Mikko] The logical representation used to be updated later in the function
@@ -2607,7 +2193,6 @@ void CPlayer::UpdateStats(float frameTime)
 
 	CHECKQNAN_VEC(m_eyeOffset);
 	CHECKQNAN_VEC(m_weaponOffset);
-	Interpolate(m_weaponOffset, GetWeaponOffsetWithLean(m_stance, m_stats.leanAmount, m_stats.peekOverAmount, m_eyeOffset), 5.0f, frameTime);
 	CHECKQNAN_VEC(m_weaponOffset);
 	pe_player_dynamics simPar;
 
@@ -2618,7 +2203,6 @@ void CPlayer::UpdateStats(float frameTime)
 		simPar.type = simParType;
 	}
 
-	//if (GetLinkedVehicle())
 	const SAnimationTarget *pTarget = NULL;
 
 	if(GetAnimationGraphState())
@@ -2636,7 +2220,7 @@ void CPlayer::UpdateStats(float frameTime)
 	UpdateSwimStats(frameTime);
 
 	//FIXME:
-	if ((m_stats.spectatorMode || (!simPar.bActive && !isClient) || m_stats.flyMode || GetLinkedVehicle()) && !forceForAnimTarget)
+	if (m_stats.spectatorMode || (!simPar.bActive && !isClient) || m_stats.flyMode)
 	{
 		ChangeParachuteState(0);
 		m_stats.velocity = m_stats.velocityUnconstrained.Set(0, 0, 0);
@@ -2871,18 +2455,8 @@ void CPlayer::UpdateStats(float frameTime)
 		}
 	}
 
-	//*
-	DebugGraph_AddValue("OnGround", onGround ? 1.0f : 0.0f);
-	DebugGraph_AddValue("Jumping", m_stats.jumped ? 1.0f : 0.0f);
-	DebugGraph_AddValue("Flying", isFlying ? 1.0f : 0.0f);
-	DebugGraph_AddValue("StuckTimer", m_stats.stuckTimeout);
-	DebugGraph_AddValue("InAirTimer", m_stats.inAir);
-	DebugGraph_AddValue("OnGroundTimer", m_stats.onGround);
-	DebugGraph_AddValue("InWaterTimer", m_stats.inWaterTimer);
-	/**/
-
 	//update status table
-	if (!onGround && !m_stats.spectatorMode && !GetLinkedVehicle())
+	if (!onGround && !m_stats.spectatorMode)
 	{
 		if (ShouldSwim())
 		{
@@ -3015,12 +2589,6 @@ void CPlayer::UpdateStats(float frameTime)
 	// even though the velocity is set to zero.
 	// Thus we need to use the velocity change instead of landing to identify impact.
 	m_stats.downwardsImpactVelocity = max(0.0f, min(m_stats.velocityUnconstrained.z, 0.0f) - min(prevVelocityU.z, 0.0f));
-
-	// If you land while in a vehicle, don't apply damage.
-	if (GetLinkedVehicle() != NULL)
-	{
-		m_stats.downwardsImpactVelocity = 0.0f;
-	}
 
 	// If you land in deep enough water, don't apply damage.
 	// (In MP the remote ShouldSwim() might lag behind though, so you will get damage unless you have a parachute).
@@ -3349,13 +2917,9 @@ void CPlayer::Revive( bool fromInit )
 	m_eyeOffset.Set(0, 0, 0);
 	m_eyeOffsetView.Set(0, 0, 0);
 	m_modelOffset.Set(0, 0, 0);
-	m_weaponOffset.Set(0, 0, 0);
 	m_groundElevation = 0.0f;
 	m_velocity.Set(0, 0, 0);
 	m_bobOffset.Set(0, 0, 0);
-	m_FPWeaponOffset.Set(0, 0, 0);
-	m_FPWeaponAngleOffset.Set(0, 0, 0);
-	m_FPWeaponLastDirVec.Set(0, 0, 0);
 	m_feetWpos[0] = ZERO;
 	m_feetWpos[1] = ZERO;
 	m_lastAnimContPos = ZERO;
@@ -3401,13 +2965,6 @@ void CPlayer::Revive( bool fromInit )
 		ResetAnimGraph();
 	}
 
-	CItem *pCurrentItem = GetItem(GetInventory()->GetCurrentItem());
-
-	if (pCurrentItem)
-	{
-		pCurrentItem->Select(true);
-	}
-
 	if(!fromInit && IsClient())
 	{
 		if(gEnv->bMultiplayer)
@@ -3423,16 +2980,6 @@ void CPlayer::Revive( bool fromInit )
 			gEnv->pMusicSystem->EndTheme(EThemeFade_FadeOut, 0, true);
 			// cancel voice recording (else channel can be stuck open)
 			g_pGame->GetIGameFramework()->EnableVoiceRecording(false);
-		}
-	}
-
-	if(!GetInventory()->GetCurrentItem() && !GetISystem()->IsSerializingFile())
-	{
-		CFists *pFists = static_cast<CFists *>(GetItemByClass(CItem::sFistsClass));
-
-		if(pFists)
-		{
-			g_pGame->GetIGameFramework()->GetIItemSystem()->SetActorItem(this, pFists->GetEntityId());
 		}
 	}
 
@@ -3464,12 +3011,10 @@ void CPlayer::Revive( bool fromInit )
 		}
 	}
 
-	m_lookAim.Reset();
 	CALL_PLAYER_EVENT_LISTENERS(OnRevive(this, IsGod() > 0));
 
 	if(gEnv->bServer)
 	{
-		GetGameObject()->ChangedNetworkState(ASPECT_CURRENT_ITEM);
 		GetGameObject()->ChangedNetworkState(IPlayerInput::INPUT_ASPECT);
 	}
 
@@ -3497,7 +3042,7 @@ void CPlayer::Revive( bool fromInit )
 
 Vec3 CPlayer::GetStanceViewOffset(EStance stance, float *pLeanAmt, bool withY) const
 {
-	if ((m_stats.inFreefall == 1) || (m_isClient && m_stats.isGrabbed))
+	if ((m_stats.inFreefall == 1))
 	{
 		return GetLocalEyePos2();
 	}
@@ -3549,11 +3094,6 @@ void CPlayer::RagDollize( bool fallAndPlay )
 {
 	if (m_stats.isRagDoll && !gEnv->pSystem->IsSerializingFile())
 	{
-		if(!IsPlayer() && !fallAndPlay)
-		{
-			DropAttachedItems();
-		}
-
 		return;
 	}
 
@@ -3614,11 +3154,6 @@ void CPlayer::RagDollize( bool fallAndPlay )
 		if (pCharacter)
 		{
 			pCharacter->EnableStartAnimation(false);
-		}
-
-		if(!IsPlayer())
-		{
-			DropAttachedItems();
 		}
 	}
 	else
@@ -3744,14 +3279,6 @@ void CPlayer::CameraShake(float angle, float shift, float duration, float freque
 	float angleAmount(max(-90.0f, min(90.0f, angle)) * gf_PI / 180.0f);
 	float shiftAmount(shift);
 
-	if (IVehicle *pVehicle = GetLinkedVehicle())
-	{
-		if (IVehicleSeat *pSeat = pVehicle->GetSeatForPassenger(GetEntityId()))
-		{
-			pSeat->OnCameraShake(angleAmount, shiftAmount, pos, source);
-		}
-	}
-
 	Ang3 shakeAngle(\
 					RANDOMR(0.0f, 1.0f)*angleAmount * 0.15f,
 					(angleAmount * min(1.0f, max(-1.0f, RANDOM() * 7.7f))) * 1.15f,
@@ -3801,11 +3328,6 @@ void CPlayer::ResetAnimations()
 
 void CPlayer::SetHealth(float health )
 {
-	if(m_stats.isGrabbed)
-	{
-		health -= 1;    //Trigger automatic thrown
-	}
-
 	float oldHealth = m_health;
 	CActor::SetHealth(health);
 
@@ -3851,14 +3373,6 @@ void CPlayer::SetHealth(float health )
 		if(m_stats.isOnLadder)
 		{
 			RequestLeaveLadder(eLAT_Die);
-		}
-
-		if(IsClient())
-		{
-			if(IItem *pItem = GetCurrentItem(false))
-			{
-				pItem->Select(false);
-			}
 		}
 
 		// report normal death
@@ -3939,12 +3453,6 @@ void CPlayer::SetAuthority( bool auth )
 	if(auth)
 	{
 		CHANGED_NETWORK_STATE(this, eEA_Physics);
-
-		if (g_pGame->IsGameSessionHostMigrating())
-		{
-			// If we're migrating, we've probably set our selected item before we were allowed to, resend it here
-			CHANGED_NETWORK_STATE(this, ASPECT_CURRENT_ITEM);
-		}
 	}
 }
 
@@ -4006,7 +3514,7 @@ void CPlayer::Freeze(bool freeze)
 		ISkeletonAnim *pSkeletonAnim = pCharacter->GetISkeletonAnim();
 		ISkeletonPose *pSkeletonPose = pCharacter->GetISkeletonPose();
 		pSkeletonPose->DestroyCharacterPhysics();
-		bool zeroMass = m_stats.isOnLadder || (m_linkStats.GetLinkedVehicle() != 0);
+		bool zeroMass = m_stats.isOnLadder;
 		SEntityPhysicalizeParams params;
 		params.nSlot = 0;
 		params.mass = zeroMass ? 0.0f : dyn.mass;
@@ -4073,42 +3581,12 @@ void CPlayer::Freeze(bool freeze)
 			UpdateAnimGraph(m_pAnimatedCharacter->GetAnimationGraphState());
 		}
 	}
-
-	if (IVehicle *pVehicle = GetLinkedVehicle())
-	{
-		IVehicleSeat *pSeat = pVehicle->GetSeatForPassenger(GetEntityId());
-
-		if (pSeat)
-		{
-			if (!freeze)
-			{
-				pSeat->ForceAnimGraphInputs();
-			}
-
-			if (pSeat->IsDriver())
-			{
-				SVehicleMovementEventParams params;
-				params.fValue = freeze ? 1.0f : 0.0f;
-				pVehicle->GetMovement()->OnEvent(IVehicleMovement::eVME_Freeze, params);
-			}
-		}
-	}
-
+	
 	m_params.vLimitDir.zero();
 
-	if (IsPlayer())
+	if (IsPlayer() && freeze)
 	{
-		if (freeze)
-		{
-			m_params.vLimitDir = m_viewQuat.GetColumn1();
-		}
-		else if (CItem *pCurrentItem = static_cast<CItem *>(GetCurrentItem()))
-		{
-			if (pCurrentItem->IsMounted())
-			{
-				pCurrentItem->ApplyViewLimit(GetEntityId(), true);
-			}
-		}
+		m_params.vLimitDir = m_viewQuat.GetColumn1();
 	}
 
 	if (m_pAnimatedCharacter)
@@ -4150,32 +3628,6 @@ void CPlayer::Freeze(bool freeze)
 
 float CPlayer::GetMassFactor() const
 {
-	//code regarding currentItem only
-	EntityId itemId = GetInventory()->GetCurrentItem();
-
-	if (itemId)
-	{
-		float mass = 0;
-
-		if(CWeapon *weap = GetWeapon(itemId))
-		{
-			mass = weap->GetParams().mass;
-		}
-		else if(CItem *item = GetItem(itemId))
-		{
-			mass = item->GetParams().mass;
-		}
-
-		float massFactor = 1.0f - (mass / (m_params.maxGrabMass * GetActorStrength() * 1.75f));
-
-		if (m_stats.inZeroG)
-		{
-			massFactor += (1.0f - massFactor) * 0.5f;
-		}
-
-		return massFactor;
-	}
-
 	return 1.0f;
 }
 
@@ -4211,11 +3663,6 @@ void CPlayer::SetAngles(const Ang3 &angles)
 
 Ang3 CPlayer::GetAngles()
 {
-	if(IsClient() && GetLinkedVehicle())
-	{
-		return Ang3(m_clientViewMatrix);
-	}
-
 	return Ang3(m_viewQuatFinal.GetNormalized());
 }
 
@@ -4224,65 +3671,6 @@ void CPlayer::AddAngularImpulse(const Ang3 &angular, float deceleration, float d
 	m_stats.angularImpulse = angular;
 	m_stats.angularImpulseDeceleration = deceleration;
 	m_stats.angularImpulseTimeMax = m_stats.angularImpulseTime = duration;
-}
-
-void CPlayer::SelectNextItem(int direction, bool keepHistory, const char *category)
-{
-	if (m_health && m_stats.animationControlled || ShouldSwim() || /*m_bSprinting || */m_stats.inFreefall)
-	{
-		return;
-	}
-
-	COffHand *pOffHand = static_cast<COffHand *>(GetWeaponByClass(CItem::sOffHandClass));
-
-	if(pOffHand && pOffHand->IsSelected())
-	{
-		//Grenade throw can be interrupted by switching weapons
-		if((pOffHand->GetOffHandState() == eOHS_HOLDING_GRENADE) && !category)
-		{
-			pOffHand->SetOffHandState(eOHS_INIT_STATE);
-			pOffHand->SetResetTimer(0.25f); //Just in case...
-			pOffHand->RequireUpdate(eIUS_General);
-		}
-		else
-		{
-			return;
-		}
-	}
-
-	EntityId oldItemId = GetCurrentItemId();
-	CActor::SelectNextItem(direction, keepHistory, category);
-
-	if (GetCurrentItemId() && oldItemId != GetCurrentItemId())
-	{
-		m_bSprinting = false;    // force the weapon disabling code to be
-	}
-
-	GetGameObject()->ChangedNetworkState(ASPECT_CURRENT_ITEM);
-}
-
-void CPlayer::HolsterItem(bool holster, bool playSelect)
-{
-	CActor::HolsterItem(holster, playSelect);
-	GetGameObject()->ChangedNetworkState(ASPECT_CURRENT_ITEM);
-}
-
-void CPlayer::SelectLastItem(bool keepHistory, bool forceNext /* = false */)
-{
-	CActor::SelectLastItem(keepHistory, forceNext);
-	GetGameObject()->ChangedNetworkState(ASPECT_CURRENT_ITEM);
-}
-
-void CPlayer::SelectItemByName(const char *name, bool keepHistory)
-{
-	CActor::SelectItemByName(name, keepHistory);
-	GetGameObject()->ChangedNetworkState(ASPECT_CURRENT_ITEM);
-}
-
-void CPlayer::SelectItem(EntityId itemId, bool keepHistory)
-{
-	CActor::SelectItem(itemId, keepHistory);
-	GetGameObject()->ChangedNetworkState(ASPECT_CURRENT_ITEM);
 }
 
 bool CPlayer::SetAspectProfile(EEntityAspects aspect, uint8 profile )
@@ -4299,16 +3687,6 @@ bool CPlayer::SetAspectProfile(EEntityAspects aspect, uint8 profile )
 	}
 
 	bool res = CActor::SetAspectProfile(aspect, profile);
-
-	if (aspect == eEA_Physics)
-	{
-		// transition frozen->linked: need to relink so animgraph and collider modes get updated
-		if (profile == eAP_Linked && currentphys == eAP_Frozen)
-			if (m_linkStats.linkID)
-			{
-				LinkToVehicle(m_linkStats.linkID);
-			}
-	}
 
 	return res;
 }
@@ -4354,25 +3732,6 @@ bool CPlayer::NetSerialize( TSerialize ser, EEntityAspects aspect, uint8 profile
 				if(ser.IsReading())
 				{
 					ChangeParachuteState(isFalling);
-				}
-			}
-			break;
-
-		case ASPECT_CURRENT_ITEM:
-			{
-				bool hasWeapon = false;
-
-				if (!reading)
-				{
-					hasWeapon = NetGetCurrentItem() != 0;
-				}
-
-				ser.Value("hasWeapon", hasWeapon, 'bool');
-				ser.Value("currentItemId", static_cast<CActor *>(this), &CActor::NetGetCurrentItem, &CActor::NetSetCurrentItem, 'eid');
-
-				if (reading && hasWeapon && NetGetCurrentItem() == 0) // fix the case where this guy's weapon might not have been bound on this client yet
-				{
-					ser.FlagPartialRead();
 				}
 			}
 			break;
@@ -4424,7 +3783,6 @@ bool CPlayer::NetSerialize( TSerialize ser, EEntityAspects aspect, uint8 profile
 					ser.FlagPartialRead();
 				}
 
-				ser.Value("VehicleViewRotation", m_vehicleViewDir, 'dir0');
 			}
 			break;
 
@@ -4466,9 +3824,6 @@ void CPlayer::FullSerialize( TSerialize ser )
 	// skip currAnimW
 	ser.Value( "eyeOffset", m_eyeOffset );
 	ser.Value( "bobOffset", m_bobOffset );
-	ser.Value( "FPWeaponLastDirVec", m_FPWeaponLastDirVec );
-	ser.Value( "FPWeaponOffset", m_FPWeaponOffset );
-	ser.Value( "FPWeaponAngleOffset", m_FPWeaponAngleOffset );
 	ser.Value( "viewAnglesOffset", m_viewAnglesOffset );
 	ser.Value( "angleOffset", m_angleOffset );
 	ser.Value( "modelOffset", m_modelOffset );
@@ -4479,7 +3834,6 @@ void CPlayer::FullSerialize( TSerialize ser )
 	ser.Value( "viewQuat", m_viewQuat );
 	ser.Value( "viewQuatFinal", m_viewQuatFinal );
 	ser.Value( "baseQuat", m_baseQuat );
-	ser.Value( "weaponOffset", m_weaponOffset );
 	ser.Value( "frozenAmount", m_frozenAmount );
 
 	if(IsClient())
@@ -4595,10 +3949,6 @@ void SPlayerStats::Serialize(TSerialize ser, unsigned aspects)
 		ser.Value("stuckTimeout", stuckTimeout);
 		ser.Value("upVector", upVector);
 		ser.Value("groundNormal", groundNormal);
-		ser.Value("FPWeaponPos", FPWeaponPos);
-		ser.Value("FPWeaponAngles", FPWeaponAngles);
-		ser.Value("FPSecWeaponPos", FPSecWeaponPos);
-		ser.Value("FPSecWeaponAngles", FPSecWeaponAngles);
 		ser.Value("isThirdPerson", isThirdPerson);
 		isFrozen.Serialize(ser, "isFrozen"); //this is already serialized by the gamerules ..
 		isHidden.Serialize(ser, "isHidden");
@@ -4619,7 +3969,6 @@ void SPlayerStats::Serialize(TSerialize ser, unsigned aspects)
 		ser.Value("ladderUpDir", ladderUpDir);
 		ser.Value("playerRotation", playerRotation);
 		ser.Value("forceCrouchTime", forceCrouchTime);
-		ser.Value("grabbedHeavyObject", grabbedHeavyEntity);
 	}
 
 	ser.EndGroup();
@@ -4674,7 +4023,6 @@ void CPlayer::PlayAction(const char *action, const char *extension, bool looping
 			strcpy(m_params.animationAppendix, "nw");
 		}
 
-		m_pAnimatedCharacter->GetAnimationGraphState()->SetInput( m_inputItem, m_params.animationAppendix );
 	}
 
 	if (looping)
@@ -4775,17 +4123,6 @@ void CPlayer::HandleEvent( const SGameObjectEvent &event )
 					}
 				}
 
-				if (GetCurrentItemId(false))
-				{
-					g_pGame->GetGameRules()->FreezeEntity(GetCurrentItemId(false), event.param != 0, true);
-					CItem *pOffHand = static_cast<COffHand *>(GetWeaponByClass(CItem::sOffHandClass));
-
-					if(pOffHand && pOffHand->IsSelected())
-					{
-						g_pGame->GetGameRules()->FreezeEntity(pOffHand->GetEntityId(), event.param != 0, true);
-					}
-				}
-
 				if (event.param == 0)
 				{
 					if (m_stats.inFreefall.Value() > 0)
@@ -4828,8 +4165,6 @@ void CPlayer::HandleEvent( const SGameObjectEvent &event )
 					{
 						GetGameObject()->SetAutoDisablePhysicsMode(eADPM_Never);
 						SetActorModel();
-						m_lookAim.Reset();
-						InitActorAttachments();
 						Physicalize();
 						ResetFPView();
 					}
@@ -4840,11 +4175,6 @@ void CPlayer::HandleEvent( const SGameObjectEvent &event )
 
 void CPlayer::OnCollision(EventPhysCollision *physCollision)
 {
-}
-
-void CPlayer::UpdateGrab(float frameTime)
-{
-	CActor::UpdateGrab(frameTime);
 }
 
 float CPlayer::GetActorStrength() const
@@ -5160,26 +4490,7 @@ void CPlayer::SwitchDemoModeSpectator(bool activate)
 	{
 		m_stats.firstPersonBody = (uint8)g_pGameCVars->cl_fpBody;
 	}
-
-	CItem *pItem = GetItem(GetInventory()->GetCurrentItem());
-
-	if(pItem)
-	{
-		pItem->UpdateFPView(0);
-	}
-
-	IVehicle *pVehicle = GetLinkedVehicle();
-
-	if (pVehicle)
-	{
-		IVehicleSeat *pVehicleSeat = pVehicle->GetSeatForPassenger( GetEntityId() );
-
-		if (pVehicleSeat)
-		{
-			pVehicleSeat->SetView( activate ? pVehicleSeat->GetNextView(InvalidVehicleViewId) : InvalidVehicleViewId );
-		}
-	}
-
+	
 	if (activate)
 	{
 		IScriptSystem *pSS = gEnv->pScriptSystem;
@@ -5228,14 +4539,6 @@ void CPlayer::SetSpectatorMode(uint8 mode, EntityId targetId)
 
 	if (mode && !m_stats.spectatorMode)
 	{
-		if (IVehicle *pVehicle = GetLinkedVehicle())
-		{
-			if (IVehicleSeat *pSeat = pVehicle->GetSeatForPassenger(GetEntityId()))
-			{
-				pSeat->Exit(false);
-			}
-		}
-
 		Revive(false);
 
 		if (server)
@@ -5310,42 +4613,6 @@ void CPlayer::MoveToSpectatorTargetPosition()
 void CPlayer::Stabilize(bool stabilize)
 {
 	m_bStabilize = stabilize;
-}
-
-bool CPlayer::UseItem(EntityId itemId)
-{
-	const bool bOK = CActor::UseItem(itemId);
-
-	if (bOK)
-	{
-		CALL_PLAYER_EVENT_LISTENERS(OnItemUsed(this, itemId));
-	}
-
-	return bOK;
-}
-
-bool CPlayer::PickUpItem(EntityId itemId, bool sound, bool ignoreOffhand)
-{
-	const bool bOK = CActor::PickUpItem(itemId, sound, ignoreOffhand);
-
-	if (bOK)
-	{
-		CALL_PLAYER_EVENT_LISTENERS(OnItemPickedUp(this, itemId));
-	}
-
-	return bOK;
-}
-
-bool CPlayer::DropItem(EntityId itemId, float impulseScale, bool selectNext, bool byDeath)
-{
-	const bool bOK = CActor::DropItem(itemId, impulseScale, selectNext, byDeath);
-
-	if (bOK)
-	{
-		CALL_PLAYER_EVENT_LISTENERS(OnItemDropped(this, itemId));
-	}
-
-	return bOK;
 }
 
 void CPlayer::UpdateUnfreezeInput(const Ang3 &deltaRotation, const Vec3 &deltaMovement, float mult)
@@ -5741,12 +5008,6 @@ bool CPlayer::IsLadderUsable()
 		}
 
 		//Check OffHand
-		if(COffHand *pOffHand = static_cast<COffHand *>(GetItemByClass(CItem::sOffHandClass)))
-			if(pOffHand->GetOffHandState() != eOHS_INIT_STATE)
-			{
-				return false;
-			}
-
 		Vec3 ladderOrientation = worldTM.GetColumn1().normalize();
 		Vec3 ladderUp = worldTM.GetColumn2().normalize();
 
@@ -6311,94 +5572,12 @@ void CPlayer::RecordExplosiveDestroyed(EntityId entityId, uint8 typeId)
 //------------------------------------------------------------------------
 void CPlayer::EnterFirstPersonSwimming( )
 {
-	CFists *pFists = static_cast<CFists *>(GetItemByClass(CItem::sFistsClass));
-
-	if(!pFists)
-	{
-		return;
-	}
-
-	COffHand *pOffHand = static_cast<COffHand *>(GetItemByClass(CItem::sOffHandClass));
-
-	//Drop object or NPC
-	if (pOffHand)
-	{
-		if(pOffHand->IsHoldingEntity())
-		{
-			//Force drop
-			if(pOffHand->GetOffHandState() == eOHS_MELEE)
-			{
-				pOffHand->GetScheduler()->Reset();
-				pOffHand->SetOffHandState(eOHS_HOLDING_OBJECT);
-			}
-
-			pOffHand->OnAction(GetEntityId(), "use", eAAM_OnPress, 0);
-			pOffHand->OnAction(GetEntityId(), "use", eAAM_OnRelease, 0);
-		}
-		else if(pOffHand->GetOffHandState() == eOHS_HOLDING_GRENADE)
-		{
-			pOffHand->FinishAction(eOHA_RESET);
-		}
-	}
-
-	//Entering the water (select fists...)
-	CItem *currentItem = static_cast<CItem *>(GetCurrentItem());
-
-	if(!currentItem)
-	{
-		//Player has no item selected... just select fists
-		pFists->EnableAnimations(false);
-		SelectItem(pFists->GetEntityId(), false);
-		pFists->EnableAnimations(true);
-	}
-	else if(pFists->GetEntityId() == currentItem->GetEntityId())
-	{
-		//Fists already selected
-		GetInventory()->SetLastItem(pFists->GetEntityId());
-	}
-	else
-	{
-		//Deselect current item and select fists
-		currentItem->Select(false);
-		pFists->EnableAnimations(false);
-		SelectItem(pFists->GetEntityId(), false);
-		pFists->EnableAnimations(true);
-	}
-
-	pFists->EnterWater(true);
-	pFists->RequestAnimState(eFAS_SWIM_IDLE);
 	SendMusicLogicEvent(eMUSICLOGICEVENT_PLAYER_SWIM_ENTER);
 }
 
 //------------------------------------------------------------------------
 void CPlayer::ExitFirstPersonSwimming()
 {
-	CFists *pFists = static_cast<CFists *>(GetItemByClass(CItem::sFistsClass));
-
-	if(!pFists)
-	{
-		return;
-	}
-
-	// we probably left water, so reactivate last item
-	EntityId lastItemId = GetInventory()->GetLastItem();
-	CItem *lastItem = (CItem *)gEnv->pGame->GetIGameFramework()->GetIItemSystem()->GetItem(lastItemId);
-	pFists->EnterWater(false);
-	pFists->ResetAnimation();
-	pFists->GetScheduler()->Reset();
-	pFists->RequestAnimState(eFAS_NOSTATE);
-	pFists->RequestAnimState(eFAS_FIGHT);
-
-	if (GetLinkedVehicle())
-	{
-		HolsterItem(false);
-	}
-
-	if (GetLinkedVehicle())
-	{
-		HolsterItem(true);
-	}
-
 	UpdateFirstPersonSwimmingEffects(false, 0.0f);
 	m_bUnderwater = false;
 	SendMusicLogicEvent(eMUSICLOGICEVENT_PLAYER_SWIM_LEAVE);
@@ -6432,13 +5611,6 @@ void CPlayer::UpdateFirstPersonSwimming()
 	}
 	else if (swimming && m_bSwimming)
 	{
-		CFists *pFists = static_cast<CFists *>(GetItemByClass(CItem::sFistsClass));
-
-		if(!pFists)
-		{
-			return;
-		}
-
 		//Retrieve some player info...
 		pe_status_dynamics dyn;
 		IPhysicalEntity *phys = GetEntity()->GetPhysics();
@@ -6462,39 +5634,7 @@ void CPlayer::UpdateFirstPersonSwimming()
 		bool moving = (dyn.v.GetLengthSquared() > 1.0f);
 		float  dotP = dyn.v.GetNormalized().Dot(direction);
 
-		if (moving && fabs_tpl(dotP) > 0.1f)
-		{
-			if (dotP >= 0.1f)
-			{
-				if (m_stats.bSprinting)
-				{
-					pFists->RequestAnimState(eFAS_SWIM_SPEED);
-				}
-				else
-				{
-					pFists->RequestAnimState(eFAS_SWIM_FORWARD);
-				}
-
-				m_stats.bSprinting = false;
-			}
-			else
-			{
-				pFists->RequestAnimState(eFAS_SWIM_BACKWARD);
-			}
-		}
-		else
-		{
-			// idling in water
-			if (m_stats.headUnderWaterTimer > 0.0f)
-			{
-				pFists->RequestAnimState(eFAS_SWIM_IDLE);
-			}
-			else
-			{
-				pFists->RequestAnimState(eFAS_SWIM_IDLE);
-			}
-		}
-
+		
 		UpdateFirstPersonSwimmingEffects(false, dyn.v.len2());
 	}
 
@@ -6517,62 +5657,6 @@ void CPlayer::UpdateFirstPersonFists()
 	{
 		UpdateFirstPersonSwimming();
 		return;
-	}
-
-	COffHand *pOffHand = static_cast<COffHand *>(GetItemByClass(CItem::sOffHandClass));
-	CFists   *pFists   = static_cast<CFists *>(GetItemByClass(CItem::sFistsClass));
-
-	if(pFists && pFists->IsSelected() && pOffHand && !pOffHand->IsSelected())
-	{
-		//Retrieve some player info...
-		pe_status_dynamics dyn;
-		IPhysicalEntity *phys = GetEntity()->GetPhysics();
-
-		// only thing used is dyn.v, which is set to zero by default constructor.
-		if (phys)
-		{
-			phys->GetStatus(&dyn);
-		}
-
-		int stance = GetStance();
-
-		//Select fists state...
-		if(pFists->GetCurrentAnimState() == eFAS_JUMPING && (m_stats.landed || (m_stats.onGround > 0.0001f && m_stats.inAir <= 0.5f)))
-		{
-			pFists->RequestAnimState(eFAS_LANDING);
-		}
-
-		// dyn.v is zero by default constructor, meaning it's safe to use even if the GetParams call fails.
-		if(stance == STANCE_PRONE && GetPlayerInput() &&
-				(GetPlayerInput()->GetMoveButtonsState()&CPlayerInput::eMBM_Forward))
-		{
-			pFists->RequestAnimState(eFAS_CRAWL);
-		}
-		else if(stance == STANCE_PRONE)
-		{
-			pFists->RequestAnimState(eFAS_RELAXED);
-		}
-		else if(stance != STANCE_PRONE && pFists->GetCurrentAnimState() == eFAS_CRAWL)
-		{
-			pFists->RequestAnimState(eFAS_RELAXED);
-		}
-
-		if(m_stats.bSprinting && stance == STANCE_STAND)
-		{
-			//m_stats.bSprinting = false;		//Need to do this, or you barely saw the fists on screen...
-			pFists->RequestAnimState(eFAS_RUNNING);
-		}
-		else if(pFists->GetCurrentAnimState() == eFAS_RUNNING)
-		{
-			if(m_stats.jumped)
-			{
-				pFists->RequestAnimState(eFAS_JUMPING);
-			}
-			else
-			{
-				pFists->RequestAnimState(eFAS_RELAXED);
-			}
-		}
 	}
 }
 
@@ -6619,14 +5703,6 @@ bool CPlayer::CanFire()
 		{
 			return false;
 		}
-	}
-
-	//3- Player can not fire while his weapon is underwater level
-	//	(doesn't apply in vehicles - CVehicleWeapon::CanFire() takes care of this,
-	//	 else it breaks in 3rd person view)
-	if (!GetLinkedVehicle() && m_stats.worldWaterLevel > m_stats.FPWeaponPos.z)
-	{
-		return false;
 	}
 
 	return true;
@@ -6827,28 +5903,6 @@ void CPlayer::ResetFPView()
 	g_pGameCVars->i_offset_front = g_pGameCVars->i_offset_right = g_pGameCVars->i_offset_up = 0.0f;
 }
 
-void CPlayer::NotifyObjectGrabbed(bool bIsGrab, EntityId objectId, bool bIsNPC, bool bIsTwoHanded /*= false*/)
-{
-	CALL_PLAYER_EVENT_LISTENERS(OnObjectGrabbed(this, bIsGrab, objectId, bIsNPC, bIsTwoHanded));
-
-	//Set Player stats
-	if(bIsGrab)
-	{
-		if(bIsNPC)
-		{
-			m_stats.grabbedHeavyEntity = 2;
-		}
-		else if(bIsTwoHanded)
-		{
-			m_stats.grabbedHeavyEntity = 1;
-		}
-	}
-	else if(!bIsGrab)
-	{
-		m_stats.grabbedHeavyEntity = false;
-	}
-}
-
 void CPlayer::StopLoopingSounds()
 {
 	//stop sounds
@@ -6858,18 +5912,6 @@ void CPlayer::StopLoopingSounds()
 	}
 }
 
-
-EntityId	CPlayer::GetGrabbedEntityId() const
-{
-	CWeapon *pWeapon = static_cast<CWeapon *>(GetItemByClass(CItem::sOffHandClass));
-
-	if(pWeapon)
-	{
-		return pWeapon->GetHeldEntityId();
-	}
-
-	return 0;
-}
 
 //////////////////////////////////////////////////////////////////////////
 /// These functions are called for cut-scenes flagged with 'NO_PLAYER'
@@ -7085,38 +6127,6 @@ void CPlayer::AnimationEvent(ICharacterInstance *pCharacter, const AnimEventInst
 		}
 	}
 }
-
-//--------------------------------------------------------
-void CPlayer::AutoPickUpItem(EntityId itemId)
-{
-	if(!IsClient())
-	{
-		return;
-	}
-
-	IItem *pItem = g_pGame->GetIGameFramework()->GetIItemSystem()->GetItem(itemId);
-
-	if(!pItem)
-	{
-		return;
-	}
-
-	IItem *pCurrentItem = GetCurrentItem();
-
-	if(pCurrentItem && pCurrentItem->GetIWeapon())
-	{
-		if(pItem->GetEntity()->GetClass() == pCurrentItem->GetEntity()->GetClass())
-		{
-			float distance = (GetEntity()->GetWorldPos() - pItem->GetEntity()->GetWorldPos()).GetLengthFast();
-
-			if(distance < 1.0f)
-			{
-				PickUpItem(itemId, true, true);
-			}
-		}
-	}
-}
-
 
 bool CPlayer::GetForceNoIK() const
 {

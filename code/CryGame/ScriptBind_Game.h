@@ -53,18 +53,6 @@ class CScriptBind_Game :
 		//		Queries battle status, range from 0 (quiet) to 1 (full combat).
 		int	QueryBattleStatus(IFunctionHandler *pH);
 
-		// <title GetNumLightsActivated>
-		// Syntax: Game.GetNumLightsActivated()
-		// Description:
-		//		Gets the number of activated lights.
-		int GetNumLightsActivated(IFunctionHandler *pH);
-
-		// <title IsMountedWeaponUsableWithTarget>
-		// Syntax: Game.IsMountedWeaponUsableWithTarget()
-		// Description:
-		//		Checks if the mounted weapon is usable with the target.
-		int IsMountedWeaponUsableWithTarget(IFunctionHandler *pH);
-
 		// <title IsPlayer>
 		// Syntax: Game.IsPlayer()
 		// Description:

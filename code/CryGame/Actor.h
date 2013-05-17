@@ -32,8 +32,6 @@
 #include "IAnimationGraph.h"
 #include "IAnimatedCharacter.h"
 #include "IMovementController.h"
-#include "GrabHandler.h"
-#include "WeaponAttachmentManager.h"
 #include "AutoEnum.h"
 
 struct HitInfo;
@@ -121,13 +119,6 @@ struct IActorMovementController : public IMovementController
 AUTOENUM_BUILDENUMWITHTYPE_WITHNUM(EBonesID, ActorBoneList, BONE_ID_NUM);
 extern const char *s_BONE_ID_NAME[BONE_ID_NUM];
 
-//For first person grabbing
-enum EGrabbedCharacterType
-{
-	eGCT_UNKNOWN = 0,
-	eGCT_HUMAN
-};
-
 //represent the key status of the actor
 #define ACTION_JUMP						(1<<0)
 #define ACTION_CROUCH					(1<<1)
@@ -142,14 +133,10 @@ enum EGrabbedCharacterType
 #define ACTION_STEALTH				(1<<10)
 #define ACTION_MOVE						(1<<11)
 
-struct IVehicle;
-struct IInventory;
 struct IInteractor;
 
 struct SActorParams
 {
-	float maxGrabMass;
-	float maxGrabVolume;
 	bool nanoSuitActive;
 
 	Vec3	viewPivot;
@@ -173,7 +160,6 @@ struct SActorParams
 	float timeImpulseRecover;
 
 	float lookFOVRadians;
-	float lookInVehicleFOVRadians;
 	float aimFOVRadians;
 
 	bool canUseComplexLookIK;
@@ -190,7 +176,6 @@ struct SActorParams
 
 	SActorParams()
 		: lookFOVRadians(gf_PI)
-		, lookInVehicleFOVRadians(gf_PI)
 		, aimFOVRadians(gf_PI)
 		, aimIKLayer(1)
 		, lookIKLayer(15)
@@ -230,7 +215,6 @@ struct SActorAnimationEvents
 		uint32 m_swimmingStrokeId;
 		uint32 m_footStepImpulseId;
 		uint32 m_forceFeedbackId;
-		uint32 m_grabObjectId;
 		uint32 m_weaponLeftHandId;
 		uint32 m_weaponRightHandId;
 
@@ -281,8 +265,6 @@ struct SActorStats
 	Vec3 forceLookVector;
 	float	bobCycle;
 
-	float grabbedTimer;
-	bool isGrabbed;
 	bool isRagDoll;
 
 	int8 inFreefallLast;
@@ -533,7 +515,6 @@ struct SIKLimb
 struct SLinkStats
 {
 #define LINKED_FREELOOK (1<<0)
-#define LINKED_VEHICLE (1<<1)
 
 	//which entity are we linked to?
 	EntityId linkID;
@@ -598,13 +579,8 @@ struct SLinkStats
 		}
 	}
 
-	IVehicle *GetLinkedVehicle();
-
 	void Serialize( TSerialize ser );
 };
-
-class CItem;
-class CWeapon;
 
 class CActor :
 	public CGameObjectExtensionHelper<CActor, IActor>,
@@ -624,36 +600,6 @@ class CActor :
 		};
 
 	public:
-		struct ItemIdParam
-		{
-			ItemIdParam(): itemId(0) {};
-			ItemIdParam(EntityId item): itemId(item) {};
-			void SerializeWith(TSerialize ser)
-			{
-				ser.Value("itemId", itemId, 'eid');
-			}
-			EntityId itemId;
-		};
-
-		struct DropItemParams
-		{
-			DropItemParams(): itemId(0), impulseScale(1.0f), selectNext(true), byDeath(false) {};
-			DropItemParams(EntityId item, float scale, bool next = true, bool death = false): itemId(item), impulseScale(scale), selectNext(next), byDeath(death) {};
-
-			void SerializeWith(TSerialize ser)
-			{
-				ser.Value("itemId", itemId, 'eid');
-				ser.Value("impulseScale", impulseScale, 'iScl');
-				ser.Value("selectNext", selectNext, 'bool');
-				ser.Value("byDeath", byDeath, 'bool');
-			}
-
-			float impulseScale;
-			EntityId itemId;
-			bool selectNext;
-			bool byDeath;
-		};
-
 		struct ReviveParams
 		{
 			// PLAYERPREDICTION
@@ -680,25 +626,6 @@ class CActor :
 			Quat rot;
 		};
 
-		struct ReviveInVehicleParams
-		{
-			ReviveInVehicleParams(): vehicleId(0), seatId(0), teamId(0) {};
-			ReviveInVehicleParams(EntityId vId, int sId, int tId): vehicleId(vId), seatId(sId), teamId(tId) {};
-			void SerializeWith(TSerialize ser)
-			{
-				ser.Value("teamId", teamId, 'team');
-				ser.Value("vehicleId", vehicleId, 'eid');
-				ser.Value("seatId", seatId, 'seat');
-			};
-
-			int	 teamId;
-			EntityId vehicleId;
-			int seatId;
-			// PLAYERPREDICTION
-			uint8 physCounter;
-			// ~PLAYERPREDICTION
-		};
-
 		struct KillParams
 		{
 			KillParams()
@@ -706,7 +633,6 @@ class CActor :
 				  targetId(0),
 				  weaponId(0),
 				  projectileId(0),
-				  itemIdToDrop(0),
 				  weaponClassId(0),
 				  damage(0.0f),
 				  material(0),
@@ -729,7 +655,6 @@ class CActor :
 			EntityId targetId;
 			EntityId weaponId;
 			EntityId projectileId;
-			EntityId itemIdToDrop;
 			int weaponClassId;
 			float damage;
 			float impulseScale;
@@ -755,7 +680,6 @@ class CActor :
 				ser.Value("targetId", targetId, 'eid');
 				ser.Value("weaponId", weaponId, 'eid');
 				ser.Value("projectileId", projectileId, 'eid');
-				ser.Value("itemIdToDrop", itemIdToDrop , 'eid');
 				ser.Value("weaponClassId", weaponClassId, 'clas');
 				ser.Value("damage", damage, 'dmg');
 				ser.Value("material", material, 'mat');
@@ -796,22 +720,6 @@ class CActor :
 			}
 			string ammo;
 			int	count;
-		};
-
-		struct PickItemParams
-		{
-			PickItemParams(): itemId(0), select(false), sound(false) {};
-			PickItemParams(EntityId item, bool slct, bool snd): itemId(item), select(slct), sound(snd) {};
-			void SerializeWith(TSerialize ser)
-			{
-				ser.Value("itemId", itemId, 'eid');
-				ser.Value("select", select, 'bool');
-				ser.Value("sound", sound, 'bool');
-			}
-
-			EntityId	itemId;
-			bool			select;
-			bool			sound;
 		};
 
 		struct SetSpectatorModeParams
@@ -855,47 +763,16 @@ class CActor :
 			eASM_Cutscene,												// HUDInterfaceEffects.cpp sets this
 		};
 
-		DECLARE_SERVER_RMI_NOATTACH(SvRequestDropItem, DropItemParams, eNRT_ReliableOrdered);
-		DECLARE_SERVER_RMI_NOATTACH(SvRequestPickUpItem, ItemIdParam, eNRT_ReliableOrdered);
-		DECLARE_SERVER_RMI_NOATTACH(SvRequestUseItem, ItemIdParam, eNRT_ReliableOrdered);
 		// cannot be _FAST - see comment on InvokeRMIWithDependentObject
-		DECLARE_CLIENT_RMI_NOATTACH(ClPickUp, PickItemParams, eNRT_ReliableOrdered);
-		DECLARE_CLIENT_RMI_NOATTACH(ClClearInventory, NoParams, eNRT_ReliableOrdered);
-
-		DECLARE_CLIENT_RMI_NOATTACH(ClDrop, DropItemParams, eNRT_ReliableOrdered);
-		DECLARE_CLIENT_RMI_NOATTACH(ClStartUse, ItemIdParam, eNRT_ReliableOrdered);
-		DECLARE_CLIENT_RMI_NOATTACH(ClStopUse, ItemIdParam, eNRT_ReliableOrdered);
-
 		DECLARE_CLIENT_RMI_PREATTACH(ClSetSpectatorMode, SetSpectatorModeParams, eNRT_ReliableOrdered);
 		DECLARE_CLIENT_RMI_PREATTACH(ClSetSpectatorHealth, SetSpectatorHealthParams, eNRT_ReliableOrdered);
 
 		DECLARE_CLIENT_RMI_PREATTACH(ClRevive, ReviveParams, eNRT_ReliableOrdered);
-		DECLARE_CLIENT_RMI_PREATTACH(ClReviveInVehicle, ReviveInVehicleParams, eNRT_ReliableOrdered);
 		DECLARE_CLIENT_RMI_POSTATTACH(ClSimpleKill, NoParams, eNRT_ReliableOrdered);
 		DECLARE_CLIENT_RMI_NOATTACH(ClKill, KillParams, eNRT_ReliableOrdered);
 		DECLARE_CLIENT_RMI_NOATTACH(ClMoveTo, MoveParams, eNRT_ReliableOrdered);
 
-		DECLARE_CLIENT_RMI_NOATTACH(ClSetAmmo, AmmoParams, eNRT_ReliableOrdered);
-		DECLARE_CLIENT_RMI_NOATTACH(ClAddAmmo, AmmoParams, eNRT_ReliableOrdered);
-
-		CItem *GetItem(EntityId itemId) const;
-		CItem *GetItemByClass(IEntityClass *pClass) const;
-		CWeapon *GetWeapon(EntityId itemId) const;
-		CWeapon *GetWeaponByClass(IEntityClass *pClass) const;
-
-		virtual void SelectNextItem(int direction, bool keepHistory, const char *category = 0);
-		virtual void HolsterItem(bool holster, bool playSelect = true);
-		virtual void SelectLastItem(bool keepHistory, bool forceNext = false);
-		virtual void SelectItemByName(const char *name, bool keepHistory);
-		virtual void SelectItem(EntityId itemId, bool keepHistory);
-
-		virtual bool UseItem(EntityId itemId);
-		virtual bool PickUpItem(EntityId itemId, bool sound, bool ignoreOffhand = false);
-		virtual bool DropItem(EntityId itemId, float impulseScale = 1.0f, bool selectNext = true, bool byDeath = false);
-		virtual void DropAttachedItems();
-
 		virtual void NetReviveAt(const Vec3 &pos, const Quat &rot, int teamId);
-		virtual void NetReviveInVehicle(EntityId vehicleId, int seatId, int teamId);
 		virtual void NetSimpleKill();
 		virtual void NetKill(EntityId shooterId, uint16 weaponClassId, int damage, int material, int hit_type);
 
@@ -924,9 +801,6 @@ class CActor :
 		virtual void SerializeSpawnInfo( TSerialize ser );
 		virtual ISerializableInfoPtr GetSpawnInfo();
 		virtual void SetChannelId(uint16 id);
-		virtual void  SerializeLevelToLevel( TSerialize &ser );
-		virtual IInventory *GetInventory() const;
-		virtual void NotifyCurrentItemChanged(IItem *newItem) {};
 
 		virtual bool IsPlayer() const;
 		virtual bool IsClient() const;
@@ -978,14 +852,6 @@ class CActor :
 
 		virtual void RequestFacialExpression(const char *pExpressionName /* = NULL */, f32 *sequenceLength /*= NULL*/);
 		virtual void PrecacheFacialExpression(const char *pExpressionName);
-
-		virtual void NotifyInventoryAmmoChange(IEntityClass *pAmmoClass, int amount);
-		virtual EntityId	GetGrabbedEntityId() const
-		{
-			return 0;
-		}
-
-		virtual void HideAllAttachments(bool isHiding);
 
 		virtual void OnAIProxyEnabled(bool enabled) {};
 		virtual void OnReturnedToPool() {};
@@ -1102,8 +968,6 @@ class CActor :
 		virtual void StandUp();
 		virtual void NotifyLeaveFallAndPlay();
 		virtual bool IsFallen() const;
-		virtual IEntity *LinkToVehicle(EntityId vehicleId);
-		virtual IEntity *LinkToVehicleRemotely(EntityId vehicleId);
 		virtual void LinkToMountedWeapon(EntityId weaponId) {};
 		virtual IEntity *LinkToEntity(EntityId entityId, bool bKeepTransformOnDetach = true);
 
@@ -1117,14 +981,9 @@ class CActor :
 			return m_linkStats.GetLinked();
 		}
 
-		virtual IVehicle *GetLinkedVehicle() const
-		{
-			return m_linkStats.GetLinkedVehicle();
-		}
-
 		float GetLookFOV(const SActorParams &actorParams) const
 		{
-			return GetLinkedVehicle() ? actorParams.lookInVehicleFOVRadians : actorParams.lookFOVRadians;
+			return actorParams.lookFOVRadians;
 		}
 
 		uint32 GetAimIKLayer(const SActorParams &actorParams) const
@@ -1136,8 +995,6 @@ class CActor :
 		{
 			return actorParams.lookIKLayer;
 		}
-
-		virtual void SetViewInVehicle(Quat viewRotation) {};
 
 		virtual void SupressViewBlending() {};
 
@@ -1218,8 +1075,6 @@ class CActor :
 		{
 			return s_animationEventsTable;
 		};
-
-		void ResetHelmetAttachment();
 
 		virtual float GetFrozenAmount(bool stages = false) const
 		{
@@ -1367,17 +1222,6 @@ class CActor :
 
 		virtual void OnPhysicsPreStep(float frameTime) {};
 
-		//grabbing
-		virtual IGrabHandler *CreateGrabHanlder();
-		virtual void UpdateGrab(float frameTime);
-
-		virtual bool CheckInventoryRestrictions(const char *itemClassName);
-		virtual bool CheckVirtualInventoryRestrictions(const std::vector<string> &inventory, const char *itemClassName);
-
-		virtual bool CanPickUpObject(IEntity *obj, float &heavyness, float &volume);
-		virtual bool CanPickUpObject(float mass, float volume);
-		virtual float GetActorStrength() const;
-
 		//
 		virtual void ProcessIKLimbs(ICharacterInstance *pCharacter, float frameTime);
 
@@ -1408,23 +1252,8 @@ class CActor :
 		};
 		void SetFacialAlertnessLevel(int alertness);
 
-		//weapons
-		virtual IItem *GetCurrentItem(bool includeVehicle = false) const;
-		EntityId GetCurrentItemId(bool includeVehicle = false) const;
-		virtual IItem *GetHolsteredItem() const;
-
-		//Net
-		EntityId NetGetCurrentItem() const;
-		void NetSetCurrentItem(EntityId id);
-
 		//AI
 		Vec3 GetAIAttentionPos();
-
-		CWeaponAttachmentManager *GetWeaponAttachmentManager()
-		{
-			return m_pWeaponAM;
-		}
-		void InitActorAttachments();
 
 		virtual void SwitchDemoModeSpectator(bool activate) {};	//this is a player only function
 
@@ -1455,12 +1284,6 @@ class CActor :
 		virtual bool  CanSleep()
 		{
 			return false;
-		}
-
-		//Grabbing
-		virtual int	GetActorSpecies()
-		{
-			return eGCT_UNKNOWN;
 		}
 
 		virtual void SetAnimTentacleParams(pe_params_rope &rope, float animBlend) {};
@@ -1529,8 +1352,6 @@ class CActor :
 		void UpdateCachedAIValues();
 
 	private:
-		mutable IInventory *m_pInventory;
-		void ClearExtensionCache();
 		void CrapDollize();
 
 	protected:
@@ -1578,20 +1399,14 @@ class CActor :
 		IAnimatedCharacter *m_pAnimatedCharacter;
 		IActorMovementController *m_pMovementController;
 
-		static IItemSystem			*m_pItemSystem;
 		static IGameFramework		*m_pGameFramework;
 		static IGameplayRecorder *m_pGameplayRecorder;
-
-		IGrabHandler *m_pGrabHandler;
 
 		mutable SLinkStats m_linkStats;
 
 		TIKLimbs m_IKLimbs;
 
 		float m_frozenAmount; // internal amount. used to leave authority over frozen state at game
-
-		// Weapon Attachment manager
-		CWeaponAttachmentManager *m_pWeaponAM;
 
 		uint8 m_currentPhysProfile;
 
@@ -1609,8 +1424,6 @@ class CActor :
 		float m_airResistance;
 		float m_timeImpulseRecover;
 
-		EntityId m_netLastSelectablePickedUp;
-
 		//helmet serialization
 		EntityId	m_lostHelmet, m_serializeLostHelmet;
 		string		m_lostHelmetObj, m_serializelostHelmetObj;
@@ -1621,17 +1434,32 @@ class CActor :
 
 		//
 		std::map< ICharacterInstance *, _smart_ptr<IMaterial> > m_testOldMats;
-		std::map< IAttachmentObject *, _smart_ptr<IMaterial> > m_attchObjMats;
 		//std::map< EntityId, IMaterial* > m_wepAttchMats;
 
 		float			m_sleepTimer, m_sleepTimerOrg;
 
 		int				m_teamId;
-		EntityId	m_lastItemId;
 
 		// PLAYERPREDICTION
 		uint8		m_netPhysCounter;				 //	Physics counter, to enable us to throw away old updates
 		// ~PLAYERPREDICTION
+
+	// items are disabled but these are needed
+	public:		
+		virtual void NotifyCurrentItemChanged(IItem *newItem) {};
+		IItem *GetCurrentItem(bool includeVehicle = false) const {return nullptr;};
+		EntityId GetCurrentItemId(bool includeVehicle = false) const {return 0;};
+		IItem *GetHolsteredItem() const {return nullptr;};
+
+		void HolsterItem(bool holster, bool playSelect = true) {};
+		bool DropItem(EntityId itemId, float impulseScale=1.0f, bool selectNext=true, bool byDeath=false) {return true;};
+		IInventory *GetInventory() const {return nullptr;};
+		void HideAllAttachments(bool isHiding) {};
+		EntityId GetGrabbedEntityId() const {return 0;};
+		IVehicle *GetLinkedVehicle(void) const {return nullptr;};
+		void SetViewInVehicle(Quat) {};
+		IEntity *LinkToVehicle(EntityId) {return nullptr;};
+		void SerializeLevelToLevel(TSerialize &) {};
 };
 
 #endif //__Actor_H__

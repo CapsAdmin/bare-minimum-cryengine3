@@ -557,10 +557,6 @@ struct SCVars
 
 	float		ctrl_input_smoothing;
 
-	int			g_disable_throw;
-	int			g_disable_pickup;
-	int			g_disable_grab;
-
 	int			g_tpview_control;
 	int			g_tpview_enable;
 	int			g_tpview_force_goc;

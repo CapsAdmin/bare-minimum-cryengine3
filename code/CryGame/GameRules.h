@@ -418,9 +418,6 @@ class CGameRules :	public CGameObjectExtensionHelper<CGameRules, IGameRules, 64>
 		virtual void OnEntitySpawn(IEntity *pEntity);
 		virtual void OnEntityRemoved(IEntity *pEntity);
 
-		virtual void OnItemDropped(EntityId itemId, EntityId actorId);
-		virtual void OnItemPickedUp(EntityId itemId, EntityId actorId);
-
 		virtual void SendTextMessage(ETextMessageType type, const char *msg, uint32 to = eRMI_ToAllClients, int channelId = -1,
 									 const char *p0 = 0, const char *p1 = 0, const char *p2 = 0, const char *p3 = 0);
 		virtual void SendChatMessage(EChatMessageType type, EntityId sourceId, EntityId targetId, const char *msg);
@@ -464,11 +461,7 @@ class CGameRules :	public CGameObjectExtensionHelper<CGameRules, IGameRules, 64>
 		virtual void RegisterConsoleVars(IConsole *pConsole);
 
 		virtual void OnRevive(CActor *pActor, const Vec3 &pos, const Quat &rot, int teamId);
-		virtual void OnReviveInVehicle(CActor *pActor, EntityId vehicleId, int seatId, int teamId);
 		virtual void OnKill(CActor *pActor, EntityId shooterId, const char *weaponClassName, int damage, int material, int hit_type);
-		virtual void OnVehicleDestroyed(EntityId id);
-		virtual void OnVehicleSubmerged(EntityId id, float ratio);
-		virtual void OnVehicleFlipped(EntityId id);
 		virtual void OnTextMessage(ETextMessageType type, const char *msg,
 								   const char *p0 = 0, const char *p1 = 0, const char *p2 = 0, const char *p3 = 0);
 		virtual void OnChatMessage(EChatMessageType type, EntityId sourceId, EntityId targetId, const char *msg, bool teamChatOnly);
@@ -504,7 +497,6 @@ class CGameRules :	public CGameObjectExtensionHelper<CGameRules, IGameRules, 64>
 		virtual CActor *SpawnPlayer(int channelId, const char *name, const char *className, const Vec3 &pos, const Ang3 &angles);
 		virtual CActor *ChangePlayerClass(int channelId, const char *className);
 		virtual void RevivePlayer(CActor *pActor, const Vec3 &pos, const Ang3 &angles, int teamId = 0, bool clearInventory = true);
-		virtual void RevivePlayerInVehicle(CActor *pActor, EntityId vehicleId, int seatId, int teamId = 0, bool clearInventory = true);
 		virtual void RenamePlayer(CActor *pActor, const char *name);
 		virtual string VerifyName(const char *name, IEntity *pEntity = 0);
 		virtual bool IsNameTaken(const char *name, IEntity *pEntity = 0);
@@ -671,8 +663,6 @@ class CGameRules :	public CGameObjectExtensionHelper<CGameRules, IGameRules, 64>
 
 		virtual void ForceScoreboard(bool force);
 		virtual void FreezeInput(bool freeze);
-
-		virtual bool IsProjectile(EntityId id) const;
 
 		virtual void ShowStatus();
 
@@ -1579,6 +1569,14 @@ class CGameRules :	public CGameObjectExtensionHelper<CGameRules, IGameRules, 64>
 		TEntityIdVec m_entityEventDoneListeners;
 
 		TCryUserIdSet m_participatingUsers;
+
+		// vehicles are disabled but these are needed
+		public:
+			void IGameRules::OnVehicleDestroyed(EntityId) {};
+			void IGameRules::OnVehicleSubmerged(EntityId,float) {};
+			void IGameRules::OnVehicleFlipped(EntityId) {};
+
+
 };
 
 #define NOTIFY_UI_MP( fct ) { \

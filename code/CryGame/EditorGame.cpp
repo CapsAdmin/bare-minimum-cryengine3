@@ -20,9 +20,6 @@
 #include "IAgent.h"
 #include "ILevelSystem.h"
 #include "IMovementController.h"
-#include "IItemSystem.h"
-#include "ItemParamReader.h"
-#include "EquipmentSystemInterface.h"
 #include "GameCVars.h"
 #include "Actor.h"
 #include "GameRules.h"
@@ -90,7 +87,6 @@ void CEditorGame::ToggleMultiplayerGameRules()
 //------------------------------------------------------------------------
 CEditorGame::~CEditorGame()
 {
-	SAFE_DELETE(m_pEquipmentSystemInterface);
 	s_pEditorGame = NULL;
 	SAFE_RELEASE(s_pEditorGameMode);
 }
@@ -136,7 +132,6 @@ bool CEditorGame::Init(ISystem *pSystem, IGameToEditorInterface *pGameToEditorIn
 	}
 
 	InitUIEnums(pGameToEditorInterface);
-	m_pEquipmentSystemInterface = new CEquipmentSystemInterface(this, pGameToEditorInterface);
 	gEnv->bServer = true;
 	gEnv->bMultiplayer = false;
 #if !defined(XENON) && !defined(PS3) && !defined(GRINGO)
@@ -551,11 +546,6 @@ void CEditorGame::InitActionInputEnums( IGameToEditorInterface *pGTE )
 			pGTE->SetUIEnums("input_actions", actionList.m_allActionNames, actionList.m_nameCount);
 		}
 	}
-}
-
-IEquipmentSystemInterface *CEditorGame::GetIEquipmentSystemInterface()
-{
-	return m_pEquipmentSystemInterface;
 }
 
 void CEditorGame::SetGameRules()

@@ -8,7 +8,6 @@ Player = {
 	type = "Player",
 
 	foreignCollisionDamageMult = 0.1,	
-	vehicleCollisionDamageMult = 7.5,
 	
 	Properties = 
 	{	
@@ -1279,7 +1278,7 @@ function Player:UpdateDraw()
 	  
 		if (self.hideActor) then
 			self:DrawSlot(0,0);
-		elseif (stats.followCharacterHead==1 or self.grabParams.entityId or (self:IsOnVehicle() and not ghostPit)) then
+		elseif (stats.followCharacterHead==1 or self.grabParams.entityId) then
 			self:DrawSlot(0,1);
 			--first show all
 			self:HideAllAttachments(0, false, false);

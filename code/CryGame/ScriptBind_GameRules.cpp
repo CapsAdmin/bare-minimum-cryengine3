@@ -70,7 +70,6 @@ void CScriptBind_GameRules::RegisterMethods()
 	SCRIPT_REG_TEMPLFUNC(SpawnPlayer, "channelId, name, className, pos, angles");
 	SCRIPT_REG_TEMPLFUNC(ChangePlayerClass, "channelId, className, pos, angles");
 	SCRIPT_REG_TEMPLFUNC(RevivePlayer, "playerId, pos, angles, teamId, clearInventory");
-	SCRIPT_REG_TEMPLFUNC(RevivePlayerInVehicle, "playerId, vehicleId, seatId, teamId, clearInventory");
 	SCRIPT_REG_TEMPLFUNC(RenamePlayer, "playerId, name");
 	SCRIPT_REG_TEMPLFUNC(KillPlayer, "playerId, dropItem, ragdoll, shooterId, weaponId, damage, hitJoint, headshot, melee, impulse, projectileId, [weaponClassId], [projectileClassId]");
 	SCRIPT_REG_TEMPLFUNC(MovePlayer, "playerId, pos, angles");
@@ -80,7 +79,6 @@ void CScriptBind_GameRules::RegisterMethods()
 	SCRIPT_REG_TEMPLFUNC(GetSpectatorCount, "");
 	SCRIPT_REG_TEMPLFUNC(GetPlayers, "");
 	SCRIPT_REG_TEMPLFUNC(IsPlayerInGame, "playerId");
-	SCRIPT_REG_TEMPLFUNC(IsProjectile, "entityId");
 	SCRIPT_REG_TEMPLFUNC(IsSameTeam, "entityId0, entityId1");
 	SCRIPT_REG_TEMPLFUNC(IsNeutral, "entityId");
 	SCRIPT_REG_TEMPLFUNC(AddSpawnLocation, "entityId");
@@ -330,26 +328,6 @@ int CScriptBind_GameRules::RevivePlayer(IFunctionHandler *pH, ScriptHandle playe
 }
 
 //------------------------------------------------------------------------
-int CScriptBind_GameRules::RevivePlayerInVehicle(IFunctionHandler *pH, ScriptHandle playerId, ScriptHandle vehicleId, int seatId, int teamId, bool clearInventory)
-{
-	CGameRules *pGameRules = GetGameRules(pH);
-
-	if (!pGameRules)
-	{
-		return pH->EndFunction();
-	}
-
-	CActor *pActor = GetActor((EntityId)playerId.n);
-
-	if (pActor)
-	{
-		pGameRules->RevivePlayerInVehicle(pActor, (EntityId)vehicleId.n, seatId, teamId, clearInventory);
-	}
-
-	return pH->EndFunction();
-}
-
-//------------------------------------------------------------------------
 int CScriptBind_GameRules::RenamePlayer(IFunctionHandler *pH, ScriptHandle playerId, const char *name)
 {
 	CGameRules *pGameRules = GetGameRules(pH);
@@ -566,13 +544,6 @@ int CScriptBind_GameRules::IsPlayerInGame(IFunctionHandler *pH, ScriptHandle pla
 	}
 
 	return pH->EndFunction();
-}
-
-//------------------------------------------------------------------------
-int CScriptBind_GameRules::IsProjectile(IFunctionHandler *pH, ScriptHandle entityId)
-{
-	CGameRules *pGameRules = GetGameRules(pH);
-	return pH->EndFunction(pGameRules->IsProjectile((EntityId)entityId.n));
 }
 
 //------------------------------------------------------------------------

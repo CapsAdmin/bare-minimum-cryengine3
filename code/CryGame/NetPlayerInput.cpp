@@ -3,9 +3,6 @@
 #include "Player.h"
 #include "Game.h"
 #include "GameCVars.h"
-// PLAYERPREDICTION
-#include "Weapon.h"
-// ~PLAYERPREDICTION
 #include "IAIActor.h"
 
 // PLAYERPREDICTION

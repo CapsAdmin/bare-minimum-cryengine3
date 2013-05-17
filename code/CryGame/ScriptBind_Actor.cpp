@@ -14,13 +14,11 @@
 #include "ScriptBind_Actor.h"
 #include "Actor.h"
 #include "IMovementController.h"
-#include "Item.h"
 #include "Game.h"
 #include "Player.h"
 #include "GameCVars.h"
 
 #include <IGameFramework.h>
-#include <IVehicleSystem.h>
 #include <IGameObject.h>
 #include <Cry_Geo.h>
 #include <Cry_GeoDistance.h>
@@ -62,9 +60,6 @@ CScriptBind_Actor::CScriptBind_Actor(ISystem *pSystem)
 	SCRIPT_REG_FUNC(IsPlayer);
 	SCRIPT_REG_FUNC(IsLocalClient);
 	SCRIPT_REG_FUNC(LinkToEntity);
-	SCRIPT_REG_TEMPLFUNC(GetLinkedVehicleId, "");
-	SCRIPT_REG_FUNC(LinkToVehicle);
-	SCRIPT_REG_FUNC(LinkToVehicleRemotely);
 	SCRIPT_REG_FUNC(IsGhostPit);
 	SCRIPT_REG_FUNC(IsFlying);
 	SCRIPT_REG_TEMPLFUNC(SetAngles, "vAngles");
@@ -82,9 +77,6 @@ CScriptBind_Actor::CScriptBind_Actor(ISystem *pSystem)
 	SCRIPT_REG_TEMPLFUNC(SetExtensionParams, "extension,params");
 	SCRIPT_REG_TEMPLFUNC(GetExtensionParams, "extension,params");
 	SCRIPT_REG_TEMPLFUNC(SetMovementControlledByAnimation, "enable");
-	SCRIPT_REG_TEMPLFUNC(SetInventoryAmmo, "ammo, amount");
-	SCRIPT_REG_TEMPLFUNC(AddInventoryAmmo, "ammo, amount");
-	SCRIPT_REG_TEMPLFUNC(GetInventoryAmmo, "ammo");
 	SCRIPT_REG_TEMPLFUNC(SetHealth, "health");
 	SCRIPT_REG_TEMPLFUNC(DamageInfo, "shooterID, targetID, weaponID, damage, damageType");
 	SCRIPT_REG_TEMPLFUNC(SetMaxHealth, "health");
@@ -120,18 +112,8 @@ CScriptBind_Actor::CScriptBind_Actor(ISystem *pSystem)
 	//------------------------------------------------------------------------
 	// NETWORK
 	//------------------------------------------------------------------------
-	SCRIPT_REG_TEMPLFUNC(CheckInventoryRestrictions, "itemClassName");
-	SCRIPT_REG_TEMPLFUNC(CheckVirtualInventoryRestrictions, "inventory, itemClassName");
-	SCRIPT_REG_TEMPLFUNC(HolsterItem, "holster");
-	SCRIPT_REG_TEMPLFUNC(DropItem, "itemId");
-	SCRIPT_REG_TEMPLFUNC(PickUpItem, "itemId");
-	SCRIPT_REG_TEMPLFUNC(SelectItemByName, "");
-	SCRIPT_REG_TEMPLFUNC(SelectItem, "");
-	SCRIPT_REG_TEMPLFUNC(SelectLastItem, "");
-	//------------------------------------------------------------------------
 	SCRIPT_REG_TEMPLFUNC(CreateIKLimb, "slot,limbName,rootBone,midBone,endBone,flags");
 	SCRIPT_REG_TEMPLFUNC(ResetScores, "");
-	SCRIPT_REG_TEMPLFUNC(RenderScore, "");
 	SCRIPT_REG_TEMPLFUNC(SetSearchBeam, "dir");
 	m_pSS->SetGlobalValue("ZEROG_AREA_ID", ZEROG_AREA_ID);
 	m_pSS->SetGlobalValue("IKLIMB_LEFTHAND", IKLIMB_LEFTHAND);
@@ -447,82 +429,6 @@ int CScriptBind_Actor::PostPhysicalize(IFunctionHandler *pH)
 	if (pActor)
 	{
 		pActor->PostPhysicalize();
-	}
-
-	return pH->EndFunction();
-}
-
-//------------------------------------------------------------------------
-int CScriptBind_Actor::GetLinkedVehicleId(IFunctionHandler *pH)
-{
-	CActor *pActor = GetActor(pH);
-
-	if (!pActor)
-	{
-		return pH->EndFunction();
-	}
-
-	if (pActor)
-	{
-		ScriptHandle vehicleHandle;
-
-		if (IVehicle *pVehicle = pActor->GetLinkedVehicle())
-		{
-			vehicleHandle.n = pVehicle->GetEntityId();
-			return pH->EndFunction(vehicleHandle);
-		}
-	}
-
-	return pH->EndFunction();
-}
-
-//------------------------------------------------------------------------
-int CScriptBind_Actor::LinkToVehicle(IFunctionHandler *pH)
-{
-	CActor *pActor = GetActor(pH);
-
-	if (!pActor)
-	{
-		return pH->EndFunction();
-	}
-
-	if (pActor)
-	{
-		ScriptHandle vehicleId;
-		vehicleId.n = 0;
-
-		if (pH->GetParamType(1) != svtNull)
-		{
-			pH->GetParam(1, vehicleId);
-		}
-
-		pActor->LinkToVehicle((EntityId) vehicleId.n);
-	}
-
-	return pH->EndFunction();
-}
-
-//------------------------------------------------------------------------
-int CScriptBind_Actor::LinkToVehicleRemotely(IFunctionHandler *pH)
-{
-	CActor *pActor = GetActor(pH);
-
-	if (!pActor)
-	{
-		return pH->EndFunction();
-	}
-
-	if (pActor)
-	{
-		ScriptHandle vehicleId;
-		vehicleId.n = 0;
-
-		if (pH->GetParamType(1) != svtNull)
-		{
-			pH->GetParam(1, vehicleId);
-		}
-
-		pActor->LinkToVehicleRemotely((EntityId) vehicleId.n);
 	}
 
 	return pH->EndFunction();
@@ -847,124 +753,6 @@ int CScriptBind_Actor::GetExtensionParams(IFunctionHandler *pH, const char *exte
 	}
 
 	return pH->EndFunction();
-}
-
-//------------------------------------------------------------------------
-int CScriptBind_Actor::SetInventoryAmmo(IFunctionHandler *pH, const char *ammo, int amount)
-{
-	CActor *pActor = GetActor(pH);
-
-	if (!pActor)
-	{
-		return pH->EndFunction();
-	}
-
-	IInventory *pInventory = pActor->GetInventory();
-
-	if (!pInventory)
-	{
-		return pH->EndFunction();
-	}
-
-	IEntityClass *pClass = gEnv->pEntitySystem->GetClassRegistry()->FindClass(ammo);
-	assert(pClass);
-	int capacity = pInventory->GetAmmoCapacity(pClass);
-	int current = pInventory->GetAmmoCount(pClass);
-
-	if((!gEnv->IsEditor()) && (amount > capacity))
-	{
-		//If still there's some place, full inventory to maximum...
-		if(current < capacity)
-		{
-			pInventory->SetAmmoCount(pClass, capacity);
-
-			if (gEnv->bServer)
-			{
-				pActor->GetGameObject()->InvokeRMI(CActor::ClSetAmmo(), CActor::AmmoParams(ammo, amount), eRMI_ToRemoteClients);
-			}
-		}
-	}
-	else
-	{
-		pInventory->SetAmmoCount(pClass, amount);
-
-		if (gEnv->bServer)
-		{
-			pActor->GetGameObject()->InvokeRMI(CActor::ClSetAmmo(), CActor::AmmoParams(ammo, amount), eRMI_ToRemoteClients);
-		}
-	}
-
-	return pH->EndFunction();
-}
-
-//------------------------------------------------------------------------
-int CScriptBind_Actor::AddInventoryAmmo(IFunctionHandler *pH, const char *ammo, int amount)
-{
-	CActor *pActor = GetActor(pH);
-
-	if (!pActor)
-	{
-		return pH->EndFunction();
-	}
-
-	IInventory *pInventory = pActor->GetInventory();
-
-	if (!pInventory)
-	{
-		return pH->EndFunction();
-	}
-
-	IEntityClass *pClass = gEnv->pEntitySystem->GetClassRegistry()->FindClass(ammo);
-	assert(pClass);
-	int capacity = pInventory->GetAmmoCapacity(pClass);
-	int current = pInventory->GetAmmoCount(pClass);
-
-	if((!gEnv->IsEditor()) && (amount > capacity))
-	{
-		//If still there's some place, full inventory to maximum...
-		if(current < capacity)
-		{
-			pInventory->SetAmmoCount(pClass, capacity);
-
-			if (gEnv->bServer)
-			{
-				pActor->GetGameObject()->InvokeRMI(CActor::ClAddAmmo(), CActor::AmmoParams(ammo, amount), eRMI_ToRemoteClients);
-			}
-		}
-	}
-	else
-	{
-		pInventory->SetAmmoCount(pClass, amount);
-
-		if (gEnv->bServer)
-		{
-			pActor->GetGameObject()->InvokeRMI(CActor::ClAddAmmo(), CActor::AmmoParams(ammo, amount), eRMI_ToRemoteClients);
-		}
-	}
-
-	return pH->EndFunction();
-}
-
-//------------------------------------------------------------------------
-int CScriptBind_Actor::GetInventoryAmmo(IFunctionHandler *pH, const char *ammo)
-{
-	CActor *pActor = GetActor(pH);
-
-	if (!pActor)
-	{
-		return pH->EndFunction();
-	}
-
-	IInventory *pInventory = pActor->GetInventory();
-
-	if (!pInventory)
-	{
-		return pH->EndFunction();
-	}
-
-	IEntityClass *pClass = gEnv->pEntitySystem->GetClassRegistry()->FindClass(ammo);
-	assert(pClass);
-	return pH->EndFunction(pInventory->GetAmmoCount(pClass));
 }
 
 //------------------------------------------------------------------------
@@ -1423,14 +1211,7 @@ int CScriptBind_Actor::SetPhysicalizationProfile(IFunctionHandler *pH, const cha
 	}
 	else if (!stricmp(profile, "ragdoll"))
 	{
-		if (!pActor->GetLinkedVehicle())
-		{
-			p = eAP_Ragdoll;
-		}
-		else
-		{
-			p = eAP_Alive;
-		}
+		p = eAP_Alive;
 	}
 	else if (!stricmp(profile, "spectator"))
 	{
@@ -1768,175 +1549,6 @@ int CScriptBind_Actor::ResetScores(IFunctionHandler *pH)
 }
 
 //------------------------------------------------------------------------
-int CScriptBind_Actor::RenderScore(IFunctionHandler *pH, ScriptHandle player, int kills, int deaths, int ping)
-{
-	IEntity *pEntity = gEnv->pEntitySystem->GetEntity((EntityId)player.n);
-
-	if(pEntity)
-	{
-		string name = pEntity->GetName();
-		EntityId id = (EntityId)player.n;
-		g_pGame->GetGameRules()->UpdateScoreBoardItem(id, name, kills, deaths);
-	}
-
-	return pH->EndFunction();
-}
-
-//------------------------------------------------------------------------
-int CScriptBind_Actor::CheckInventoryRestrictions(IFunctionHandler *pH, const char *itemClassName)
-{
-	CActor *pActor = GetActor(pH);
-
-	if (!pActor)
-	{
-		return pH->EndFunction();
-	}
-
-	if (pActor->CheckInventoryRestrictions(itemClassName))
-	{
-		return pH->EndFunction(1);
-	}
-
-	return pH->EndFunction();
-}
-
-//------------------------------------------------------------------------
-int CScriptBind_Actor::CheckVirtualInventoryRestrictions(IFunctionHandler *pH, SmartScriptTable inventory, const char *itemClassName)
-{
-	CActor *pActor = GetActor(pH);
-
-	if (!pActor)
-	{
-		return pH->EndFunction();
-	}
-
-	static std::vector<string> virtualInventory;
-	virtualInventory.reserve(inventory->Count());
-	IScriptTable::Iterator it = inventory->BeginIteration();
-
-	while(inventory->MoveNext(it))
-	{
-		const char *itemClass = 0;
-		it.value.CopyTo(itemClass);
-
-		if (itemClass && itemClass[0])
-		{
-			virtualInventory.push_back(itemClass);
-		}
-	}
-
-	inventory->EndIteration(it);
-	bool result = pActor->CheckVirtualInventoryRestrictions(virtualInventory, itemClassName);
-	virtualInventory.resize(0);
-
-	if (result)
-	{
-		return pH->EndFunction(1);
-	}
-
-	return pH->EndFunction();
-}
-
-
-//------------------------------------------------------------------------
-int CScriptBind_Actor::HolsterItem(IFunctionHandler *pH, bool holster)
-{
-	CActor *pActor = GetActor(pH);
-
-	if (!pActor)
-	{
-		return pH->EndFunction();
-	}
-
-	pActor->HolsterItem(holster);
-	return pH->EndFunction();
-}
-
-//------------------------------------------------------------------------
-int CScriptBind_Actor::DropItem(IFunctionHandler *pH, ScriptHandle itemId)
-{
-	CActor *pActor = GetActor(pH);
-
-	if (!pActor)
-	{
-		return pH->EndFunction();
-	}
-
-	float impulse = 1.0f;
-	bool bydeath = false;
-
-	if (pH->GetParamCount() > 1 && pH->GetParamType(2) == svtNumber)
-	{
-		pH->GetParam(2, impulse);
-	}
-
-	if (pH->GetParamCount() > 2 && pH->GetParamType(3) == svtNumber || pH->GetParamType(2) == svtBool)
-	{
-		pH->GetParam(3, bydeath);
-	}
-
-	pActor->DropItem((EntityId)itemId.n, impulse, true, bydeath);
-	return pH->EndFunction();
-}
-
-//------------------------------------------------------------------------
-int CScriptBind_Actor::PickUpItem(IFunctionHandler *pH, ScriptHandle itemId)
-{
-	CActor *pActor = GetActor(pH);
-
-	if (!pActor)
-	{
-		return pH->EndFunction();
-	}
-
-	pActor->PickUpItem((EntityId)itemId.n, true);
-	return pH->EndFunction();
-}
-
-//------------------------------------------------------------------------
-int CScriptBind_Actor::SelectLastItem(IFunctionHandler *pH)
-{
-	CActor *pActor = GetActor(pH);
-
-	if (!pActor)
-	{
-		return pH->EndFunction();
-	}
-
-	pActor->SelectLastItem(true);
-	return pH->EndFunction();
-}
-
-
-//------------------------------------------------------------------------
-int CScriptBind_Actor::SelectItemByName(IFunctionHandler *pH, const char *name)
-{
-	CActor *pActor = GetActor(pH);
-
-	if (!pActor)
-	{
-		return pH->EndFunction();
-	}
-
-	pActor->SelectItemByName(name, true);
-	return pH->EndFunction();
-}
-
-//------------------------------------------------------------------------
-int CScriptBind_Actor::SelectItem(IFunctionHandler *pH, ScriptHandle itemId)
-{
-	CActor *pActor = GetActor(pH);
-
-	if (!pActor)
-	{
-		return pH->EndFunction();
-	}
-
-	pActor->SelectItem((EntityId) itemId.n, true);
-	return pH->EndFunction();
-}
-
-//------------------------------------------------------------------------
 int CScriptBind_Actor::GetFrozenAmount(IFunctionHandler *pH)
 {
 	CActor *pActor = GetActor(pH);
@@ -1972,22 +1584,7 @@ int CScriptBind_Actor::IsGhostPit(IFunctionHandler *pH)
 		return pH->EndFunction();
 	}
 
-	bool hidden = false;
-
-	if (IVehicle *pVehicle = pActor->GetLinkedVehicle())
-	{
-		IVehicleSeat *pSeat = pVehicle->GetSeatForPassenger(pActor->GetEntityId());
-
-		if (pSeat)
-		{
-			if (IVehicleView *pView = pSeat->GetView(pSeat->GetCurrentView()))
-			{
-				hidden = pView->IsPassengerHidden();
-			}
-		}
-	}
-
-	return pH->EndFunction(hidden);
+	return pH->EndFunction(false);
 }
 
 //------------------------------------------------------------------------
