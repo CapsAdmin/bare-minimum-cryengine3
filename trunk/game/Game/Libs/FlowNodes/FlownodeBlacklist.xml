@@ -1,0 +1,13 @@
+<!-- Remove engine (CryAction) flownodes on flowgraph level. -->
+<!-- This was added to adopt the flowgraph to Crysis 2 without loosing code-compatibility -->
+<!-- Backwards compatibility can be preserved by adding the renamed flownodes to the Substitutions.xml -->
+
+<Blacklist>
+
+	<!-- Remove classes here -->
+
+	<!-- Examples of removing or renaming -->
+	<!-- <Rem class="AI:AIAwareness" /> -->
+	<!-- <Ren class="Game:PlayerStaging" newClass="Actor:PlayerStaging"/> -->
+	
+</Blacklist>

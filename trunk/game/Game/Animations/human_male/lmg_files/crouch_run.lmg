@@ -1,0 +1,14 @@
+<LocomotionGroup>
+
+  <BLENDTYPE type="STF1" />
+	<CAPS code="run" />
+
+  <ExampleList>
+    <Example Position=" 0, 1, 0" AName="crouch_run_forward_fast" />
+    <Example Position=" 1, 0, 0" AName="crouch_run_left_fast" />
+    <Example Position=" 0,-1, 0" AName="crouch_run_back_fast" />
+    <Example Position="-1, 0, 0" AName="crouch_run_right_fast" />
+  </ExampleList>
+
+
+</LocomotionGroup>

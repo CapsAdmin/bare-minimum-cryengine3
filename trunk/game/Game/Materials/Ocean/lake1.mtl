@@ -1,0 +1,7 @@
+<Material MtlFlags="526336" Shader="Water" GenMask="835" StringGenMask="" SurfaceType="mat_water" MatTemplate="" Diffuse="0,0,0" Specular="0,0,0" Emissive="0,0,0" Shininess="10" Opacity="1">
+ <Textures>
+  <Texture Map="Bumpmap" File="textures/defaults/oceanwaves_ddn.dds"/>
+  <Texture Map="Environment" File="textures/cubemaps/forest/cubemap_forest_a_cm.tif"/>
+ </Textures>
+ <PublicParams NormalsScale="0.1" SoftIntersectionFactor="1" Tilling="10" SubSurfaceScatteringScale="2" RipplesNormalsScale="1" FresnelPower="4" DetailNormalsScale="1" DetailTilling="4" GradientScale="0.1" FresnelBias="0.25" ReflectionScale="0.5" RefractionBumpScale="0.25" HeightScale="0.2" ReflectionBumpScale="1" RainTilling="0.5"/>
+</Material>

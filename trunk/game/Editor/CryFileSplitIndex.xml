@@ -1,0 +1,45 @@
+<index version="2">
+	
+	<entry filename="base.xml">
+		<path>
+			<Level />
+		</path>
+	</entry>
+	
+	<entry filename="timeofday.xml">
+		<path>
+			<Level>
+				<Missions>
+					<Mission Name="Mission0">
+						<TimeOfDay />
+					</Mission>
+				</Missions>
+			</Level>
+		</path>
+	</entry>
+
+	<entry filename="objectLayers.xml">
+		<path>
+			<Level>
+				<Missions>
+					<Mission Name="Mission0">
+						<ObjectLayers />
+					</Mission>
+				</Missions>
+			</Level>
+		</path>
+	</entry>
+
+	<entry filename="objects.xml">
+		<path>
+			<Level>
+				<Missions>
+					<Mission Name="Mission0">
+						<Objects />
+					</Mission>
+				</Missions>
+			</Level>
+		</path>
+	</entry>
+
+</index>

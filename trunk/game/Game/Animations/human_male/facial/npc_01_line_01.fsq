@@ -1,0 +1,55 @@
+<FacialSequence Flags="1" StartTime="0" EndTime="1.8790001" Joysticks="animations/human_male/facial/setup/sdk_head.joy">
+ <Channel Flags="1" Name="Head">
+  <Channel Flags="0" Name="Neck_lean_left_right">
+   <Spline Keys="0:0:65544,0.5:0:0,1:0:0,"/>
+  </Channel>
+  <Channel Flags="0" Name="Neck_left_right">
+   <Spline Keys="0:0:65544,0.5:0:0,1:0:0,"/>
+  </Channel>
+  <Channel Flags="0" Name="Neck_up_down">
+   <Spline Keys="0:0:65544,0.5:0:0,1:0:0,"/>
+  </Channel>
+ </Channel>
+ <Channel Flags="1" Name="Jaw">
+  <Channel Flags="0" Name="Jaw_Left_Right">
+   <Spline Keys="0:0:65544,0.5:0:0,1:0:0,"/>
+  </Channel>
+  <Channel Flags="0" Name="Jaw_open_close">
+   <Spline Keys="0:0:65544,0.5:0:0,1:0:0,"/>
+  </Channel>
+  <Channel Flags="0" Name="Jaw_Forward_Backward">
+   <Spline Keys="0:0:65544,0.5:0:0,1:0:0,"/>
+  </Channel>
+ </Channel>
+ <Channel Flags="1" Name="Eyebrows">
+  <Channel Flags="0" Name="Brow_lowerer">
+   <Spline Keys="0:0:65544,0.5:0:0,1:0:0,"/>
+  </Channel>
+ </Channel>
+ <Channel Flags="8193" Name="LipSync">
+  <Channel Flags="2" Name="Phoneme Strength">
+   <Spline Keys="0:0.649392:65536,"/>
+  </Channel>
+  <Channel Flags="64" Name="Lipsync Category Strength (_jaw_occlusion)">
+   <Spline Keys="0:0:0,"/>
+  </Channel>
+ </Channel>
+ <SoundEntry Sound="Game/Languages/dialog/examples/npc_01_line_01.wav" StartTime="0">
+  <Sentence Text="Hi! Good to see you! How are you?">
+   <Words>
+    <Word Word="Hi" Start="95" End="415"/>
+    <Word Word="Good" Start="445" End="605"/>
+    <Word Word="to" Start="605" End="695"/>
+    <Word Word="see" Start="695" End="995"/>
+    <Word Word="you" Start="995" End="1115"/>
+    <Word Word="How" Start="1145" End="1265"/>
+    <Word Word="are" Start="1265" End="1425"/>
+    <Word Word="you" Start="1425" End="1595"/>
+   </Words>
+   <Phonemes>5:95:x,95:135:h,135:415:AY,415:445:x,445:495:g,495:575:UH,575:605:d,605:635:t,635:695:IH,695:795:s,795:995:IY,995:1025:y,1025:1115:UW,1115:1145:x,1145:1205:h,1205:1265:AW,1265:1365:AA,1365:1425:r,1425:1535:y,1535:1595:UW,1595:1875:x</Phonemes>
+  </Sentence>
+ </SoundEntry>
+ <CameraPathPositions Keys=""/>
+ <CameraPathOrientations Keys=""/>
+ <CameraPathFOV Keys=""/>
+</FacialSequence>

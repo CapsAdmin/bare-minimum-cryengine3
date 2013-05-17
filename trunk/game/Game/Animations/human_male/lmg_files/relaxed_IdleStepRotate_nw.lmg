@@ -1,0 +1,13 @@
+<LocomotionGroup>
+
+  <BLENDTYPE type="IROT" />
+  <CAPS code="IROT" />
+
+  <ExampleList>
+    <Example Position=" 0,-1, 0" AName="relaxed_steprotate_nw_right_01" />
+    <Example Position=" 0, 0, 0" AName="relaxed_idle_nw_01" />
+    <Example Position=" 0, 1, 0" AName="relaxed_steprotate_nw_left_01" />
+  </ExampleList>
+
+
+</LocomotionGroup>

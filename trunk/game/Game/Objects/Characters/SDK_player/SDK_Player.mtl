@@ -1,0 +1,71 @@
+<Material MtlFlags="524544">
+ <SubMaterials>
+  <Material Name="SDK_Head" MtlFlags="524416" Shader="Humanskin" GenMask="1100080000" StringGenMask="%GLOSS_MAP%TEMP_SKIN%TESSELLATION" SurfaceType="mat_flesh" MatTemplate="" Diffuse="0.071761452,0.071761452,0.071761452" Specular="0.42281148,0.43703347,0.46624923" Emissive="0.20109573,0.20109573,0.20109573" Shininess="45" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/characters/sdk_player/textures/sdk_head_dif.tif"/>
+    <Texture Map="Specular" File="objects/characters/sdk_player/textures/sdk_head_spec.tif"/>
+    <Texture Map="Bumpmap" File="objects/characters/sdk_player/textures/sdk_head_ddn.tif"/>
+   </Textures>
+   <PublicParams FresnelPower="5" ScatterRadius="3" Melanin="0" FresnelScale="1.2" RimStrength="0" FresnelBias="0.5" SecondarySpecGloss="0" SecondarySpecStrength="0" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+  <Material Name="SDK_Torso" MtlFlags="524416" Shader="Cloth" GenMask="200000220C" StringGenMask="%ALPHAMASK_DETAILMAP%ANISO_SPECULAR%DETAIL_BUMP_MAPPING%DETAIL_TEXTURE_IS_SET%VERTCOLORS" SurfaceType="mat_fabric" MatTemplate="" Diffuse="0.35865393,0.35865393,0.35865393" Specular="0.1,0.1,0.1" Emissive="0.19751643,0.19751643,0.19751643" Shininess="1" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/characters/sdk_player/textures/sdk_torso_diff.tif"/>
+    <Texture Map="Specular" File="objects/characters/sdk_player/textures/sdk_torso_spec.tif"/>
+    <Texture Map="Bumpmap" File="objects/characters/sdk_player/textures/sdk_torso_ddn.tif"/>
+    <Texture Map="Detail" File="objects/characters/sdk_player/textures/sdk_leather_detail_ddn.tif"/>
+   </Textures>
+   <PublicParams AnimAmplitudeWav0="0" AmbientSpecMult="1" FresnelPower="2.3399999" DetailBumpTillingU="14" AnisotropicShape="0.25" FresnelScale="2.6199999" DetailDiffuseScale="0" FuzzynessSpread="0.74000001" SpecularMultiplier="0.31400001" FuzzynessStrength="1" FresnelBias="0.029999999" FuzzynessSmoothness="2" DetailBumpScale="1" FuzzynessSaturation="1" DiffuseExponent="1" DetailGlossScale="0" AnimFrequency="0" AnimAmplitudeWav2="0" AnimPhase="1" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+  <Material Name="SDK_Hair" MtlFlags="526466" Shader="Hair" GenMask="40000008" StringGenMask="%ANISO_SPECULAR%SOFT_ALPHATEST" SurfaceType="mat_flesh" MatTemplate="" Diffuse="0.032875914,0.027755279,0.025371276" Specular="0.0071550366,0.0071550366,0.0071550366" Emissive="0,0,0" Shininess="9" Opacity="1" AlphaTest="0.28999999" HeatAmountScaled="32">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/characters/sdk_player/textures/sdk_hair_diff.tif"/>
+    <Texture Map="Specular" File="objects/characters/sdk_player/textures/sdk_hair_diff.tif"/>
+   </Textures>
+   <PublicParams AnimAmplitudeWav0="0" AmbientSpecMult="5.3400002" SecondarySpecShift="0.54000002" PrimarySpecColor="1,1,1" RimMultiplier="2" DiffuseWrap="0.60000002" PrimarySpecPow="10" SelfShadowSoftening="40" DetailTilling="1" HairColor="0.30212551,0.30212551,0.30212551" AlphaTestSoftening="0.015" SecondarySpecColor="0.038472746,0.038472746,0.038472746" AnimFrequency="0" PrimarySpecShift="0.27599999" AnimAmplitudeWav2="0" SecondarySpecPow="16" AnimPhase="1" BumpScale="0" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+  <Material Name="SDK_Legs" MtlFlags="524416" Shader="Cloth" GenMask="2208" StringGenMask="%ANISO_SPECULAR%DETAIL_BUMP_MAPPING%DETAIL_TEXTURE_IS_SET" SurfaceType="mat_fabric" MatTemplate="" Diffuse="0.33445781,0.33445781,0.33445781" Specular="0.075926125,0.10615607,0.17343903" Emissive="0.051122054,0.051122054,0.051122054" Shininess="1" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/characters/sdk_player/textures/sdk_legs_dif.tif"/>
+    <Texture Map="Specular" File="objects/characters/sdk_player/textures/sdk_legs_spec.tif"/>
+    <Texture Map="Bumpmap" File="objects/characters/sdk_player/textures/sdk_legs_ddn.tif"/>
+    <Texture Map="Detail" File="objects/characters/sdk_player/textures/sdk_fabrics.tif"/>
+   </Textures>
+   <PublicParams AnimAmplitudeWav0="0" AmbientSpecMult="1" FresnelPower="4" DetailBumpTillingU="15" AnisotropicShape="0.25" FresnelScale="1" DetailDiffuseScale="0" FuzzynessSpread="1" SpecularMultiplier="0.31400001" FuzzynessStrength="1.5" FresnelBias="1" FuzzynessSmoothness="1" DetailBumpScale="1" FuzzynessSaturation="1" DiffuseExponent="0.5" DetailGlossScale="0" AnimFrequency="0" AnimAmplitudeWav2="0" AnimPhase="1" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+  <Material Name="SDK_Shoes" MtlFlags="524416" Shader="Illum" GenMask="100040000" StringGenMask="%GLOSS_DIFFUSEALPHA%TESSELLATION" SurfaceType="mat_rubber" MatTemplate="" Diffuse="0.044552624,0.044552624,0.044552624" Specular="0.19751643,0.19751643,0.19751643" Emissive="0.22331043,0.22331043,0.22331043" Shininess="2.0999999" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/characters/sdk_player/textures/sdk_legs_dif.tif"/>
+    <Texture Map="Bumpmap" File="objects/characters/sdk_player/textures/sdk_legs_ddn.dds"/>
+   </Textures>
+   <PublicParams FresnelPower="4" FresnelScale="1" FresnelBias="1" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+  <Material Name="SDK_Eye" MtlFlags="524448" Shader="Eye" GenMask="40000010000" StringGenMask="%ENVIRONMENT_MAP%TEMP_EYES" SurfaceType="mat_flesh" MatTemplate="" Diffuse="0.10114516,0.10114516,0.10114516" Specular="0,0,0" Emissive="0,0,0" Shininess="255" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/characters/sdk_player/textures/sdk_eyeball_diff.tif"/>
+    <Texture Map="Specular" File="objects/characters/sdk_player/textures/sdk_eyeball_spec.tif"/>
+    <Texture Map="Bumpmap" File="objects/characters/sdk_player/textures/sdk_eyeball_ddn.tif"/>
+    <Texture Map="Environment" File="textures/cubemaps/test_fleetfire.dds"/>
+   </Textures>
+   <PublicParams PupilX="0.5" IrisDepth="0.0022" PupilDynDilation="5.04" CorneaOpacity="0.5" FresnelPower="0" PupilDilation="4.8000002" IrisScattering="2.6830001" FresnelScale="1.02" PupilY="0.5" IrisColor="1,1,1" GlintMul="0.741" FresnelBias="0.014" IndirectColor="0.25084025,0.25084025,0.25084025"/>
+  </Material>
+  <Material Name="SDK_Eye_TriangleNodraw" MtlFlags="525440" Shader="Nodraw" GenMask="0" StringGenMask="" SurfaceType="mat_nodraw" MatTemplate="" Diffuse="1,1,1" Specular="0,0,0" Emissive="0,0,0" Shininess="10" Opacity="1">
+   <Textures />
+  </Material>
+  <Material Name="SDK_EyeLeashes" MtlFlags="524416" Shader="Eye" GenMask="40000020000" StringGenMask="%EYE_OVERLAY%TEMP_EYES" SurfaceType="mat_flesh" MatTemplate="" Diffuse="0.0016869151,0.0016869151,0.0016869151" Specular="0.20173104,0.20173104,0.20173104" Emissive="0,0,0" Shininess="94" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/characters/sdk_player/textures/sdk_eyelash_diff.tif"/>
+   </Textures>
+   <PublicParams FresnelPower="4" DepthBiasScale="0.234" FresnelScale="1" FresnelBias="0.80000001" OcclusionStrength="1" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+  <Material Name="SDK_Hands" MtlFlags="524416" Shader="Cloth" GenMask="200" StringGenMask="%DETAIL_TEXTURE_IS_SET" SurfaceType="mat_fabric" MatTemplate="" Diffuse="0.20471011,0.20471011,0.20471011" Specular="0.056374099,0.056374099,0.056374099" Emissive="0,0,0" Shininess="14.1" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/characters/agent/textures/sdk_legs_dif.dds"/>
+    <Texture Map="Bumpmap" File="objects/characters/agent/textures/sdk_legs_ddn.dds"/>
+    <Texture Map="Detail" File="objects/characters/neutral_male/fabric.tif"/>
+   </Textures>
+   <PublicParams AnimAmplitudeWav0="0" FresnelPower="4" FresnelScale="1" FuzzynessSpread="1.33" FuzzynessStrength="1" FresnelBias="1" FuzzynessSmoothness="9.3299999" FuzzynessSaturation="0.98900002" DiffuseExponent="1" AnimFrequency="0" AnimAmplitudeWav2="0" AnimPhase="1" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+ </SubMaterials>
+ <PublicParams FresnelPower="4" GlossFromDiffuseContrast="1" FresnelScale="1" GlossFromDiffuseOffset="0" FresnelBias="1" GlossFromDiffuseAmount="0" GlossFromDiffuseBrightness="0.333" IndirectColor="0.25,0.25,0.25"/>
+</Material>

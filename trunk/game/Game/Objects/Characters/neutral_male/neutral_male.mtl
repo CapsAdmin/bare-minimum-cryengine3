@@ -1,0 +1,66 @@
+<Material MtlFlags="524544">
+ <SubMaterials>
+  <Material Name="belt" MtlFlags="524416" Shader="Illum" GenMask="100000208" StringGenMask="%ANISO_SPECULAR%DETAIL_TEXTURE_IS_SET%TESSELLATION" SurfaceType="mat_flesh" MatTemplate="" Diffuse="0.11129942,0.11129942,0.11129942" Specular="0.034027677,0.051805474,0.089574173" Emissive="0,0,0" Shininess="8.8999996" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/characters/neutral_male/misc_diff.tif"/>
+    <Texture Map="Detail" File="textures/detail/con_detail_wood.dds"/>
+   </Textures>
+   <PublicParams FresnelPower="4" GlossFromDiffuseContrast="1" AnisotropicShape="0.25" FresnelScale="1" GlossFromDiffuseOffset="0" FresnelBias="1" GlossFromDiffuseAmount="0" GlossFromDiffuseBrightness="0.333" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+  <Material Name="shirt" MtlFlags="524416" Shader="Illum" GenMask="100002200" StringGenMask="%DETAIL_BUMP_MAPPING%DETAIL_TEXTURE_IS_SET%TESSELLATION" SurfaceType="mat_fabric" MatTemplate="" Diffuse="0.060031611,0.089193508,0.18354899" Specular="0.047775757,0.1036341,0.089193508" Emissive="0,0,0" Shininess="24" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="textures/defaults/16_grey.dds"/>
+    <Texture Map="Bumpmap" File="objects/characters/neutral_male/body_ddn.dds"/>
+    <Texture Map="Detail" File="objects/characters/neutral_male/fabric.tif"/>
+   </Textures>
+   <PublicParams FresnelPower="5" GlossFromDiffuseContrast="1" DetailBumpTillingU="15" FresnelScale="0.56999999" GlossFromDiffuseOffset="0" DetailDiffuseScale="0" FresnelBias="0.012" GlossFromDiffuseAmount="0" DetailBumpScale="1" GlossFromDiffuseBrightness="0.333" DetailGlossScale="0" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+  <Material Name="arms" MtlFlags="524416" Shader="HumanSkin" GenMask="1100000000" StringGenMask="%TEMP_SKIN%TESSELLATION" SurfaceType="mat_flesh" MatTemplate="" Diffuse="0.238828,0.25084025,0.2801244" Specular="0.039947167,0.039947167,0.039947167" Emissive="0,0,0" Shininess="13.2" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/characters/agent/textures/sdk_legs_dif.dds"/>
+    <Texture Map="Bumpmap" File="objects/characters/agent/textures/sdk_legs_ddn.dds"/>
+   </Textures>
+   <PublicParams FresnelPower="4" ScatterRadius="2" Melanin="0.60000002" FresnelScale="1" RimStrength="0.30000001" FresnelBias="1" SecondarySpecGloss="10" SecondarySpecStrength="0.2" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+  <Material Name="trousers" MtlFlags="524416" Shader="Cloth" GenMask="200" StringGenMask="%DETAIL_TEXTURE_IS_SET" SurfaceType="mat_fabric" MatTemplate="" Diffuse="0.080219261,0.089193508,0.1036341" Specular="0.32503697,0.32503697,0.32503697" Emissive="0.0077510267,0.0077510267,0.0077510267" Shininess="20" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/characters/neutral_male/body_diff.dds"/>
+    <Texture Map="Bumpmap" File="objects/characters/neutral_male/body_ddn.dds"/>
+    <Texture Map="Detail" File="objects/characters/neutral_male/fabric.tif" Filter="6">
+     <TexMod TileU="50" TileV="50"/>
+    </Texture>
+   </Textures>
+   <PublicParams AnimAmplitudeWav0="0" FresnelPower="4" FresnelScale="1" FuzzynessSpread="3.45" FuzzynessStrength="4.6799998" FresnelBias="1" FuzzynessSmoothness="0.23" FuzzynessSaturation="0.54699999" DiffuseExponent="0.70300001" AnimFrequency="0" AnimAmplitudeWav2="0" AnimPhase="0" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+  <Material Name="shoes" MtlFlags="524416" Shader="Illum" GenMask="100040000" StringGenMask="%GLOSS_DIFFUSEALPHA%TESSELLATION" SurfaceType="mat_rubber" MatTemplate="" Diffuse="0.061907478,0.054592282,0.051122054" Specular="0.051122054,0.044552624,0.024222942" Emissive="0,0,0" Shininess="10" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/characters/agent/textures/sdk_legs_dif.dds"/>
+    <Texture Map="Bumpmap" File="objects/characters/agent/textures/sdk_legs_ddn.dds"/>
+   </Textures>
+   <PublicParams FresnelPower="4" FresnelScale="1" FresnelBias="1" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+  <Material Name="Jacket" MtlFlags="524418" Shader="Cloth" GenMask="200" StringGenMask="%DETAIL_TEXTURE_IS_SET" SurfaceType="mat_fabric" MatTemplate="" Diffuse="0.32972905,0.21951973,0.13035227" Specular="0.014310519,0.023103556,0.038472746" Emissive="0,0,0" Shininess="28" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/characters/neutral_male/jacket_diff.tif"/>
+    <Texture Map="Bumpmap" File="objects/characters/neutral_male/jacket_ddn.tif"/>
+    <Texture Map="Detail" File="objects/characters/neutral_male/fabric.tif"/>
+   </Textures>
+   <PublicParams AnimAmplitudeWav0="0" FresnelPower="4" FresnelScale="1" FuzzynessSpread="1" FuzzynessStrength="1.5" FresnelBias="1" FuzzynessSmoothness="1" FuzzynessSaturation="1" DiffuseExponent="0.5" AnimFrequency="0" AnimAmplitudeWav2="0" AnimPhase="1" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+  <Material Name="head" MtlFlags="524416" Shader="Humanskin" GenMask="1100080000" StringGenMask="%GLOSS_MAP%TEMP_SKIN%TESSELLATION" SurfaceType="mat_flesh" MatTemplate="" Diffuse="0.089193508,0.089193508,0.089193508" Specular="0.12752977,0.12752977,0.12752977" Emissive="0,0,0" Shininess="28" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/characters/neutral_male/head_diff.tif"/>
+    <Texture Map="Specular" File="objects/characters/neutral_male/head_diff.tif"/>
+    <Texture Map="Bumpmap" File="objects/characters/neutral_male/head_ddn.tif"/>
+   </Textures>
+   <PublicParams FresnelPower="5" ScatterRadius="2" Melanin="0.30000001" FresnelScale="4" RimStrength="0.30000001" FresnelBias="0.34999999" SecondarySpecGloss="32" SecondarySpecStrength="1" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+  <Material Name="eyeLeashes" MtlFlags="540802" Shader="Eye" GenMask="40000020000" StringGenMask="%EYE_OVERLAY%TEMP_EYES" SurfaceType="mat_flesh" MatTemplate="" Diffuse="0.037028514,0.025371276,0.022012994" Specular="0,0,0" Emissive="0,0,0" Shininess="1.5" Opacity="0.99000001">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/characters/neutral_male/uveyeleash_diff.tif" Filter="1"/>
+   </Textures>
+   <PublicParams FresnelPower="4" DepthBiasScale="0.1" FresnelScale="0.37" FresnelBias="0.109" OcclusionStrength="1" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+ </SubMaterials>
+ <PublicParams FresnelPower="4" GlossFromDiffuseContrast="1" FresnelScale="1" GlossFromDiffuseOffset="0" FresnelBias="1" GlossFromDiffuseAmount="0" GlossFromDiffuseBrightness="0.333" IndirectColor="0.25,0.25,0.25"/>
+</Material>

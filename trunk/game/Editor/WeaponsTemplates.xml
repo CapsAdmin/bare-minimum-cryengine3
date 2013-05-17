@@ -1,0 +1,20 @@
+<Templates>
+	<WeaponAmmo>
+		<Pistol type="Int" value="50"/>
+		<Assault type="Int" value="120"/>
+		<SMG type="Int" value="90"/>
+		<Sniper type="Int" value="0"/>
+		<Minigun type="Int" value="0"/>
+		<Shotgun type="Int" value="0"/>
+		<Rocket type="Int" value="0"/>
+		<OICWGrenade type="Int" value="0"/>
+		<AG36Grenade type="Int" value="0"/>
+		<MortarShells type="Int" value="0"/>
+		<HandGrenade type="Int" value="3"/>
+		<Rock type="Int" value="9999"/>
+		<FlashbangGrenade type="Int" value="3"/>
+		<SmokeGrenade type="Int" value="0"/>
+		<FlareGrenade type="Int" value="0"/>
+		<StickyExplosive type="Int" value="0"/>
+	</WeaponAmmo>
+</Templates>

@@ -1,0 +1,8 @@
+<Material MtlFlags="524294" Shader="Illum" GenMask="0" StringGenMask="" SurfaceType="mat_default" MatTemplate="" Diffuse="1,0.5411765,0.035294119" Specular="0,0,0" Emissive="0,0,0" Shininess="10" Opacity="0.99000001">
+ <Textures>
+  <Texture Map="Diffuse" File="textures/lights/alien_ringlight.dds" IsTileU="0" IsTileV="0">
+   <TexMod OffsetU="0.5" OffsetV="0.5" TexMod_UOscillatorType="5" TexMod_VOscillatorType="5" TexMod_UOscillatorRate="1" TexMod_VOscillatorRate="1" TexMod_UOscillatorAmplitude="0.050000001" TexMod_VOscillatorAmplitude="0.050000001"/>
+  </Texture>
+ </Textures>
+ <PublicParams FresnelPower="4" GlossFromDiffuseContrast="1" FresnelScale="1" GlossFromDiffuseOffset="0" FresnelBias="1" GlossFromDiffuseAmount="0" GlossFromDiffuseBrightness="0.333" IndirectColor="0.25,0.25,0.25"/>
+</Material>

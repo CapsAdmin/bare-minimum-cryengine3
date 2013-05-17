@@ -1,0 +1,22 @@
+<Material MtlFlags="524544">
+ <SubMaterials>
+  <Material Name="glass" MtlFlags="2623618" Shader="Glass" GenMask="80000014010" StringGenMask="%BILINEAR_FP16%DIRT_MAP%ENVIRONMENT_MAP%TINT_COLOR_MAP" SurfaceType="" MatTemplate="" Diffuse="0.0071550366,0.0055217445,0.0029323183" Specular="0.031551391,0.031551391,0.031551391" Emissive="0,0,0" Shininess="255" Opacity="0.94999999">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/characters/sdk_player/textures/ramp.tif"/>
+    <Texture Map="Bumpmap" File="textures/defaults/white_ddn.dds"/>
+    <Texture Map="Environment" File="textures/cubemaps/camera_river_cubemap_bright.dds"/>
+    <Texture Map="Custom" File="objects/characters/sdk_player/textures/ramp.tif"/>
+   </Textures>
+   <PublicParams SpecFromDiffAlphaBias="0" BumpMapTile="5" TintColor="0.29765266,0.29765266,0.29765266" FresnelPower="0.60000002" FresnelScale="1.47" SpecFromDiffAlphaMult="1" FresnelBias="0.40000001" TintCloudiness="0.13699999" BackLightScale="0.60000002" BumpScale="0.5" IndirectColor="0.34402567,0.34402567,0.34402567"/>
+  </Material>
+  <Material Name="plastic" MtlFlags="524418" Shader="Illum" GenMask="100010008" StringGenMask="%ANISO_SPECULAR%ENVIRONMENT_MAP%TESSELLATION" SurfaceType="" MatTemplate="" Diffuse="0.017936433,0.017936433,0.017936433" Specular="0.024222942,0.024222942,0.024222942" Emissive="0,0,0" Shininess="121" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/characters/sdk_player/textures/ramp.tif"/>
+    <Texture Map="Bumpmap" File="textures/defaults/white_ddn.dds"/>
+    <Texture Map="Environment" File="textures/cubemaps/test_fleetfire.dds"/>
+   </Textures>
+   <PublicParams FresnelPower="5" GlossFromDiffuseContrast="1" AnisotropicShape="0.25" FresnelScale="3.7" GlossFromDiffuseOffset="0" FresnelBias="0.168" GlossFromDiffuseAmount="0" GlossFromDiffuseBrightness="0.333" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+ </SubMaterials>
+ <PublicParams FresnelPower="4" GlossFromDiffuseContrast="1" FresnelScale="1" GlossFromDiffuseOffset="0" FresnelBias="1" GlossFromDiffuseAmount="0" GlossFromDiffuseBrightness="0.333" IndirectColor="0.25,0.25,0.25"/>
+</Material>

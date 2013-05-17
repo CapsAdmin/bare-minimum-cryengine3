@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PreloadData>
+  <Platform PC="1" Xbox360="0" PS3="0">
+    <Global>
+      <File name="sounds/dialog/dialog_background.fsb" />
+      <File name="sounds/interface/interface_menu.fsb" />
+      <File name="sounds/interface/interface_player.fsb" />
+      <File name="sounds/physics/physics_bullets.fsb" />
+      <File name="sounds/physics/physics_collisions.fsb" />
+      <File name="sounds/physics/physics_destructibles.fsb" />
+      <File name="sounds/physics/physics_foleys.fsb" />
+      <File name="sounds/physics/physics_footsteps.fsb" />
+      <File name="sounds/physics/physics_objects.fsb" />
+      <File name="sounds/physics/physics_particles.fsb" />
+    </Global>
+    <Level name="forest">
+      <File name="sounds/environment/environment_forest.fsb" />
+	  <File name="sounds/environment/environment_boids.fsb" />
+    </Level>
+  </Platform>
+  <Platform PC="0" Xbox360="1" PS3="1">
+    <Global>
+      <File name="sounds/dialog/dialog_background.fsb" />
+      <File name="sounds/interface/interface_menu.fsb" />
+      <File name="sounds/interface/interface_player.fsb" />
+      <File name="sounds/physics/physics_bullets.fsb" />
+      <File name="sounds/physics/physics_collisions.fsb" />
+      <File name="sounds/physics/physics_destructibles.fsb" />
+      <File name="sounds/physics/physics_foleys.fsb" />
+      <File name="sounds/physics/physics_footsteps.fsb" />
+      <File name="sounds/physics/physics_objects.fsb" />
+      <File name="sounds/physics/physics_particles.fsb" />
+    </Global>
+    <Level name="forest">
+      <File name="sounds/environment/environment_forest.fsb" />
+    </Level>
+  </Platform>
+  <GameHints>
+<!-- WEAPONS -->  
+    <scar_fp>
+      <File name="sounds/weapons/weapons_scar.fsb" />
+      <File name="sounds/weapons/weapons_accessories.fsb" />
+    </scar_fp>
+	<scar_3p>
+      <File name="sounds/weapons/weapons_scar_3p.fsb" />
+	</scar_3p>
+	<rocketlauncher_fp>
+      <File name="sounds/weapons/weapons_law.fsb" />
+    </rocketlauncher_fp>
+	<rocketlauncher_3p>
+      <File name="sounds/weapons/weapons_law_3p.fsb" />
+    </rocketlauncher_3p>	
+<!-- VEHICLES -->
+    <abrams>
+      <File name="sounds/vehicles/vehicles_abrams.fsb" />
+      <File name="sounds/vehicles/vehicles_accesories.fsb" />
+	  <File name="sounds/weapons/weapons_tank_main_cannon.fsb" />
+	  <File name="sounds/weapons/weapons_hmg.fsb" />
+	</abrams>
+    <hmmwv>
+      <File name="sounds/vehicles/vehicles_hmmwv.fsb" />
+	  <File name="sounds/vehicles/vehicles_hmmwv_race.fsb" />
+      <File name="sounds/vehicles/vehicles_accesories.fsb" />
+    </hmmwv>
+	<mh60_blackhawk>
+      <File name="sounds/vehicles/vehicles_blackhawk.fsb" />
+      <File name="sounds/vehicles/vehicles_accesories.fsb" />
+    </mh60_blackhawk>	
+	<speedboat>
+	<File name="sounds/vehicles/vehicles_speedboat.fsb" />
+    <File name="sounds/vehicles/vehicles_accesories.fsb" />
+	</speedboat>
+  </GameHints>
+</PreloadData>

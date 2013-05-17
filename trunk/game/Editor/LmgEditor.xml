@@ -1,0 +1,648 @@
+<lmg_editor>
+	<blend_types>
+	
+		<blend_type code="STF1" name="Strafe (STF1)" description="4 directions 1 speed" >
+			<caps_code_ids>
+				<caps_code_id>run</caps_code_id>
+				<caps_code_id>walk</caps_code_id>
+			</caps_code_ids>
+			<slot_ids>
+				<slot_id>forward</slot_id>
+				<slot_id>left</slot_id>
+				<slot_id>back</slot_id>
+				<slot_id>right</slot_id>
+			</slot_ids>
+			<test_ids>
+				<test_id>strafe_test</test_id>
+			</test_ids>
+		</blend_type>
+	
+		<blend_type code="STF2" name="Strafe (STF2)" description="4 directions 2 speeds" >
+			<caps_code_ids>
+				<caps_code_id>run</caps_code_id>
+				<caps_code_id>walk</caps_code_id>
+			</caps_code_ids>
+			<slot_ids>
+				<slot_id>forward_fast</slot_id>
+				<slot_id>left_fast</slot_id>
+				<slot_id>back_fast</slot_id>
+				<slot_id>right_fast</slot_id>
+				<slot_id>forward</slot_id>
+				<slot_id>left</slot_id>
+				<slot_id>back</slot_id>
+				<slot_id>right</slot_id>
+			</slot_ids>
+			<test_ids>
+				<test_id>strafe_test</test_id>
+			</test_ids>
+		</blend_type>
+		
+		<blend_type code="IROT" name="Idle Rotate (IROT)" description="" >
+			<caps_code_ids>
+				<caps_code_id>irot</caps_code_id>
+			</caps_code_ids>
+			<slot_ids>
+				<slot_id>rotate_right</slot_id>
+				<slot_id>idle</slot_id>
+				<slot_id>rotate_left</slot_id>
+			</slot_ids>
+			<test_ids>
+				<test_id>irot_test</test_id>
+			</test_ids>
+		</blend_type>
+		
+		<blend_type code="TSTP" name="Step Rotate (TSTP)" description="" >
+			<caps_code_ids>
+				<caps_code_id>irot</caps_code_id>
+			</caps_code_ids>
+			<slot_ids>
+				<slot_id>rotate_right</slot_id>
+				<slot_id>idle</slot_id>
+				<slot_id>rotate_left</slot_id>
+			</slot_ids>
+			<test_ids>
+				<test_id>tstp_test</test_id>
+			</test_ids>
+		</blend_type>
+		
+		<blend_type code="ISTP" name="Idle Step (ISTP)" description="" >
+			<caps_code_ids>
+				<caps_code_id>istp</caps_code_id>
+			</caps_code_ids>
+			<slot_ids>
+				<slot_id>forward_right_foot</slot_id>
+				<slot_id>right_right_foot</slot_id>
+				<slot_id>back_right_foot</slot_id>
+				<slot_id>forward_left_foot</slot_id>
+				<slot_id>left_left_foot</slot_id>
+				<slot_id>back_left_foot</slot_id>
+				<slot_id>idle</slot_id>
+			</slot_ids>
+			<test_ids>
+				<test_id>istp_test</test_id>
+			</test_ids>
+		</blend_type>
+		
+		<blend_type code="I2M1" name="Idle to Move (I2M1)" description="" >
+			<caps_code_ids>
+				<caps_code_id>i2m</caps_code_id>
+			</caps_code_ids>
+			<slot_ids>
+				<slot_id>forward_right_foot</slot_id>
+				<slot_id>right_right_foot</slot_id>
+				<slot_id>back_right_foot</slot_id>
+				<slot_id>forward_left_foot</slot_id>
+				<slot_id>left_left_foot</slot_id>
+				<slot_id>back_left_foot</slot_id>
+			</slot_ids>
+			<test_ids>
+				<test_id>i2m_test</test_id>
+			</test_ids>
+		</blend_type>
+		
+		<blend_type code="I2M2" name="Idle to Move (I2M2)" description="" >
+			<caps_code_ids>
+				<caps_code_id>i2m</caps_code_id>
+			</caps_code_ids>
+			<slot_ids>
+				<slot_id>forward_right_foot</slot_id>
+				<slot_id>right_right_foot</slot_id>
+				<slot_id>back_right_foot</slot_id>
+				<slot_id>forward_left_foot</slot_id>
+				<slot_id>left_left_foot</slot_id>
+				<slot_id>back_left_foot</slot_id>
+				<slot_id>forward_right_foot_fast</slot_id>
+				<slot_id>right_right_foot_fast</slot_id>
+				<slot_id>back_right_foot_fast</slot_id>
+				<slot_id>forward_left_foot_fast</slot_id>
+				<slot_id>left_left_foot_fast</slot_id>
+				<slot_id>back_left_foot_fast</slot_id>
+			</slot_ids>
+			<test_ids>
+				<test_id>i2m_test</test_id>
+			</test_ids>
+		</blend_type>
+		
+		<blend_type code="M2I1" name="Move to Idle (M2I1)" description="" >
+			<caps_code_ids>
+				<caps_code_id>m2i</caps_code_id>
+			</caps_code_ids>
+			<slot_ids>
+				<slot_id>forward_to_stop</slot_id>
+			</slot_ids>
+		</blend_type>
+		
+		<blend_type code="FLR1" name="Forward Left Right (FLR1)" description="" >
+			<caps_code_ids>
+				<caps_code_id>run</caps_code_id>
+			</caps_code_ids>
+			<slot_ids>
+				<slot_id>turn_left</slot_id>
+				<slot_id>flr_forward</slot_id>
+				<slot_id>turn_right</slot_id>
+			</slot_ids>
+			<test_ids>
+				<test_id>flr_test</test_id>
+			</test_ids>
+		</blend_type>
+		
+		<blend_type code="FLR2" name="Forward Left Right (FLR2)" description="" >
+			<caps_code_ids>
+				<caps_code_id>run</caps_code_id>
+			</caps_code_ids>
+			<slot_ids>
+				<slot_id>turn_left_fast</slot_id>
+				<slot_id>flr_forward_sprint</slot_id>
+				<slot_id>turn_right_fast</slot_id>
+				<slot_id>turn_left_slow</slot_id>
+				<slot_id>flr_forward_slow</slot_id>
+				<slot_id>turn_right_slow</slot_id>
+			</slot_ids>
+			<test_ids>
+				<test_id>flr_test</test_id>
+			</test_ids>
+		</blend_type>
+		
+		<blend_type code="FLR3" name="Forward Left Right (FLR3)" description="" >
+			<caps_code_ids>
+				<caps_code_id>run</caps_code_id>
+			</caps_code_ids>
+			<slot_ids>
+				<slot_id>turn_left_fast</slot_id>
+				<slot_id>flr_forward_sprint</slot_id>
+				<slot_id>turn_right_fast</slot_id>
+				<slot_id>flr_forward</slot_id>
+				<slot_id>turn_left_slow</slot_id>
+				<slot_id>flr_forward_slow</slot_id>
+				<slot_id>turn_right_slow</slot_id>
+			</slot_ids>
+			<test_ids>
+				<test_id>flr_test</test_id>
+			</test_ids>
+		</blend_type>
+		
+		<blend_type code="TRN1" name="Turn (TRN1)" description="" >
+			<caps_code_ids>
+			</caps_code_ids>
+			<slot_ids>
+				<slot_id>turn_right_180</slot_id>
+				<slot_id>turn_right_90</slot_id>
+				<slot_id>turn_forward</slot_id>
+				<slot_id>turn_left_90</slot_id>
+				<slot_id>turn_left_180</slot_id>
+			</slot_ids>
+			<test_ids>
+				<test_id>flr_test</test_id>
+			</test_ids>
+		</blend_type>
+		
+		<blend_type code="S__1" name="Strafe (S__1)" description="" >
+			<caps_code_ids>
+				<caps_code_id>run</caps_code_id>
+				<caps_code_id>walk</caps_code_id>
+			</caps_code_ids>
+			<slot_ids>
+				<slot_id>forward</slot_id>
+				<slot_id>cross_left</slot_id>
+				<slot_id>left</slot_id>
+				<slot_id>back</slot_id>
+				<slot_id>cross_right</slot_id>
+				<slot_id>right</slot_id>
+			</slot_ids>
+			<test_ids>
+				<test_id>strafe_test</test_id>
+			</test_ids>
+		</blend_type>
+		
+		<blend_type code="UDH1" name="Uphill Downhill (UDH1)" description="" >
+			<caps_code_ids>
+				<caps_code_id>run</caps_code_id>
+				<caps_code_id>walk</caps_code_id>
+			</caps_code_ids>
+			<slot_ids>
+				<slot_id>up_turn_right</slot_id>
+				<slot_id>up_forward</slot_id>
+				<slot_id>up_turn_left</slot_id>
+				<slot_id>udh1_turn_right</slot_id>
+				<slot_id>forward</slot_id>
+				<slot_id>udh1_turn_left</slot_id>
+				<slot_id>down_turn_right</slot_id>
+				<slot_id>down_forward</slot_id>
+				<slot_id>down_turn_left</slot_id>
+			</slot_ids>
+			<test_ids>
+				<test_id>udh12_test</test_id>
+			</test_ids>
+		</blend_type>
+		
+		<blend_type code="UDH3" name="Uphill Downhill (UDH3)" description="" >
+			<caps_code_ids>
+				<caps_code_id>run</caps_code_id>
+				<caps_code_id>walk</caps_code_id>
+			</caps_code_ids>
+			<slot_ids>
+				<slot_id>up_turn_left_sprint</slot_id>
+				<slot_id>up_forward_sprint</slot_id>
+				<slot_id>up_turn_right_sprint</slot_id>
+				<slot_id>up_turn_left_fast</slot_id>
+				<slot_id>up_forward_fast</slot_id>
+				<slot_id>up_turn_right_fast</slot_id>
+				<slot_id>up_turn_left</slot_id>
+				<slot_id>up_forward</slot_id>
+				<slot_id>up_turn_right</slot_id>
+				
+				<slot_id>udh3_turn_left_sprint</slot_id>
+				<slot_id>udh3_forward_sprint</slot_id>
+				<slot_id>udh3_turn_right_sprint</slot_id>
+				<slot_id>udh3_turn_left_fast</slot_id>
+				<slot_id>udh3_forward_fast</slot_id>
+				<slot_id>udh3_turn_right_fast</slot_id>
+				<slot_id>udh3_turn_left</slot_id>
+				<slot_id>udh3_forward</slot_id>
+				<slot_id>udh3_turn_right</slot_id>
+				
+				<slot_id>down_turn_left_sprint</slot_id>
+				<slot_id>down_forward_sprint</slot_id>
+				<slot_id>down_turn_right_sprint</slot_id>
+				<slot_id>down_turn_left_fast</slot_id>
+				<slot_id>down_forward_fast</slot_id>
+				<slot_id>down_turn_right_fast</slot_id>
+				<slot_id>down_turn_left</slot_id>
+				<slot_id>down_forward</slot_id>
+				<slot_id>down_turn_right</slot_id>
+			</slot_ids>
+			<test_ids>
+				<test_id>udh_test</test_id>
+			</test_ids>
+		</blend_type>
+		
+		<blend_type code="STH2" name="Strafe Uphill Downhill (STH2)" description="" >
+			<caps_code_ids>
+				<caps_code_id>run</caps_code_id>
+				<caps_code_id>walk</caps_code_id>
+			</caps_code_ids>
+			<slot_ids>
+				<slot_id>st_up_forward_fast</slot_id>
+				<slot_id>st_up_left_fast</slot_id>
+				<slot_id>st_up_back_fast</slot_id>
+				<slot_id>st_up_right_fast</slot_id>
+				<slot_id>st_up_forward_slow</slot_id>
+				<slot_id>st_up_left_slow</slot_id>
+				<slot_id>st_up_back_slow</slot_id>
+				<slot_id>st_up_right_slow</slot_id>
+				
+				<slot_id>forward_fast</slot_id>
+				<slot_id>cross_left_fast</slot_id>
+				<slot_id>left_fast</slot_id>
+				<slot_id>back_fast</slot_id>
+				<slot_id>cross_right_fast</slot_id>
+				<slot_id>right_fast</slot_id>
+				
+				<slot_id>forward</slot_id>
+				
+				<slot_id>forward_slow</slot_id>
+				<slot_id>cross_left_slow</slot_id>
+				<slot_id>left_slow</slot_id>
+				<slot_id>back_slow</slot_id>
+				<slot_id>cross_right_slow</slot_id>
+				<slot_id>right_slow</slot_id>
+				
+				<slot_id>turn_left_fast</slot_id>
+				<slot_id>turn_right_fast</slot_id>
+				<slot_id>turn_left_slow</slot_id>
+				<slot_id>turn_right_slow</slot_id>
+				
+				<slot_id>st_down_forward_fast</slot_id>
+				<slot_id>st_down_left_fast</slot_id>
+				<slot_id>st_down_back_fast</slot_id>
+				<slot_id>st_down_right_fast</slot_id>
+				<slot_id>st_down_forward_slow</slot_id>
+				<slot_id>st_down_left_slow</slot_id>
+				<slot_id>st_down_back_slow</slot_id>
+				<slot_id>st_down_right_slow</slot_id>
+			</slot_ids>
+			<test_ids>
+				<test_id>strafe_ud_turn_test</test_id>
+			</test_ids>
+		</blend_type>
+		
+		<blend_type code="S_H2" name="Strafe Uphill Downhill (S_H2)" description="" >
+			<caps_code_ids>
+				<caps_code_id>run</caps_code_id>
+				<caps_code_id>walk</caps_code_id>
+			</caps_code_ids>
+			<slot_ids>
+				<slot_id>st_up_forward_fast</slot_id>
+				<slot_id>st_up_left_fast</slot_id>
+				<slot_id>st_up_back_fast</slot_id>
+				<slot_id>st_up_right_fast</slot_id>
+				<slot_id>st_up_forward_slow</slot_id>
+				<slot_id>st_up_left_slow</slot_id>
+				<slot_id>st_up_back_slow</slot_id>
+				<slot_id>st_up_right_slow</slot_id>
+				
+				<slot_id>forward_fast</slot_id>
+				<slot_id>cross_left_fast</slot_id>
+				<slot_id>left_fast</slot_id>
+				<slot_id>back_fast</slot_id>
+				<slot_id>cross_right_fast</slot_id>
+				<slot_id>right_fast</slot_id>
+				
+				<slot_id>forward_slow</slot_id>
+				<slot_id>cross_left_slow</slot_id>
+				<slot_id>left_slow</slot_id>
+				<slot_id>back_slow</slot_id>
+				<slot_id>cross_right_slow</slot_id>
+				<slot_id>right_slow</slot_id>
+				
+				<slot_id>st_down_forward_fast</slot_id>
+				<slot_id>st_down_left_fast</slot_id>
+				<slot_id>st_down_back_fast</slot_id>
+				<slot_id>st_down_right_fast</slot_id>
+				<slot_id>st_down_forward_slow</slot_id>
+				<slot_id>st_down_left_slow</slot_id>
+				<slot_id>st_down_back_slow</slot_id>
+				<slot_id>st_down_right_slow</slot_id>
+			</slot_ids>
+			<test_ids>
+				<test_id>strafe_ud_test</test_id>
+			</test_ids>
+		</blend_type>
+		
+	</blend_types>
+	
+	
+	
+	<slots>
+		<slot id="forward_fast" name="Forward Fast" description="" position="0,1,0" />
+		<slot id="left_fast" name="Left Fast" description="" position="-1,0,0" />
+		<slot id="back_fast" name="Back Fast" description="" position="0,-1,0" />
+		<slot id="right_fast" name="Right Fast" description="" position="1,0,0" />
+		
+		<slot id="forward" name="Forward" description="" position="0,1,0" />
+		<slot id="left" name="Left" description="" position="-1,0,0" />
+		<slot id="back" name="Back" description="" position="0,-1,0" />
+		<slot id="right" name="Right" description="" position="1,0,0" />
+		
+		<slot id="forward_slow" name="Forward Slow" description="" position="0,1,0" />
+		<slot id="left_slow" name="Left Slow" description="" position="-1,0,0" />
+		<slot id="back_slow" name="Back Slow" description="" position="0,-1,0" />
+		<slot id="right_slow" name="Right Slow" description="" position="1,0,0" />
+		
+		<slot id="cross_left_slow" name="Cross Left Slow" description="" position="-1,1,0" />
+		<slot id="cross_right_slow" name="Cross Right Slow" description="" position="1,-1,0" />
+		<slot id="cross_left" name="Cross Left" description="" position="-1,1,0" />
+		<slot id="cross_right" name="Cross Right" description="" position="1,-1,0" />
+		<slot id="cross_left_fast" name="Cross Left Fast" description="" position="-1,1,0" />
+		<slot id="cross_right_fast" name="Cross Right Fast" description="" position="1,-1,0" />
+		
+		<slot id="rotate_right" name="Rotate Right" description="" position="0,-1,0" />
+		<slot id="idle" name="Idle" description="" position="0,0,0" />
+		<slot id="rotate_left" name="Rotate Left" description="" position="0,1,0" />
+		
+		<slot id="forward_right_foot" name="Forward RFoot" description="" position="0,0,0" />
+		<slot id="right_right_foot" name="Right RFoot" description="" position="0,0,0" />
+		<slot id="back_right_foot" name="Back RFoot" description="" position="0,0,0" />
+		<slot id="forward_left_foot" name="Forward LFoot" description="" position="0,0,0" />
+		<slot id="left_left_foot" name="Left LFoot" description="" position="0,0,0" />
+		<slot id="back_left_foot" name="Back LFoot" description="" position="0,0,0" />
+		
+		<slot id="forward_right_foot_fast" name="Forward RFoot Fast" description="" position="0,0,0" />
+		<slot id="right_right_foot_fast" name="Right RFoot Fast" description="" position="0,0,0" />
+		<slot id="back_right_foot_fast" name="Back RFoot Fast" description="" position="0,0,0" />
+		<slot id="forward_left_foot_fast" name="Forward LFoot Fast" description="" position="0,0,0" />
+		<slot id="left_left_foot_fast" name="Left LFoot Fast" description="" position="0,0,0" />
+		<slot id="back_left_foot_fast" name="Back LFoot Fast" description="" position="0,0,0" />
+		
+		<slot id="forward_to_stop" name="Forward to Stop" description="" position="0,0,0" />
+		
+		<slot id="turn_left" name="Turn Left" description="" position="-1,1,0" />
+		<slot id="turn_right" name="Turn Right" description="" position="1,1,0" />
+		<slot id="turn_left_fast" name="Turn Left Fast" description="" position="-1,1,0" />
+		<slot id="flr_forward_sprint" name="Forward Sprint" description="" position="0,1,0" />
+		<slot id="turn_right_fast" name="Turn Right Fast" description="" position="1,1,0" />
+		<slot id="flr_forward" name="Forward Fast" description="" position="0,0,0" />
+		<slot id="turn_left_slow" name="Turn Left Slow" description="" position="-1,-1,0" />
+		<slot id="flr_forward_slow" name="Forward Slow" description="" position="0,-1,0" />
+		<slot id="turn_right_slow" name="Turn Right Slow" description="" position="1,-1,0" />
+		
+		<slot id="turn_right_180" name="Turn Right 180" description="" position="0,0,0" />
+		<slot id="turn_right_90" name="Turn Right 90" description="" position="0,0,0" />
+		<slot id="turn_forward" name="Forward" description="" position="0,0,0" />
+		<slot id="turn_left_90" name="Turn Left 90" description="" position="0,0,0" />
+		<slot id="turn_left_180" name="Turn Left 180" description="" position="0,0,0" />
+		
+		<slot id="up_turn_right" name="Uphill Turn Right" description="" position="-1,-1,1" />
+		<slot id="up_forward" name="Uphill Forward" description="" position="0,-1,1" />
+		<slot id="up_turn_left" name="Uphill Turn Left" description="" position="1,-1,1" />
+		<slot id="udh1_turn_right" name="Turn Right" description="" position="-1,-1,0" />
+		<slot id="udh1_turn_left" name="Turn Left" description="" position="1,-1,0" />
+		<slot id="down_turn_right" name="Downhill Turn Right" description="" position="-1,-1,-1" />
+		<slot id="down_forward" name="Downhill Forward" description="" position="0,-1,-1" />
+		<slot id="down_left" name="Downhill Turn Left" description="" position="1,-1,-1" />
+		
+		<slot id="up_turn_left_sprint" name="Uphill Turn Left Sprint" description="" position="-1,1,1" />
+		<slot id="up_forward_sprint" name="Uphill Forward Sprint" description="" position="0,1,1" />
+		<slot id="up_turn_right_sprint" name="Uphill Turn Right Sprint" description="" position="1,1,1" />
+		<slot id="up_turn_left_fast" name="Uphill Turn Left Fast" description="" position="-1,0,1" />
+		<slot id="up_forward_fast" name="Uphill Forward Fast" description="" position="0,0,1" />
+		<slot id="up_turn_right_fast" name="Uphill Turn Right Fast" description="" position="1,0,1" />
+		<slot id="up_turn_left" name="Uphill Turn Left Slow" description="" position="-1,-1,1" />
+		<slot id="up_forward" name="Uphill Forward Slow" description="" position="0,-1,1" />
+		<slot id="up_turn_right" name="Uphill Turn Right Slow" description="" position="0,-1,1" />
+		
+		<slot id="udh3_turn_left_sprint" name="Turn Left Sprint" description="" position="-1,1,0" />
+		<slot id="udh3_forward_sprint" name="Forward Sprint" description="" position="0,1,0" />
+		<slot id="udh3_turn_right_sprint" name="Turn Right Sprint" description="" position="1,1,0" />
+		<slot id="udh3_turn_left_fast" name="Turn Left Fast" description="" position="-1,0,0" />
+		<slot id="udh3_forward_fast" name="Forward Fast" description="" position="0,0,0" />
+		<slot id="udh3_turn_right_fast" name="Turn Right Fast" description="" position="1,0,0" />
+		<slot id="udh3_turn_left" name="Turn Left Slow" description="" position="-1,-1,0" />
+		<slot id="udh3_forward" name="Forward Slow" description="" position="0,-1,0" />
+		<slot id="udh3_turn_right" name="Turn Right" description="" position="1,-1,0" />
+		
+		<slot id="down_turn_left_sprint" name="Downhill Turn Left Sprint" description="" position="-1,1,-1" />
+		<slot id="down_forward_sprint" name="Downhill Forward Sprint" description="" position="0,1,-1" />
+		<slot id="down_turn_right_sprint" name="Downhill Turn Right Sprint" description="" position="1,1,-1" />
+		<slot id="down_turn_left_fast" name="Downhill Turn Left Fast" description="" position="-1,0,-1" />
+		<slot id="down_forward_fast" name="Downhill Forward Fast" description="" position="0,0,-1" />
+		<slot id="down_turn_right_fast" name="Downhill Turn Right Fast" description="" position="1,0,-1" />
+		<slot id="down_turn_left" name="Downhill Turn Left Slow" description="" position="-1,-1,-1" />
+		<slot id="down_forward" name="Downhill Forward Slow" description="" position="0,-1,-1" />
+		<slot id="down_turn_right" name="Downhill Turn Right Slow" description="" position="0,-1,-1" />
+		
+		<slot id="st_up_forward_fast" name="Uphill Forward Fast" description="" position="0,1,0" />
+		<slot id="st_up_left_fast" name="Uphill Left Fast" description="" position="-1,0,0" />
+		<slot id="st_up_back_fast" name="Uphill Back Fast" description="" position="0,-1,0" />
+		<slot id="st_up_right_fast" name="Uphill Right Fast" description="" position="1,0,0" />
+		<slot id="st_up_forward_slow" name="Uphill Forward Slow" description="" position="0,1,0" />
+		<slot id="st_up_left_slow" name="Uphill Left Slow" description="" position="-1,0,0" />
+		<slot id="st_up_back_slow" name="Uphill Back Slow" description="" position="0,-1,0" />
+		<slot id="st_up_right_slow" name="Uphill Right Slow" description="" position="1,0,0" />
+		
+		<slot id="st_down_forward_fast" name="Downhill Forward Fast" description="" position="0,1,0" />
+		<slot id="st_down_left_fast" name="Downhill Left Fast" description="" position="-1,0,0" />
+		<slot id="st_down_back_fast" name="Downhill Back Fast" description="" position="0,-1,0" />
+		<slot id="st_down_right_fast" name="Downhill Right Fast" description="" position="1,0,0" />
+		<slot id="st_down_forward_slow" name="Downhill Forward Slow" description="" position="0,1,0" />
+		<slot id="st_down_left_slow" name="Downhill Left Slow" description="" position="-1,0,0" />
+		<slot id="st_down_back_slow" name="Downhill Back Slow" description="" position="0,-1,0" />
+		<slot id="st_down_right_slow" name="Downhill Right Slow" description="" position="1,0,0" />
+	</slots>
+	
+	
+	
+	<capabilities>
+		<capability id="valid" name="Valid" description="Blah" />
+	</capabilities>
+	
+	
+	
+	<caps_codes>
+		<caps_code id="run" name="Run" code="RUN_" />
+		<caps_code id="walk" name="Walk" code="WALK" />
+		<caps_code id="irot" name="Idle Rotate" code="IROT" />
+		<caps_code id="istp" name="Idle Step" code="ISTP" />
+		<caps_code id="i2m" name="Idle To Move" code="I2M_" />
+		<caps_code id="m2i" name="Move To Idle" code="M2I_" />
+	</caps_codes>
+	
+	<tests>
+		<test id="default" name="Blah">
+			<joystick name="Travel Angle and Speed" x="5" y="25" width="128" height="128" default_x="0" default_y="1" >
+				<mapping what="LENGTH_TIMES_PARAM_RANGE" to="TravelSpeed" />
+				<mapping what="ANGLE_Y_AXIS" to="TravelAngle" />
+			</joystick>
+			<horizontal_slider name="slider 1" x="0" y="128" width="128" height="25" min_x="0" >
+				<mapping what="X" to="1" />
+			</horizontal_slider>
+			<constant value="21" mapping="TravelSlope" />
+		</test>
+		
+		<test id="irot_test" name="Idle Rotate Test" >
+			<horizontal_slider name="TurnSpeed" x="5" y="25" width="128" height="25" >
+				<mapping what="X" to="TurnSpeed" />
+			</horizontal_slider>
+		</test>
+		
+		<test id="tstp_test" name="Step Rotate Test" >
+			<horizontal_slider name="TurnAngle" x="5" y="25" width="128" height="25" >
+				<mapping what="MAP_X_TO_PARAM_RANGE" to="TurnAngle" />
+			</horizontal_slider>
+		</test>
+		
+		<test id="istp_test" name="Idle Step Test" >
+			<joystick name="Travel Angle and Dist" x="5" y="25" width="256" height="256" default_x="0" default_y="1" >
+				<mapping what="LENGTH_TIMES_PARAM_RANGE" to="TravelDist" />
+				<mapping what="ANGLE_Y_AXIS" to="TravelAngle" />
+			</joystick>
+		</test>
+		
+		<test id="i2m_test" name="Idle To Move Test" >
+			<joystick name="Travel Angle and Speed" x="5" y="25" width="256" height="256" default_x="0" default_y="1" length_min="-1" length_max="1" >
+				<mapping what="LENGTH_TIMES_RANGE" to="TravelSpeed" />
+				<mapping what="ANGLE_Y_AXIS" to="TravelAngle" />
+			</joystick>
+		</test>
+		
+		<test id="strafe_test" name="Strafe Test" >
+			<joystick name="Travel Angle and Speed" x="5" y="25" width="256" height="256" default_x="0" default_y="1" length_min="-1" length_max="1" >
+				<mapping what="LENGTH_TIMES_ASSET_RANGE" to="TravelSpeed" />
+				<mapping what="ANGLE_Y_AXIS" to="TravelAngle" />
+			</joystick>
+		</test>
+		
+		<test id="flr_test" name="Turn Test" >
+			<horizontal_slider name="TravelSpeed" x="5" y="25" width="128" height="25" default_x="1" min_x="0" >
+				<mapping what="MAP_X_TO_ASSET_RANGE" to="TravelSpeed" />
+			</horizontal_slider>
+			<horizontal_slider name="TurnSpeed" x="5" y="75" width="128" height="25" >
+				<mapping what="MAP_X_TO_PARAM_RANGE" to="TurnSpeed" />
+			</horizontal_slider>
+		</test>
+		
+		<test id="udh12_test" name="Uphill Downhill Test" >
+			<horizontal_slider name="TravelSlope" x="5" y="25" width="128" height="25" min_x="-21" max_x="21" >
+				<mapping what="X" to="TravelSlope" />
+			</horizontal_slider>
+		</test>
+		
+		<test id="udh_test" name="Uphill Downhill Test" >
+			<horizontal_slider name="TravelSlope" x="5" y="25" width="128" height="25" min_x="-21" max_x="21" >
+				<mapping what="X" to="TravelSlope" />
+			</horizontal_slider>
+			<horizontal_slider name="TravelSpeed" x="5" y="75" width="128" height="25" default_x="1" min_x="0" >
+				<mapping what="MAP_X_TO_ASSET_RANGE" to="TravelSpeed" />
+			</horizontal_slider>
+			<horizontal_slider name="TurnSpeed" x="5" y="125" width="128" height="25" >
+				<mapping what="MAP_X_TO_PARAM_RANGE" to="TurnSpeed" />
+			</horizontal_slider>
+		</test>
+		
+		<test id="strafe_ud_turn_test" name="Strafe Turn Up/Downhill Test" >
+			<joystick name="Travel Angle and Speed" x="5" y="25" width="256" height="256" default_x="0" default_y="1" length_min="-1" length_max="1" >
+				<mapping what="LENGTH_TIMES_ASSET_RANGE" to="TravelSpeed" />
+				<mapping what="ANGLE_Y_AXIS" to="TravelAngle" />
+			</joystick>
+			<horizontal_slider name="TravelSlope" x="5" y="305" width="256" height="25" min_x="-21" max_x="21" >
+				<mapping what="X" to="TravelSlope" />
+			</horizontal_slider>
+			<horizontal_slider name="TurnSpeed" x="5" y="355" width="256" height="25" >
+				<mapping what="MAP_X_TO_PARAM_RANGE" to="TurnSpeed" />
+			</horizontal_slider>
+		</test>
+		
+		<test id="strafe_ud_test" name="Strafe Up/Downhill Test" >
+			<joystick name="Travel Angle and Speed" x="5" y="25" width="256" height="256" default_x="0" default_y="1" length_min="-1" length_max="1" >
+				<mapping what="LENGTH_TIMES_ASSET_RANGE" to="TravelSpeed" />
+				<mapping what="ANGLE_Y_AXIS" to="TravelAngle" />
+			</joystick>
+			<horizontal_slider name="TravelSlope" x="5" y="305" width="256" height="25" min_x="-21" max_x="21" >
+				<mapping what="X" to="TravelSlope" />
+			</horizontal_slider>
+		</test>
+		
+		
+		
+		
+		<test id="general_sliders" >
+			<horizontal_slider name="TravelAngle" x="5" y="25" width="128" height="25" default_x="1" >
+				<mapping what="MAP_X_TO_PARAM_RANGE" to="TravelAngle" />
+			</horizontal_slider>
+			<horizontal_slider name="TravelDistScale" x="5" y="75" width="128" height="25" default_x="1" min_x="0" >
+				<mapping what="X" to="TravelDistScale" />
+			</horizontal_slider>
+			<horizontal_slider name="TravelSpeed" x="5" y="125" width="128" height="25" default_x="1" min_x="0" >
+				<mapping what="MAP_X_TO_PARAM_RANGE" to="TravelSpeed" />
+			</horizontal_slider>
+			<horizontal_slider name="TravelDist" x="5" y="175" width="128" height="25" default_x="1" >
+				<mapping what="MAP_X_TO_PARAM_RANGE" to="TravelDist" />
+			</horizontal_slider>
+			<horizontal_slider name="TravelSlope" x="5" y="225" width="128" height="25" min_x="-21" max_x="21" >
+				<mapping what="X" to="TravelSlope" />
+			</horizontal_slider>
+			<horizontal_slider name="WeightShift" x="5" y="275" width="128" height="25" >
+				<mapping what="X" to="WeightShift" />
+			</horizontal_slider>
+			<horizontal_slider name="TurnSpeed" x="140" y="25" width="128" height="25" >
+				<mapping what="MAP_X_TO_PARAM_RANGE" to="TurnSpeed" />
+			</horizontal_slider>
+			<horizontal_slider name="TurnAngle" x="140" y="75" width="128" height="25" >
+				<mapping what="MAP_X_TO_PARAM_RANGE" to="TurnAngle" />
+			</horizontal_slider>
+			<horizontal_slider name="Duration" x="140" y="125" width="128" height="25" >
+				<mapping what="MAP_X_TO_PARAM_RANGE" to="Duration" />
+			</horizontal_slider>
+			<horizontal_slider name="Curving" x="140" y="175" width="128" height="25" >
+				<mapping what="MAP_X_TO_PARAM_RANGE" to="Curving" />
+			</horizontal_slider>
+			<horizontal_slider name="Height" x="140" y="225" width="128" height="25" default_x="1" >
+				<mapping what="MAP_X_TO_PARAM_RANGE" to="Height" />
+			</horizontal_slider>
+			<horizontal_slider name="Scale" x="140" y="275" width="128" height="25" default_x="1" >
+				<mapping what="MAP_X_TO_PARAM_RANGE" to="Scale" />
+			</horizontal_slider>
+		</test>
+	</tests>
+	
+</lmg_editor>

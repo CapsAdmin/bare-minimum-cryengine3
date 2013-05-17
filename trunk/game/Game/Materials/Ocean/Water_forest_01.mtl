@@ -1,0 +1,6 @@
+<Material MtlFlags="526336" Shader="Water" GenMask="114" StringGenMask="" SurfaceType="mat_water" MatTemplate="" Diffuse="1,1,1" Specular="0.227451,0.227451,0.227451" Emissive="0,0,0" Shininess="10.4" Opacity="1">
+ <Textures>
+  <Texture Map="Environment" File="textures/cubes/cxpcube.dds"/>
+ </Textures>
+ <PublicParams NormalsScale="1.25" SoftIntersectionFactor="1" Tilling="50" RipplesNormalsScale="1" FresnelPower="5" DetailNormalsScale="0.5" DetailTilling="2" FakeCameraSpeed="0" GradientScale="0.1" FresnelBias="0.1" ReflectionScale="3" RefractionBumpScale="0.1" HeightScale="0.025" ReflectionBumpScale="0.1"/>
+</Material>

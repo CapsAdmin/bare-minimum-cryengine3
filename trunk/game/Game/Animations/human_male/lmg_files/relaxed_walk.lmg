@@ -1,0 +1,36 @@
+<LocomotionGroup>
+
+  <BLENDTYPE type="SUD2" />
+	<CAPS code="WALK" />
+
+  <ExampleList>
+    <Example Position=" 0, 1, 0" AName="relaxed_walkUphill_nw_forward_fast_01" />
+    <Example Position=" -1, 0, 0" AName="relaxed_walk_left_fast" />
+    <Example Position=" 0,-1, 0" AName="relaxed_walk_back_fast" />
+    <Example Position="1, 0, 0" AName="relaxed_walk_right_fast" />
+    <Example Position=" 0, 1, 0" AName="relaxed_walkUphill_nw_forward_slow_01" />
+    <Example Position=" -1, 0, 0" AName="relaxed_walk_left_slow" />
+    <Example Position=" 0,-1, 0" AName="relaxed_walk_back_slow" />
+    <Example Position="1, 0, 0" AName="relaxed_walk_right_slow" />
+
+    <Example Position=" 0, 1, 0" AName="relaxed_walk_forward_fast" />
+    <Example Position=" -1, 0, 0" AName="relaxed_walk_left_fast" />
+    <Example Position=" 0,-1, 0" AName="relaxed_walk_back_fast" />
+    <Example Position="1, 0, 0" AName="relaxed_walk_right_fast" />
+    <Example Position=" 0, 1, 0" AName="relaxed_walk_forward_slow" />
+    <Example Position=" -1, 0, 0" AName="relaxed_walk_left_slow" />
+    <Example Position=" 0,-1, 0" AName="relaxed_walk_back_slow" />
+    <Example Position="1, 0, 0" AName="relaxed_walk_right_slow" />
+
+    <Example Position=" 0, 1, 0" AName="relaxed_walkDownhill_nw_forward_fast_01" />
+    <Example Position=" -1, 0, 0" AName="relaxed_walk_left_fast" />
+    <Example Position=" 0,-1, 0" AName="relaxed_walk_back_fast" />
+    <Example Position="1, 0, 0" AName="relaxed_walk_right_fast" />
+    <Example Position=" 0, 1, 0" AName="relaxed_walkDownhill_nw_forward_slow_01" />
+    <Example Position=" -1, 0, 0" AName="relaxed_walk_left_slow" />
+    <Example Position=" 0,-1, 0" AName="relaxed_walk_back_slow" />
+    <Example Position="1, 0, 0" AName="relaxed_walk_right_slow" />
+  </ExampleList>
+
+
+</LocomotionGroup>

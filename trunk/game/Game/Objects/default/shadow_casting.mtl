@@ -1,0 +1,8 @@
+<Material MtlFlags="524288" Shader="Illum" GenMask="100000000" StringGenMask="%STAT_BRANCHING" SurfaceType="mat_concrete" MatTemplate="" Diffuse="0.8588236,0.1254902,0.1254902" Specular="0,0,0" Emissive="0,0,0" Shininess="10">
+ <Textures>
+  <Texture Map="Diffuse" File="materials/special/collision_proxy_nomaterialset.tif">
+   <TexMod TexMod_RotateType="1" TexMod_WRotatePhase="45"/>
+  </Texture>
+ </Textures>
+ <PublicParams AmbientMultiplier="1"/>
+</Material>

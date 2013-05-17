@@ -1,0 +1,22 @@
+<Material MtlFlags="524544">
+ <SubMaterials>
+  <Material Name="arms" MtlFlags="524448" Shader="Illum" GenMask="100080000" StringGenMask="%GLOSS_MAP%TESSELLATION" SurfaceType="mat_flesh" MatTemplate="" Diffuse="0.10114516,0.10114516,0.10114516" Specular="0.026548682,0.035614368,0.04145189" Emissive="0,0,0" Shininess="10" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/weapons/agent_fp/textures/agent_fp_dif.dds"/>
+    <Texture Map="Specular" File="objects/weapons/agent_fp/textures/agent_fp_spec.tif"/>
+    <Texture Map="Bumpmap" File="objects/weapons/agent_fp/textures/agent_fp_ddn.tif"/>
+   </Textures>
+   <PublicParams SpecMapChannelB="0" SpecMapChannelR="0" FresnelPower="4" GlossMapChannelB="0" SpecMapChannelG="0" FresnelScale="1" FresnelBias="1" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+  <Material Name="jacket" MtlFlags="524448" Shader="Illum" GenMask="100082080" StringGenMask="%DETAIL_BUMP_MAPPING%DETAIL_TEXTURE_IS_SET%GLOSS_MAP%TESSELLATION" SurfaceType="mat_fabric" MatTemplate="" Diffuse="0.98282623,0.98282623,0.98282623" Specular="1,1,1" Emissive="0,0,0" Shininess="58" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/weapons/agent_fp/textures/agent_fp_dif.dds"/>
+    <Texture Map="Specular" File="objects/weapons/agent_fp/textures/agent_fp_dif.dds"/>
+    <Texture Map="Bumpmap" File="objects/weapons/agent_fp/textures/agent_fp_ddn.dds"/>
+    <Texture Map="Detail" File="objects/characters/agent/textures/fabrics.dds"/>
+   </Textures>
+   <PublicParams SpecMapChannelB="0" SpecMapChannelR="0" FresnelPower="4" DetailBumpTillingU="20" GlossMapChannelB="0" SpecMapChannelG="0" FresnelScale="1" DetailDiffuseScale="0" FresnelBias="1" DetailBumpScale="2" DetailGlossScale="0" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+ </SubMaterials>
+ <PublicParams FresnelPower="4" GlossFromDiffuseContrast="1" FresnelScale="1" GlossFromDiffuseOffset="0" FresnelBias="1" GlossFromDiffuseAmount="0" GlossFromDiffuseBrightness="0.333" IndirectColor="0.25,0.25,0.25"/>
+</Material>

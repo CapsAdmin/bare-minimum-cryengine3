@@ -1,0 +1,7 @@
+<Material Diffuse="1,1,1" Emissive="0,0,0" GenMask="0" MtlFlags="2048" Opacity="1" Shader="Light.SunFlare" Shininess="10" Specular="0,0,0" SurfaceType="" >
+ <Textures>
+  <Texture File="Textures/Lights/sun.dds" Map="Diffuse" >
+   <TexMod />
+  </Texture>
+ </Textures>
+</Material>

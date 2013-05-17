@@ -1,0 +1,6 @@
+<Material MtlFlags="526336" Shader="Particles" GenMask="0" StringGenMask="" SurfaceType="" MatTemplate="" Diffuse="1,1,1" Emissive="1,1,1" Opacity="1" GlowAmount="10">
+ <Textures>
+  <Texture Map="Diffuse" File="textures/sprites/glow_tiled_a.tif"/>
+ </Textures>
+ <PublicParams FresnelPower="4" SoftParticlesScale="1" GlobalIlluminationAmount="1" FresnelScale="1" SoftParticlesVolumeScale="0" FresnelBias="1"/>
+</Material>

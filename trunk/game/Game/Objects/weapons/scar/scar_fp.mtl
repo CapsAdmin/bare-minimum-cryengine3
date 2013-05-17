@@ -1,0 +1,25 @@
+<Material MtlFlags="524544">
+ <SubMaterials>
+  <Material Name="Metal_1" MtlFlags="524448" Shader="Illum" GenMask="100092280" StringGenMask="%DETAIL_BUMP_MAPPING%DETAIL_TEXTURE_IS_NORMALMAP%DETAIL_TEXTURE_IS_SET%ENVIRONMENT_MAP%GLOSS_MAP%TESSELLATION" SurfaceType="" MatTemplate="" Diffuse="0.10588236,0.10588236,0.10588236" Specular="0.35294119,0.43921572,0.52156866" Emissive="0.24680044,0.24680044,0.24680044" Shininess="80" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/weapons/scar/case_a.tif" Filter="5"/>
+    <Texture Map="Specular" File="objects/weapons/scar/case_a_spec.tif" Filter="5"/>
+    <Texture Map="Bumpmap" File="objects/weapons/scar/case_a_ddn.tif" Filter="5"/>
+    <Texture Map="Environment" File="objects/weapons/scar/ny_cubemap.tif" Filter="5"/>
+    <Texture Map="Detail" File="objects/weapons/scar/noise_ddn.tif"/>
+   </Textures>
+   <PublicParams SpecMapChannelB="0" SpecMapChannelR="0" FresnelPower="4" DetailBumpTillingU="40" GlossMapChannelB="0" SpecMapChannelG="0" FresnelScale="0.28999999" DetailDiffuseScale="0" FresnelBias="0.40000001" DetailBumpScale="0.1" DetailGlossScale="0" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+  <Material Name="Metal_2" MtlFlags="524448" Shader="Illum" GenMask="100092280" StringGenMask="%DETAIL_BUMP_MAPPING%DETAIL_TEXTURE_IS_NORMALMAP%DETAIL_TEXTURE_IS_SET%ENVIRONMENT_MAP%GLOSS_MAP%TESSELLATION" SurfaceType="" MatTemplate="" Diffuse="0.10588236,0.10588236,0.10588236" Specular="0.35294119,0.43921572,0.52156866" Emissive="0.24680044,0.24680044,0.24680044" Shininess="40" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/weapons/scar/case_b.tif" Filter="5"/>
+    <Texture Map="Specular" File="objects/weapons/scar/case_b_spec.tif" Filter="5"/>
+    <Texture Map="Bumpmap" File="objects/weapons/scar/case_b_ddn.tif" Filter="5"/>
+    <Texture Map="Environment" File="objects/weapons/scar/ny_cubemap.tif" Filter="5"/>
+    <Texture Map="Detail" File="objects/weapons/scar/noise_ddn.tif" Filter="5"/>
+   </Textures>
+   <PublicParams SpecMapChannelB="0" SpecMapChannelR="0" FresnelPower="4" DetailBumpTillingU="30" GlossMapChannelB="0" SpecMapChannelG="0" FresnelScale="0.23" DetailDiffuseScale="0" FresnelBias="0.40000001" DetailBumpScale="0.23" DetailGlossScale="0" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+ </SubMaterials>
+ <PublicParams FresnelPower="4" GlossFromDiffuseContrast="1" FresnelScale="1" GlossFromDiffuseOffset="0" FresnelBias="1" GlossFromDiffuseAmount="0" GlossFromDiffuseBrightness="0.333" IndirectColor="0.25,0.25,0.25"/>
+</Material>

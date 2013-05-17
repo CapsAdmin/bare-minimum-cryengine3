@@ -1,0 +1,9 @@
+<Material AlphaTest="1" Diffuse="0.49411768,0.49411768,0.49411768" Emissive="0,0,0" GenMask="1" MtlFlags="2" Opacity="1" Shader="Illum" Shininess="10" Specular="0,0,0" SurfaceType="" >
+ <Textures>
+  <Texture File="objects/effects/natural/forest_ground_leafs.tif" Map="Diffuse" >
+   <TexMod />
+  </Texture>
+ </Textures>
+ <PublicParams BumpOffset="0.039999999" DebugUVScale="64" />
+ <MaterialLayers />
+</Material>

@@ -1,0 +1,15 @@
+<ObjectTemplates>
+	<SoundEventSpot SuperType="StdEntity" Category="Sound" File="SoundEventSpot" ToolTip="SoundEventSpot"/>
+	<SoundSpot SuperType="StdEntity" Category="Sound" File="SoundSpot" ToolTip="SoundSpot"/>
+	<AmbientVolume SuperType="StdEntity" Category="Sound" File="AmbientVolume" />
+	<RandomSoundVolume SuperType="StdEntity" Category="Sound" File="RandomSoundVolume" />
+	<ReverbVolume SuperType="StdEntity" Category="Sound" File="ReverbVolume" />
+	<SoundMoodVolume SuperType="StdEntity" Category="Sound" File="SoundMoodVolume" />
+	<MusicThemeSelector SuperType="StdEntity" Category="Sound" File="MusicThemeSelector" />
+	<MusicMoodSelector SuperType="StdEntity" Category="Sound" File="MusicMoodSelector" />
+	<MusicStinger SuperType="StdEntity" Category="Sound" File="MusicStinger" />
+	<MusicEndTheme SuperType="StdEntity" Category="Sound" File="MusicEndTheme" />
+	<MusicPlayPattern SuperType="StdEntity" Category="Sound" File="MusicPlayPattern" />
+	<MusicLogicTrigger SuperType="StdEntity" Category="Sound" File="MusicLogicTrigger" />	
+	<Dialog SuperType="StdEntity" Category="Sound" File="Dialog" />
+</ObjectTemplates>

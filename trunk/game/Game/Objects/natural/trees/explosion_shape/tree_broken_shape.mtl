@@ -1,0 +1,6 @@
+<Material MtlFlags="524288" Shader="Vegetation" GenMask="400000000" StringGenMask="%TEMP_VEGETATION" SurfaceType="mat_wood" MatTemplate="" Diffuse="0.26735809,0.26735809,0.26735809" Specular="0.075926125,0.075926125,0.075926125" Emissive="0,0,0" Shininess="2" Opacity="1">
+ <Textures>
+  <Texture Map="Diffuse" File="objects/natural/trees/explosion_shape/broken_tree.tif"/>
+ </Textures>
+ <PublicParams bendDetailLeafAmplitude="0.2" FresnelPower="4" bendDetailFrequency="1" bendDetailBranchAmplitude="-0.5" FresnelScale="1" FresnelBias="1" IndirectColor="0.25,0.25,0.25"/>
+</Material>

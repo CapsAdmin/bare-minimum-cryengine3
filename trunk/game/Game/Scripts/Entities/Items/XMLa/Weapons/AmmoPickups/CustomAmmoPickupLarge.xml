@@ -1,0 +1,9 @@
+<!-- OBSOLETE ENTITY -->
+<item name="CustomAmmoPickupLarge" class="AmmoPickup" category="" priority="0" invisible="1">
+	<params>
+		<param name="giveable" 		value="1" />
+		<param name="selectable" 	value="0'" />
+		<param name="droppable" 	value="0" />
+		<param name="ammo_pickup_sound" value="sounds/weapons:weapon_accessories:pickup_ammo_large" />
+	</params>
+</item>

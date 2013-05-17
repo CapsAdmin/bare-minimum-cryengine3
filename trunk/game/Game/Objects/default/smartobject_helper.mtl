@@ -1,0 +1,19 @@
+<Material MtlFlags="524544">
+ <SubMaterials>
+  <Material Name="SubMtl1" MtlFlags="525474" Shader="Nodraw" GenMask="0" StringGenMask="" SurfaceType="mat_concrete" MatTemplate="" Diffuse="0.86274511,0.80784315,0.32156864" Specular="0,0,0" Emissive="0,0,0" Shininess="10" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/default/transparent/transparent_texture.tif">
+     <TexMod />
+    </Texture>
+   </Textures>
+  </Material>
+  <Material Name="SubMtl2" MtlFlags="525474" Shader="Nodraw" GenMask="0" StringGenMask="" SurfaceType="mat_concrete" MatTemplate="" Diffuse="0.05882353,1,0.27058825" Specular="0,0,0" Emissive="0,0,0" Shininess="10" Opacity="0.15000001">
+   <Textures>
+    <Texture Map="Diffuse" File="objects/default/transparent/transparent_texture.tif">
+     <TexMod />
+    </Texture>
+   </Textures>
+  </Material>
+ </SubMaterials>
+ <PublicParams AmbientMultiplier="1"/>
+</Material>

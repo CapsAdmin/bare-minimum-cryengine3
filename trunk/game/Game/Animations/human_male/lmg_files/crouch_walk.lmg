@@ -1,0 +1,14 @@
+<LocomotionGroup>
+
+  <BLENDTYPE type="STF1" />
+	<CAPS code="WALK" />
+
+  <ExampleList>
+    <Example Position=" 0, 1, 0" AName="crouch_walk_forward" />
+    <Example Position=" 1, 0, 0" AName="crouch_walk_left" />
+    <Example Position=" 0,-1, 0" AName="crouch_walk_back" />
+    <Example Position="-1, 0, 0" AName="crouch_walk_right" />
+  </ExampleList>
+
+
+</LocomotionGroup>

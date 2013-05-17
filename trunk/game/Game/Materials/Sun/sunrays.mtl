@@ -1,0 +1,4 @@
+<Material Diffuse="0.82745105,0.68235296,0.54901963" Emissive="0,0,0" GenMask="0" MtlFlags="0" Opacity="1" Shader="TemplBeamProc" Shininess="10" Specular="0,0,0" SurfaceType="" >
+ <Textures />
+ <PublicParams EndColor="0,0,0" EndRadius="2" Length="10" OrigLength="10" OrigWidth="1" StartColor="0.82745105,0.68235296,0.54901963" StartRadius="1" />
+</Material>

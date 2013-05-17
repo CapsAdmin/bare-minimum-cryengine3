@@ -1,0 +1,8 @@
+<Material MtlFlags="526336" Shader="Particles" GenMask="8" StringGenMask="" SurfaceType="" MatTemplate="" Diffuse="0.16364066,0.16364066,0.16364066" Specular="4.6999998,4.6999998,4.6999998" Emissive="0.30588236,0.30588236,0.30588236" Shininess="10" Opacity="0.99000001">
+ <Textures>
+  <Texture Map="Diffuse" File="textures/watershore/foam_tiled2.tif"/>
+  <Texture Map="Specular" File="textures/watershore/foam_tiled2_spec.tif"/>
+  <Texture Map="Custom" File="textures/watershore/foam_tiled2_spec.tif"/>
+ </Textures>
+ <PublicParams SoftParticlesScale="1" SpecBumpScale="0.1" AlphaScale="0" SoftParticlesVolumeScale="0" FresnelScale="1" FresnelPower="4" FresnelBias="1" GlobalIlluminationAmount="1"/>
+</Material>

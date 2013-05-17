@@ -1,0 +1,19 @@
+<LocomotionGroup>
+
+  <BLENDTYPE type="STF2" />
+	<CAPS code="WALK" />
+
+  <ExampleList>
+    <Example Position=" 0, 1, 0" AName="relaxed_walk_forward_fast" />
+    <Example Position=" -1, 0, 0" AName="relaxed_walk_left_bwd_fast" />
+    <Example Position=" 0,-1, 0" AName="relaxed_walk_back_fast" />
+    <Example Position="1, 0, 0" AName="relaxed_walk_right_bwd_fast" />
+
+    <Example Position=" 0, 1, 0" AName="relaxed_walk_forward_slow" />
+    <Example Position=" -1, 0, 0" AName="relaxed_walk_left_bwd_slow" />
+    <Example Position=" 0,-1, 0" AName="relaxed_walk_back_slow" />
+    <Example Position="1, 0, 0" AName="relaxed_walk_right_bwd_slow" />
+  </ExampleList>
+
+
+</LocomotionGroup>

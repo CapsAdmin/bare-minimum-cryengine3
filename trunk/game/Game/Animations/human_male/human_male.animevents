@@ -1,0 +1,49 @@
+<anim_event_list>
+ <animation name="animations/human_male/combat/combat_reloademptychamberub_rifle_01.caf">
+  <event name="sound" time="0.0040000002" parameter="Sounds/weapons:scar:scar_weapon_up_3p" bone="weaponPos_grenade_L_hip" offset="0,0,0" dir="0,0,0" model=""/>
+  <event name="sound" time="0.1582" parameter="Sounds/weapons:scar:scar_grab_clip_3p" bone="weaponPos_grenade_L_hip" offset="0,0,0" dir="0,0,0" model=""/>
+  <event name="sound" time="0.31349999" parameter="Sounds/weapons:scar:scar_clip_out_3p" bone="weaponPos_grenade_L_hip" offset="0,0,0" dir="0,0,0" model=""/>
+  <event name="sound" time="0.56330001" parameter="Sounds/weapons:scar:scar_clip_in_3p" bone="weaponPos_grenade_L_hip" offset="0,0,0" dir="0,0,0" model=""/>
+  <event name="sound" time="0.74119997" parameter="Sounds/weapons:scar:scar_cock_back_3p" bone="weaponPos_grenade_L_hip" offset="0,0,0" dir="0,0,0" model=""/>
+  <event name="sound" time="0.78130001" parameter="Sounds/weapons:scar:scar_cock_forward_3p" bone="weaponPos_grenade_L_hip" offset="0,0,0" dir="0,0,0" model=""/>
+  <event name="sound" time="0.89349997" parameter="Sounds/weapons:scar:scar_weapon_down_3p" bone="weaponPos_grenade_L_hip" offset="0,0,0" dir="0,0,0" model=""/>
+ </animation>
+ <animation name="animations/human_male/combat/combat_reloadfullchamberub_rifle_01.caf">
+  <event name="sound" time="0.0087000001" parameter="Sounds/weapons:scar:scar_weapon_up_3p" bone="weaponPos_grenade_L_hip" offset="0,0,0" dir="0,0,0" model=""/>
+  <event name="sound" time="0.1909" parameter="Sounds/weapons:scar:scar_grab_clip_3p" bone="weaponPos_grenade_L_hip" offset="0,0,0" dir="0,0,0" model=""/>
+  <event name="sound" time="0.36660001" parameter="Sounds/weapons:scar:scar_clip_out_3p" bone="weaponPos_grenade_L_hip" offset="0,0,0" dir="0,0,0" model=""/>
+  <event name="sound" time="0.7119" parameter="Sounds/weapons:scar:scar_clip_in_3p" bone="weaponPos_grenade_L_hip" offset="0,0,0" dir="0,0,0" model=""/>
+  <event name="sound" time="0.85159999" parameter="Sounds/weapons:scar:scar_weapon_down_3p" bone="weaponPos_grenade_L_hip" offset="0,0,0" dir="0,0,0" model=""/>
+ </animation>
+ <animation name="animations/human_male/idle_breaks/relaxed_idleshouldershrug_03.caf">
+  <event name="Example_Event" time="0.24770001" parameter="Custom Parameter" bone="" offset="0,0,0" dir="0,0,0" model=""/>
+ </animation>
+ <animation name="animations/human_male/lmg_files/relaxed_idlesteprotate_nw.lmg">
+  <event name="footstep" time="0.37709999" parameter="" bone="Bip01 R Foot" offset="0,0,0" dir="0,0,0" model=""/>
+  <event name="footstep" time="0.67369998" parameter="" bone="Bip01 L Foot" offset="0,0,0" dir="0,0,0" model=""/>
+ </animation>
+ <animation name="animations/human_male/lmg_files/relaxed_run.lmg">
+  <event name="footstep" time="0.3962" parameter="" bone="Bip01 R Foot" offset="0,0,0" dir="0,0,0" model=""/>
+  <event name="footstep" time="0.9364" parameter="" bone="Bip01 L Foot" offset="0,0,0" dir="0,0,0" model=""/>
+  <event name="foley" time="0.1172" parameter="gear_fast" bone="" offset="0,0,0" dir="0,0,0" model=""/>
+  <event name="foley" time="0.61930001" parameter="gear_fast" bone="" offset="0,0,0" dir="0,0,0" model=""/>
+ </animation>
+ <animation name="animations/human_male/lmg_files/relaxed_run_bwd.lmg">
+  <event name="footstep" time="0.40959999" parameter="" bone="Bip01 R Foot" offset="0,0,0" dir="0,0,0" model=""/>
+  <event name="footstep" time="0.92430001" parameter="" bone="Bip01 L Foot" offset="0,0,0" dir="0,0,0" model=""/>
+  <event name="foley" time="0.1373" parameter="gear_fast" bone="" offset="0,0,0" dir="0,0,0" model=""/>
+  <event name="foley" time="0.6753" parameter="gear_fast" bone="" offset="0,0,0" dir="0,0,0" model=""/>
+ </animation>
+ <animation name="animations/human_male/lmg_files/relaxed_walk.lmg">
+  <event name="footstep" time="0.37709999" parameter="" bone="Bip01 R Foot" offset="0,0,0" dir="0,0,0" model=""/>
+  <event name="footstep" time="0.88980001" parameter="" bone="Bip01 L Foot" offset="0,0,0" dir="0,0,0" model=""/>
+  <event name="foley" time="0.1283" parameter="gear_medium" bone="" offset="0,0,0" dir="0,0,0" model=""/>
+  <event name="foley" time="0.5413" parameter="gear_medium" bone="" offset="0,0,0" dir="0,0,0" model=""/>
+ </animation>
+ <animation name="animations/human_male/lmg_files/relaxed_walk_bwd.lmg">
+  <event name="footstep" time="0.3899" parameter="" bone="Bip01 R Foot" offset="0,0,0" dir="0,0,0" model=""/>
+  <event name="footstep" time="0.89829999" parameter="" bone="Bip01 L Foot" offset="0,0,0" dir="0,0,0" model=""/>
+  <event name="foley" time="0.1332" parameter="gear_medium" bone="" offset="0,0,0" dir="0,0,0" model=""/>
+  <event name="foley" time="0.60350001" parameter="gear_medium" bone="" offset="0,0,0" dir="0,0,0" model=""/>
+ </animation>
+</anim_event_list>

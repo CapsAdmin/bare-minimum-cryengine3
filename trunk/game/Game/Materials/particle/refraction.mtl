@@ -1,0 +1,9 @@
+<Material MtlFlags="526336" Shader="Particles" GenMask="4" StringGenMask="" SurfaceType="" MatTemplate="" Diffuse="1,1,1" Specular="0,0,0" Emissive="0,0,0" Shininess="10" Opacity="1">
+ <Textures>
+  <Texture Map="Diffuse" File="textures/sprites/glow_b.tif">
+   <TexMod TileU="10" TileV="10" RotateW="90"/>
+  </Texture>
+  <Texture Map="Bumpmap" File="textures/sprites/refraction_a_ddn.tif"/>
+ </Textures>
+ <PublicParams FresnelPower="4" SoftParticlesScale="1" GlobalIlluminationAmount="1" FresnelScale="1" RefrBumpScale="0.050000001" SoftParticlesVolumeScale="0" FresnelBias="1"/>
+</Material>

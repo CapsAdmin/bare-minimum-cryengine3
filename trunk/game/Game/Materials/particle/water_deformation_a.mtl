@@ -1,0 +1,9 @@
+<Material MtlFlags="526336" Shader="Particles" GenMask="120" StringGenMask="" SurfaceType="" MatTemplate="" Diffuse="0.47044027,0.47044027,0.47044027" Specular="0.20835964,0.20835964,0.20835964" Emissive="0,0,0" Shininess="1" Opacity="1">
+ <Textures>
+  <Texture Map="Diffuse" File="textures/watershore/foam_tiled2.dds"/>
+  <Texture Map="Bumpmap" File="textures/watershore/foam_tiled2_ddn.dds"/>
+  <Texture Map="Environment" File="textures/cubemaps/camera_river_cubemap_bright.dds"/>
+  <Texture Map="Custom" File="textures/sprites/refraction_b_ddn.tif"/>
+ </Textures>
+ <PublicParams SoftParticlesScale="1" DeformTile="0.60000002" DeformAmount="0.2" DeformAnimSpeed="0.2" AlphaScale="0" SoftParticlesVolumeScale="0" FresnelScale="1" FresnelPower="1" FresnelBias="0.5" GlobalIlluminationAmount="1"/>
+</Material>

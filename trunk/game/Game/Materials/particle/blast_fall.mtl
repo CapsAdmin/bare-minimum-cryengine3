@@ -1,0 +1,11 @@
+<Material MtlFlags="2048" Shader="Particles" GenMask="0" SurfaceType="" Diffuse="0.65490198,0.65490198,0.65490198" Specular="4.6999998,4.6999998,4.6999998" Emissive="0.30588236,0.30588236,0.30588236" Shininess="10" Opacity="0.99000001">
+ <Textures>
+  <Texture Map="Diffuse" File="textures/sprites/blast_fall.tif">
+   <TexMod />
+  </Texture>
+  <Texture Map="Normalmap" File="textures/sprites/blast_fall_ddn.tif">
+   <TexMod />
+  </Texture>
+ </Textures>
+ <MaterialLayers />
+</Material>

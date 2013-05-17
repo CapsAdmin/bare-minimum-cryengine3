@@ -1,0 +1,77 @@
+<GlobalEnums>
+
+	<!-- AIReinforcementPoint reinforcement type -->
+	<ReinforcementType>
+		<entry enum="Wave=0" />
+		<entry enum="Radio=1" />
+		<entry enum="Flare=2" />
+		<entry enum="SmokeGrenade=3" />
+	</ReinforcementType>
+	
+	<!-- Attachment options for particles etc -->
+	<AttachForm>
+		<entry enum="Vertices" />
+		<entry enum="Edges" />
+		<entry enum="Surface" />
+		<entry enum="Volume" />
+	</AttachForm>
+	
+	<AttachType>
+		<entry enum="None" />
+		<entry enum="BoundingBox" />
+		<entry enum="Physics" />
+		<entry enum="Render" />		
+	</AttachType>
+	
+	<!-- Hazard entity damage type -->
+	<HazardType>
+		<entry enum="None=0" />
+		<entry enum="Fire=1" />
+		<entry enum="Frost=2" />
+		<entry enum="Electricity=3" />
+	</HazardType>
+
+  <!-- eiColliderMode AI property -->
+  <!-- Must match EColliderMode in IAnimationGraph.h (non level designer entries are removed here) -->
+  <ColliderMode>
+    <entry enum="Undefined=0" />
+    <entry enum="Disabled=1" />
+    <entry enum="Pushable=3" />
+    <entry enum="NonPushable=4" />
+    <entry enum="PushesPlayersOnly=5" />
+  </ColliderMode>
+
+	<!-- Hazard entity damage type -->
+	<IKObjectType>
+		<entry enum="Standard=0" />
+		<entry enum="Wheel_twoHanded=1" />
+		<entry enum="Wheel_oneHanded=2" />
+		<entry enum="WheelHandle=3" />
+		<entry enum="Lever=4" />
+		<entry enum="Button=5" />
+	</IKObjectType>
+	
+	<vehicleLightTypes>
+		<entry enum="All"/>
+		<entry enum="HeadLightDynamic"/>
+		<entry enum="HeadLightBeam"/>
+		<entry enum="HeadLightFlare"/>
+		<entry enum="HeadLightPoliceLeft"/>
+		<entry enum="HeliGreen"/>
+		<entry enum="HeliWhite"/>
+		<entry enum="HeliWhiteFlash"/>
+		<entry enum="HeliRed"/>
+		<entry enum="HeliRedFlash"/>
+		<entry enum="HeadLightPoliceRight"/>
+		<entry enum="Reverse"/>
+		<entry enum="Brake"/>
+		<entry enum="Search"/>
+	</vehicleLightTypes>
+	
+	<!--Fog volume types used by the FogVolume entity-->
+	<VolumeType>
+		<entry enum="Ellipsoid=0"/>
+		<entry enum="Cube=1"/>
+	</VolumeType>
+
+</GlobalEnums>

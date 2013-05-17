@@ -1,0 +1,9 @@
+<Material MtlFlags="2048" Shader="Particles" GenMask="1" SurfaceType="" Diffuse="1,1,1" Specular="0,0,0" Emissive="0,0,0" Shininess="10" Opacity="1" GlowAmount="14.6">
+ <Textures>
+  <Texture Map="Diffuse" File="textures/sprites/fireball_blast2.tif">
+   <TexMod />
+  </Texture>
+ </Textures>
+ <PublicParams DebugUVScale="64"/>
+ <MaterialLayers />
+</Material>

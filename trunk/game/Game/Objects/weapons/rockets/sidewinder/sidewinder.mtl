@@ -1,0 +1,17 @@
+<Material MtlFlags="524544">
+ <SubMaterials>
+  <Material Name="sidewinder" MtlFlags="524416" Shader="Illum" GenMask="82100" StringGenMask="%ALLOW_TESSELATION%DETAIL_BUMP_MAPPING%GLOSS_MAP" SurfaceType="mat_metal" MatTemplate="" Diffuse="0.16364066,0.16364066,0.16364066" Specular="1.6,1.6,1.6" Emissive="0,0,0" Shininess="43" Opacity="1">
+   <Textures>
+    <Texture Map="Diffuse" File="Objects/Weapons/Rockets/sidewinder/sidewinder.tif"/>
+    <Texture Map="Specular" File="objects/weapons/rockets/sidewinder/sidewinder_spec.tif"/>
+    <Texture Map="Bumpmap" File="objects/weapons/rockets/sidewinder/sidewinder_ddn.tif"/>
+    <Texture Map="Detail" File="textures/detail/detail_metal_ddn.dds"/>
+   </Textures>
+   <PublicParams SpecMapChannelB="0" SpecMapChannelR="0" FresnelPower="5" DetailBumpTillingU="1" DetailBlendAmount="0.094999999" GlossMapChannelB="0" SpecMapChannelG="0" FresnelScale="7.6399999" FresnelBias="0.083999999" DetailBumpScale="1.84" DetailBumpTillingV="10" IndirectColor="0.25,0.25,0.25"/>
+  </Material>
+  <Material Name="nodraw" MtlFlags="525440" Shader="Nodraw" GenMask="0" StringGenMask="" SurfaceType="mat_metal" MatTemplate="" Diffuse="0.588,0.588,0.588" Specular="0,0,0" Emissive="0,0,0" Shininess="10" Opacity="1">
+   <Textures />
+  </Material>
+ </SubMaterials>
+ <PublicParams FresnelPower="4" GlossFromDiffuseContrast="1" FresnelScale="1" GlossFromDiffuseOffset="0" FresnelBias="0" GlossFromDiffuseAmount="0" GlossFromDiffuseBrightness="0.333" IndirectColor="0.25,0.25,0.25"/>
+</Material>

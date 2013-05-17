@@ -1,0 +1,19 @@
+<LocomotionGroup>
+
+  <BLENDTYPE type="STF2" />
+	<CAPS code="RUN_" />
+
+  <ExampleList>
+    <Example Position=" 0, 1, 0" AName="crouch_run_forward_fast" />
+    <Example Position=" 1, 0, 0" AName="crouch_run_left_fast" />
+    <Example Position=" 0,-1, 0" AName="crouch_run_back_fast" />
+    <Example Position="-1, 0, 0" AName="crouch_run_right_fast" />
+
+    <Example Position=" 0, 1, 0" AName="crouch_walk_forward" />
+    <Example Position=" 1, 0, 0" AName="crouch_walk_left" />
+    <Example Position=" 0,-1, 0" AName="crouch_walk_back" />
+    <Example Position="-1, 0, 0" AName="crouch_walk_right" />
+  </ExampleList>
+
+
+</LocomotionGroup>

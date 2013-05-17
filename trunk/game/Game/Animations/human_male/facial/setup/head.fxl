@@ -1,0 +1,861 @@
+<ExpressionLibrary>
+ <AllEffectors>
+  <Effector Name="_" Type="expression"/>
+  <Effector Name="_Blank" Type="expression"/>
+  <Effector Name="_garbage" Type="group"/>
+  <Effector Name="_Phonemes+" Type="group"/>
+  <Effector Name="_Phonemes-" Type="group"/>
+  <Effector Name="_System" Type="group"/>
+  <Effector Name="aa" Type="expression"/>
+  <Effector Name="aa+" Type="expression"/>
+  <Effector Name="aa-" Type="expression"/>
+  <Effector Name="ae" Type="expression"/>
+  <Effector Name="ae+" Type="expression"/>
+  <Effector Name="ae-" Type="expression"/>
+  <Effector Name="ah" Type="expression"/>
+  <Effector Name="ah+" Type="expression"/>
+  <Effector Name="ah-" Type="expression"/>
+  <Effector Name="ao" Type="expression"/>
+  <Effector Name="ao+" Type="expression"/>
+  <Effector Name="ao-" Type="expression"/>
+  <Effector Name="aw" Type="expression"/>
+  <Effector Name="aw+" Type="expression"/>
+  <Effector Name="aw-" Type="expression"/>
+  <Effector Name="ax" Type="expression"/>
+  <Effector Name="ax+" Type="expression"/>
+  <Effector Name="ax-" Type="expression"/>
+  <Effector Name="ay" Type="expression"/>
+  <Effector Name="ay+" Type="expression"/>
+  <Effector Name="ay-" Type="expression"/>
+  <Effector Name="b" Type="expression"/>
+  <Effector Name="b+" Type="expression"/>
+  <Effector Name="b-" Type="expression"/>
+  <Effector Name="Brow_lowerer" Type="morph"/>
+  <Effector Name="ch" Type="expression"/>
+  <Effector Name="ch+" Type="expression"/>
+  <Effector Name="ch-" Type="expression"/>
+  <Effector Name="ctrl_Jaw" Type="group"/>
+  <Effector Name="ctrl_neck" Type="group"/>
+  <Effector Name="d" Type="expression"/>
+  <Effector Name="d+" Type="expression"/>
+  <Effector Name="d-" Type="expression"/>
+  <Effector Name="dh" Type="expression"/>
+  <Effector Name="dh+" Type="expression"/>
+  <Effector Name="dh-" Type="expression"/>
+  <Effector Name="eh" Type="expression"/>
+  <Effector Name="eh+" Type="expression"/>
+  <Effector Name="eh-" Type="expression"/>
+  <Effector Name="er" Type="expression"/>
+  <Effector Name="er+" Type="expression"/>
+  <Effector Name="er-" Type="expression"/>
+  <Effector Name="ey" Type="expression"/>
+  <Effector Name="ey+" Type="expression"/>
+  <Effector Name="ey-" Type="expression"/>
+  <Effector Name="f" Type="expression"/>
+  <Effector Name="f+" Type="expression"/>
+  <Effector Name="f-" Type="expression"/>
+  <Effector Name="g" Type="expression"/>
+  <Effector Name="g+" Type="expression"/>
+  <Effector Name="g-" Type="expression"/>
+  <Effector Name="h" Type="expression"/>
+  <Effector Name="h+" Type="expression"/>
+  <Effector Name="h-" Type="expression"/>
+  <Effector Name="ih" Type="expression"/>
+  <Effector Name="ih+" Type="expression"/>
+  <Effector Name="ih-" Type="expression"/>
+  <Effector Name="iy" Type="expression"/>
+  <Effector Name="iy+" Type="expression"/>
+  <Effector Name="iy-" Type="expression"/>
+  <Effector Name="j" Type="expression"/>
+  <Effector Name="Jaw_dropper_01" Type="morph"/>
+  <Effector Name="Jaw_Forward_Backward" Type="bone" Attachment="jaw" PosOffset="0,0.0099999998,0.0099999998" RotOffset="0,0,0"/>
+  <Effector Name="Jaw_Left_Right" Type="bone" Attachment="jaw" PosOffset="0,0,0" RotOffset="0,0.34906584,0"/>
+  <Effector Name="Jaw_open_close" Type="bone" Attachment="jaw" PosOffset="0,0,0" RotOffset="0,0,-0.61086524"/>
+  <Effector Name="Jaw_pusher" Type="morph"/>
+  <Effector Name="jh" Type="expression"/>
+  <Effector Name="jh+" Type="expression"/>
+  <Effector Name="jh-" Type="expression"/>
+  <Effector Name="k" Type="expression"/>
+  <Effector Name="k+" Type="expression"/>
+  <Effector Name="k-" Type="expression"/>
+  <Effector Name="l" Type="expression"/>
+  <Effector Name="l+" Type="expression"/>
+  <Effector Name="l-" Type="expression"/>
+  <Effector Name="Lower_Lip_roll_in" Type="morph"/>
+  <Effector Name="m" Type="expression"/>
+  <Effector Name="m+" Type="expression"/>
+  <Effector Name="m-" Type="expression"/>
+  <Effector Name="mouth_narrow" Type="morph"/>
+  <Effector Name="mouth_wide" Type="morph"/>
+  <Effector Name="n" Type="expression"/>
+  <Effector Name="n+" Type="expression"/>
+  <Effector Name="n-" Type="expression"/>
+  <Effector Name="Neck_lean_left_right" Type="expression"/>
+  <Effector Name="Neck_lean_left_right_bonectrl" Type="bone" Attachment="Bip01 Head" PosOffset="0,0,0" RotOffset="0,-0.78539819,0"/>
+  <Effector Name="Neck_left_right" Type="expression"/>
+  <Effector Name="Neck_left_right_bonectrl" Type="bone" Attachment="Bip01 Head" PosOffset="0,0,0" RotOffset="1.6580628,0,0"/>
+  <Effector Name="Neck_up_down" Type="expression"/>
+  <Effector Name="Neck_up_down_bonectrl" Type="bone" Attachment="Bip01 Head" PosOffset="0,0,0" RotOffset="0,0,0.87266463"/>
+  <Effector Name="ng" Type="expression"/>
+  <Effector Name="ng+" Type="expression"/>
+  <Effector Name="ng-" Type="expression"/>
+  <Effector Name="ow" Type="expression"/>
+  <Effector Name="ow+" Type="expression"/>
+  <Effector Name="ow-" Type="expression"/>
+  <Effector Name="oy" Type="expression"/>
+  <Effector Name="oy+" Type="expression"/>
+  <Effector Name="oy-" Type="expression"/>
+  <Effector Name="p" Type="expression"/>
+  <Effector Name="p+" Type="expression"/>
+  <Effector Name="p-" Type="expression"/>
+  <Effector Name="Phonemes" Type="group"/>
+  <Effector Name="r" Type="expression"/>
+  <Effector Name="r+" Type="expression"/>
+  <Effector Name="r-" Type="expression"/>
+  <Effector Name="Root" Flags="1" Type="group"/>
+  <Effector Name="s" Type="expression"/>
+  <Effector Name="s+" Type="expression"/>
+  <Effector Name="s-" Type="expression"/>
+  <Effector Name="sh" Type="expression"/>
+  <Effector Name="sh+" Type="expression"/>
+  <Effector Name="sh-" Type="expression"/>
+  <Effector Name="t" Type="expression"/>
+  <Effector Name="t+" Type="expression"/>
+  <Effector Name="t-" Type="expression"/>
+  <Effector Name="th" Type="expression"/>
+  <Effector Name="th+" Type="expression"/>
+  <Effector Name="th-" Type="expression"/>
+  <Effector Name="uh" Type="expression"/>
+  <Effector Name="uh+" Type="expression"/>
+  <Effector Name="uh-" Type="expression"/>
+  <Effector Name="upper_lip_raiser" Type="morph"/>
+  <Effector Name="uw" Type="expression"/>
+  <Effector Name="uw+" Type="expression"/>
+  <Effector Name="uw-" Type="expression"/>
+  <Effector Name="v" Type="expression"/>
+  <Effector Name="v+" Type="expression"/>
+  <Effector Name="v-" Type="expression"/>
+  <Effector Name="Visim_AA" Type="expression"/>
+  <Effector Name="Visim_AA+" Type="expression"/>
+  <Effector Name="Visim_AA-" Type="expression"/>
+  <Effector Name="Visim_AW" Type="expression"/>
+  <Effector Name="Visim_Aw+" Type="expression"/>
+  <Effector Name="Visim_Aw-" Type="expression"/>
+  <Effector Name="Visim_B" Type="expression"/>
+  <Effector Name="Visim_B+" Type="expression"/>
+  <Effector Name="Visim_B-" Type="expression"/>
+  <Effector Name="Visim_D" Type="expression"/>
+  <Effector Name="Visim_D+" Type="expression"/>
+  <Effector Name="Visim_D-" Type="expression"/>
+  <Effector Name="Visim_EE" Type="expression"/>
+  <Effector Name="Visim_EE+" Type="expression"/>
+  <Effector Name="Visim_EE-" Type="expression"/>
+  <Effector Name="Visim_F" Type="expression"/>
+  <Effector Name="Visim_F+" Type="expression"/>
+  <Effector Name="Visim_F-" Type="expression"/>
+  <Effector Name="Visim_JH" Type="expression"/>
+  <Effector Name="Visim_JH+" Type="expression"/>
+  <Effector Name="Visim_JH-" Type="expression"/>
+  <Effector Name="Visim_K" Type="expression"/>
+  <Effector Name="Visim_K+" Type="expression"/>
+  <Effector Name="Visim_K-" Type="expression"/>
+  <Effector Name="Visim_L" Type="expression"/>
+  <Effector Name="Visim_L+" Type="expression"/>
+  <Effector Name="Visim_L-" Type="expression"/>
+  <Effector Name="Visim_N" Type="expression"/>
+  <Effector Name="Visim_N+" Type="expression"/>
+  <Effector Name="Visim_N-" Type="expression"/>
+  <Effector Name="Visim_O" Type="expression"/>
+  <Effector Name="Visim_o+" Type="expression"/>
+  <Effector Name="Visim_o-" Type="expression"/>
+  <Effector Name="Visim_R" Type="expression"/>
+  <Effector Name="Visim_R+" Type="expression"/>
+  <Effector Name="Visim_R-" Type="expression"/>
+  <Effector Name="Visim_S" Type="expression"/>
+  <Effector Name="Visim_S+" Type="expression"/>
+  <Effector Name="Visim_S-" Type="expression"/>
+  <Effector Name="Visim_x" Type="expression"/>
+  <Effector Name="Visim_x+" Type="expression"/>
+  <Effector Name="Visim_x-" Type="expression"/>
+  <Effector Name="Visimes" Type="group"/>
+  <Effector Name="Visimes+" Type="group"/>
+  <Effector Name="Visimes-" Type="group"/>
+  <Effector Name="w" Type="expression"/>
+  <Effector Name="w+" Type="expression"/>
+  <Effector Name="w-" Type="expression"/>
+  <Effector Name="x" Type="expression"/>
+  <Effector Name="y" Type="expression"/>
+  <Effector Name="y+" Type="expression"/>
+  <Effector Name="y-" Type="expression"/>
+  <Effector Name="z" Type="expression"/>
+  <Effector Name="z+" Type="expression"/>
+  <Effector Name="z-" Type="expression"/>
+  <Effector Name="zh" Type="expression"/>
+  <Effector Name="zh+" Type="expression"/>
+  <Effector Name="zh-" Type="expression"/>
+ </AllEffectors>
+ <Controllers>
+  <Effector Name="_Phonemes+">
+   <SubCtrl Weight="1" Keys="" Effector="aa+"/>
+   <SubCtrl Weight="1" Keys="" Effector="ae+"/>
+   <SubCtrl Weight="1" Keys="" Effector="aw+"/>
+   <SubCtrl Weight="1" Keys="" Effector="ay+"/>
+   <SubCtrl Weight="1" Keys="" Effector="d+"/>
+   <SubCtrl Weight="1" Keys="" Effector="eh+"/>
+   <SubCtrl Weight="1" Keys="" Effector="er+"/>
+   <SubCtrl Weight="1" Keys="" Effector="ey+"/>
+   <SubCtrl Weight="1" Keys="" Effector="g+"/>
+   <SubCtrl Weight="1" Keys="" Effector="k+"/>
+   <SubCtrl Weight="1" Keys="" Effector="l+"/>
+   <SubCtrl Weight="1" Keys="" Effector="m+"/>
+   <SubCtrl Weight="1" Keys="" Effector="ow+"/>
+   <SubCtrl Weight="1" Keys="" Effector="oy+"/>
+   <SubCtrl Weight="1" Keys="" Effector="p+"/>
+   <SubCtrl Weight="1" Keys="" Effector="r+"/>
+   <SubCtrl Weight="1" Keys="" Effector="s+"/>
+   <SubCtrl Weight="1" Keys="" Effector="sh+"/>
+   <SubCtrl Weight="1" Keys="" Effector="_"/>
+   <SubCtrl Weight="1" Keys="" Effector="th+"/>
+   <SubCtrl Weight="1" Keys="" Effector="uw+"/>
+   <SubCtrl Weight="1" Keys="" Effector="v+"/>
+   <SubCtrl Weight="1" Keys="" Effector="w+"/>
+   <SubCtrl Weight="1" Keys="" Effector="y+"/>
+   <SubCtrl Weight="1" Keys="" Effector="ah+"/>
+   <SubCtrl Weight="1" Keys="" Effector="ao+"/>
+   <SubCtrl Weight="1" Keys="" Effector="ax+"/>
+   <SubCtrl Weight="1" Keys="" Effector="b+"/>
+   <SubCtrl Weight="1" Keys="" Effector="ch+"/>
+   <SubCtrl Weight="1" Keys="" Effector="dh+"/>
+   <SubCtrl Weight="1" Keys="" Effector="f+"/>
+   <SubCtrl Weight="1" Keys="" Effector="h+"/>
+   <SubCtrl Weight="1" Keys="" Effector="ih+"/>
+   <SubCtrl Weight="1" Keys="" Effector="iy+"/>
+   <SubCtrl Weight="1" Keys="" Effector="jh+"/>
+   <SubCtrl Weight="1" Keys="" Effector="n+"/>
+   <SubCtrl Weight="1" Keys="" Effector="ng+"/>
+   <SubCtrl Weight="1" Keys="" Effector="t+"/>
+   <SubCtrl Weight="1" Keys="" Effector="uh+"/>
+   <SubCtrl Weight="1" Keys="" Effector="z+"/>
+   <SubCtrl Weight="1" Keys="" Effector="zh+"/>
+  </Effector>
+  <Effector Name="_Phonemes-">
+   <SubCtrl Weight="1" Keys="" Effector="aa-"/>
+   <SubCtrl Weight="1" Keys="" Effector="ae-"/>
+   <SubCtrl Weight="1" Keys="" Effector="aw-"/>
+   <SubCtrl Weight="1" Keys="" Effector="ay-"/>
+   <SubCtrl Weight="1" Keys="" Effector="d-"/>
+   <SubCtrl Weight="1" Keys="" Effector="eh-"/>
+   <SubCtrl Weight="1" Keys="" Effector="er-"/>
+   <SubCtrl Weight="1" Keys="" Effector="ey-"/>
+   <SubCtrl Weight="1" Keys="" Effector="g-"/>
+   <SubCtrl Weight="1" Keys="" Effector="k-"/>
+   <SubCtrl Weight="1" Keys="" Effector="l-"/>
+   <SubCtrl Weight="1" Keys="" Effector="m-"/>
+   <SubCtrl Weight="1" Keys="" Effector="ow-"/>
+   <SubCtrl Weight="1" Keys="" Effector="oy-"/>
+   <SubCtrl Weight="1" Keys="" Effector="p-"/>
+   <SubCtrl Weight="1" Keys="" Effector="r-"/>
+   <SubCtrl Weight="1" Keys="" Effector="s-"/>
+   <SubCtrl Weight="1" Keys="" Effector="sh-"/>
+   <SubCtrl Weight="1" Keys="" Effector="_"/>
+   <SubCtrl Weight="1" Keys="" Effector="th-"/>
+   <SubCtrl Weight="1" Keys="" Effector="uw-"/>
+   <SubCtrl Weight="1" Keys="" Effector="v-"/>
+   <SubCtrl Weight="1" Keys="" Effector="w-"/>
+   <SubCtrl Weight="1" Keys="" Effector="y-"/>
+   <SubCtrl Weight="1" Keys="" Effector="ah-"/>
+   <SubCtrl Weight="1" Keys="" Effector="ao-"/>
+   <SubCtrl Weight="1" Keys="" Effector="ax-"/>
+   <SubCtrl Weight="1" Keys="" Effector="b-"/>
+   <SubCtrl Weight="1" Keys="" Effector="ch-"/>
+   <SubCtrl Weight="1" Keys="" Effector="dh-"/>
+   <SubCtrl Weight="1" Keys="" Effector="f-"/>
+   <SubCtrl Weight="1" Keys="" Effector="h-"/>
+   <SubCtrl Weight="1" Keys="" Effector="ih-"/>
+   <SubCtrl Weight="1" Keys="" Effector="iy-"/>
+   <SubCtrl Weight="1" Keys="" Effector="jh-"/>
+   <SubCtrl Weight="1" Keys="" Effector="n-"/>
+   <SubCtrl Weight="1" Keys="" Effector="ng-"/>
+   <SubCtrl Weight="1" Keys="" Effector="t-"/>
+   <SubCtrl Weight="1" Keys="" Effector="uh-"/>
+   <SubCtrl Weight="1" Keys="" Effector="z-"/>
+   <SubCtrl Weight="1" Keys="" Effector="zh-"/>
+  </Effector>
+  <Effector Name="_System">
+   <SubCtrl Weight="1" Keys="" Effector="Visimes"/>
+   <SubCtrl Weight="1" Keys="" Effector="Phonemes"/>
+   <SubCtrl Weight="1" Keys="" Effector="ctrl_neck"/>
+   <SubCtrl Weight="1" Keys="" Effector="ctrl_Jaw"/>
+  </Effector>
+  <Effector Name="aa">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_AA"/>
+  </Effector>
+  <Effector Name="aa+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_AA+"/>
+  </Effector>
+  <Effector Name="aa-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_AA-"/>
+  </Effector>
+  <Effector Name="ae">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE"/>
+  </Effector>
+  <Effector Name="ae+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE+"/>
+  </Effector>
+  <Effector Name="ae-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE-"/>
+  </Effector>
+  <Effector Name="ah">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_AA"/>
+  </Effector>
+  <Effector Name="ah+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_AA+"/>
+  </Effector>
+  <Effector Name="ah-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_AA-"/>
+  </Effector>
+  <Effector Name="ao">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_O"/>
+  </Effector>
+  <Effector Name="ao+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_o+"/>
+  </Effector>
+  <Effector Name="ao-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_o-"/>
+  </Effector>
+  <Effector Name="aw">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_AW"/>
+  </Effector>
+  <Effector Name="aw+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_Aw+"/>
+  </Effector>
+  <Effector Name="aw-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_Aw-"/>
+  </Effector>
+  <Effector Name="ax">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE"/>
+  </Effector>
+  <Effector Name="ax+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE+"/>
+  </Effector>
+  <Effector Name="ax-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE-"/>
+  </Effector>
+  <Effector Name="ay">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_AA"/>
+  </Effector>
+  <Effector Name="ay+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_AA+"/>
+  </Effector>
+  <Effector Name="ay-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_AA-"/>
+  </Effector>
+  <Effector Name="b">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_B"/>
+  </Effector>
+  <Effector Name="b+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_B+"/>
+  </Effector>
+  <Effector Name="b-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_B-"/>
+  </Effector>
+  <Effector Name="ch">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_JH"/>
+  </Effector>
+  <Effector Name="ch+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_JH+"/>
+  </Effector>
+  <Effector Name="ch-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_JH-"/>
+  </Effector>
+  <Effector Name="ctrl_Jaw">
+   <SubCtrl Weight="1" Keys="" Effector="Jaw_open_close"/>
+   <SubCtrl Weight="1" Keys="" Effector="Jaw_Left_Right"/>
+   <SubCtrl Weight="1" Keys="" Effector="Jaw_Forward_Backward"/>
+  </Effector>
+  <Effector Name="ctrl_neck">
+   <SubCtrl Weight="1" Keys="" Effector="Neck_left_right"/>
+   <SubCtrl Weight="1" Keys="" Effector="Neck_up_down"/>
+   <SubCtrl Weight="1" Keys="" Effector="Neck_lean_left_right"/>
+  </Effector>
+  <Effector Name="d">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_D"/>
+  </Effector>
+  <Effector Name="d+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_D+"/>
+  </Effector>
+  <Effector Name="d-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_D-"/>
+  </Effector>
+  <Effector Name="dh">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_D"/>
+  </Effector>
+  <Effector Name="eh">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE"/>
+  </Effector>
+  <Effector Name="eh+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE+"/>
+  </Effector>
+  <Effector Name="eh-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE-"/>
+  </Effector>
+  <Effector Name="er">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_O"/>
+  </Effector>
+  <Effector Name="er+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_o+"/>
+  </Effector>
+  <Effector Name="er-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_o-"/>
+  </Effector>
+  <Effector Name="ey">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_AA"/>
+  </Effector>
+  <Effector Name="ey+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_AA-"/>
+  </Effector>
+  <Effector Name="ey-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_AA-"/>
+  </Effector>
+  <Effector Name="f">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_F"/>
+  </Effector>
+  <Effector Name="f+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_F+"/>
+  </Effector>
+  <Effector Name="f-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_F-"/>
+  </Effector>
+  <Effector Name="g">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_K"/>
+  </Effector>
+  <Effector Name="g+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_K+"/>
+  </Effector>
+  <Effector Name="g-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_K-"/>
+  </Effector>
+  <Effector Name="h">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE"/>
+  </Effector>
+  <Effector Name="h+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE+"/>
+  </Effector>
+  <Effector Name="h-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE-"/>
+  </Effector>
+  <Effector Name="ih">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_S"/>
+  </Effector>
+  <Effector Name="ih+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_S+"/>
+  </Effector>
+  <Effector Name="ih-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_S-"/>
+  </Effector>
+  <Effector Name="iy">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE"/>
+  </Effector>
+  <Effector Name="iy+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE+"/>
+  </Effector>
+  <Effector Name="iy-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE-"/>
+  </Effector>
+  <Effector Name="j">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_JH"/>
+  </Effector>
+  <Effector Name="jh">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_JH"/>
+  </Effector>
+  <Effector Name="jh+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_JH+"/>
+  </Effector>
+  <Effector Name="jh-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_JH-"/>
+  </Effector>
+  <Effector Name="k">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_K"/>
+  </Effector>
+  <Effector Name="k+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_K+"/>
+  </Effector>
+  <Effector Name="k-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_K-"/>
+  </Effector>
+  <Effector Name="l">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_L"/>
+  </Effector>
+  <Effector Name="l+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_L+"/>
+  </Effector>
+  <Effector Name="l-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_L-"/>
+  </Effector>
+  <Effector Name="m">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_B"/>
+  </Effector>
+  <Effector Name="m+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_B+"/>
+  </Effector>
+  <Effector Name="m-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_B-"/>
+  </Effector>
+  <Effector Name="n">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_N"/>
+  </Effector>
+  <Effector Name="n+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_N+"/>
+  </Effector>
+  <Effector Name="n-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_N-"/>
+  </Effector>
+  <Effector Name="Neck_lean_left_right">
+   <SubCtrl Weight="1" Keys="" Effector="Neck_lean_left_right_bonectrl"/>
+  </Effector>
+  <Effector Name="Neck_left_right">
+   <SubCtrl Weight="1" Keys="" Effector="Neck_left_right_bonectrl"/>
+  </Effector>
+  <Effector Name="Neck_up_down">
+   <SubCtrl Type="1" Weight="1" Keys="-1:1,1:-1," Effector="Neck_up_down_bonectrl"/>
+  </Effector>
+  <Effector Name="ng">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_D"/>
+  </Effector>
+  <Effector Name="ng+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_D+"/>
+  </Effector>
+  <Effector Name="ng-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_D-"/>
+  </Effector>
+  <Effector Name="ow">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_O"/>
+  </Effector>
+  <Effector Name="ow+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_o+"/>
+  </Effector>
+  <Effector Name="ow-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_o-"/>
+  </Effector>
+  <Effector Name="oy">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_O"/>
+  </Effector>
+  <Effector Name="oy+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_o+"/>
+  </Effector>
+  <Effector Name="oy-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_o-"/>
+  </Effector>
+  <Effector Name="p">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_B"/>
+  </Effector>
+  <Effector Name="p+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_B+"/>
+  </Effector>
+  <Effector Name="p-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_B-"/>
+  </Effector>
+  <Effector Name="Phonemes">
+   <SubCtrl Weight="1" Keys="" Effector="s"/>
+   <SubCtrl Weight="1" Keys="" Effector="ch"/>
+   <SubCtrl Weight="1" Keys="" Effector="_Phonemes-"/>
+   <SubCtrl Weight="1" Keys="" Effector="_Phonemes+"/>
+   <SubCtrl Weight="1" Keys="" Effector="aa"/>
+   <SubCtrl Weight="1" Keys="" Effector="ay"/>
+   <SubCtrl Weight="1" Keys="" Effector="ae"/>
+   <SubCtrl Weight="1" Keys="" Effector="ey"/>
+   <SubCtrl Weight="1" Keys="" Effector="ow"/>
+   <SubCtrl Weight="1" Keys="" Effector="b"/>
+   <SubCtrl Weight="1" Keys="" Effector="n"/>
+   <SubCtrl Weight="1" Keys="" Effector="l"/>
+   <SubCtrl Weight="1" Keys="" Effector="r"/>
+   <SubCtrl Weight="1" Keys="" Effector="d"/>
+   <SubCtrl Weight="1" Keys="" Effector="th"/>
+   <SubCtrl Weight="1" Keys="" Effector="f"/>
+   <SubCtrl Weight="1" Keys="" Effector="v"/>
+   <SubCtrl Weight="1" Keys="" Effector="ah"/>
+   <SubCtrl Weight="1" Keys="" Effector="ao"/>
+   <SubCtrl Weight="1" Keys="" Effector="aw"/>
+   <SubCtrl Weight="1" Keys="" Effector="ax"/>
+   <SubCtrl Weight="1" Keys="" Effector="dh"/>
+   <SubCtrl Weight="1" Keys="" Effector="eh"/>
+   <SubCtrl Weight="1" Keys="" Effector="er"/>
+   <SubCtrl Weight="1" Keys="" Effector="g"/>
+   <SubCtrl Weight="1" Keys="" Effector="h"/>
+   <SubCtrl Weight="1" Keys="" Effector="ih"/>
+   <SubCtrl Weight="1" Keys="" Effector="iy"/>
+   <SubCtrl Weight="1" Keys="" Effector="jh"/>
+   <SubCtrl Weight="1" Keys="" Effector="k"/>
+   <SubCtrl Weight="1" Keys="" Effector="m"/>
+   <SubCtrl Weight="1" Keys="" Effector="ng"/>
+   <SubCtrl Weight="1" Keys="" Effector="oy"/>
+   <SubCtrl Weight="1" Keys="" Effector="p"/>
+   <SubCtrl Weight="1" Keys="" Effector="sh"/>
+   <SubCtrl Weight="1" Keys="" Effector="t"/>
+   <SubCtrl Weight="1" Keys="" Effector="uh"/>
+   <SubCtrl Weight="1" Keys="" Effector="uw"/>
+   <SubCtrl Weight="1" Keys="" Effector="w"/>
+   <SubCtrl Weight="1" Keys="" Effector="y"/>
+   <SubCtrl Weight="1" Keys="" Effector="z"/>
+   <SubCtrl Weight="1" Keys="" Effector="zh"/>
+   <SubCtrl Weight="1" Keys="" Effector="_"/>
+   <SubCtrl Weight="1" Keys="" Effector="x"/>
+   <SubCtrl Weight="1" Keys="" Effector="j"/>
+  </Effector>
+  <Effector Name="r">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_R"/>
+  </Effector>
+  <Effector Name="r+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_R+"/>
+  </Effector>
+  <Effector Name="r-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_R-"/>
+  </Effector>
+  <Effector Name="Root">
+   <SubCtrl Weight="1" Keys="" Effector="Brow_lowerer"/>
+   <SubCtrl Weight="1" Keys="" Effector="Jaw_dropper_01"/>
+   <SubCtrl Weight="1" Keys="" Effector="Jaw_pusher"/>
+   <SubCtrl Weight="1" Keys="" Effector="mouth_narrow"/>
+   <SubCtrl Weight="1" Keys="" Effector="mouth_wide"/>
+   <SubCtrl Weight="1" Keys="" Effector="upper_lip_raiser"/>
+   <SubCtrl Weight="1" Keys="" Effector="_System"/>
+   <SubCtrl Weight="1" Keys="" Effector="_Blank"/>
+   <SubCtrl Weight="1" Keys="" Effector="Lower_Lip_roll_in"/>
+   <SubCtrl Weight="1" Keys="" Effector="_garbage"/>
+  </Effector>
+  <Effector Name="s">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_S"/>
+  </Effector>
+  <Effector Name="s+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_S+"/>
+  </Effector>
+  <Effector Name="s-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_S-"/>
+  </Effector>
+  <Effector Name="sh">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE"/>
+  </Effector>
+  <Effector Name="sh+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE+"/>
+  </Effector>
+  <Effector Name="sh-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE-"/>
+  </Effector>
+  <Effector Name="t">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_S"/>
+  </Effector>
+  <Effector Name="t+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_S+"/>
+  </Effector>
+  <Effector Name="t-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_S-"/>
+  </Effector>
+  <Effector Name="th">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_D"/>
+  </Effector>
+  <Effector Name="th+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_D+"/>
+  </Effector>
+  <Effector Name="th-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_D-"/>
+  </Effector>
+  <Effector Name="uh">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_O"/>
+  </Effector>
+  <Effector Name="uh+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_o+"/>
+  </Effector>
+  <Effector Name="uh-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_o-"/>
+  </Effector>
+  <Effector Name="uw">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_AW"/>
+  </Effector>
+  <Effector Name="uw+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_Aw+"/>
+  </Effector>
+  <Effector Name="uw-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_Aw-"/>
+  </Effector>
+  <Effector Name="v">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_F"/>
+  </Effector>
+  <Effector Name="v+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_F+"/>
+  </Effector>
+  <Effector Name="v-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_F-"/>
+  </Effector>
+  <Effector Name="Visim_AA">
+   <SubCtrl Type="1" Weight="0.35999998" Keys="-1:-0.36,0:0,0.624625:0.266667,0.996422:0.336842," Effector="mouth_narrow"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,0:0,1:1," Effector="Jaw_open_close"/>
+  </Effector>
+  <Effector Name="Visim_AW">
+   <SubCtrl Type="1" Weight="1" Keys="0.399568:0,1:1," Effector="Visim_Aw+"/>
+   <SubCtrl Type="1" Weight="1" Keys="-0.00215983:0,0.604752:1,1:0.0105263," Effector="Visim_Aw-"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,-0.00154083:0,1:0.444444," Effector="Jaw_open_close"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,-0.0046225:0,1:0.642105," Effector="mouth_narrow"/>
+  </Effector>
+  <Effector Name="Visim_B">
+   <SubCtrl Type="1" Weight="1" Keys="0.399568:0,1:1," Effector="Visim_B+"/>
+   <SubCtrl Type="1" Weight="1" Keys="0.00215983:0,0.604752:1,1:0," Effector="Visim_B-"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,-0.00369004:-0.0631579,1:-0.105263," Effector="Jaw_open_close"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,-0.00369004:-0.0105263,1:0.2," Effector="Lower_Lip_roll_in"/>
+  </Effector>
+  <Effector Name="Visim_D">
+   <SubCtrl Type="1" Weight="1" Keys="0.302376:0,1:1," Effector="Visim_D+"/>
+   <SubCtrl Type="1" Weight="1" Keys="0.00215983:0,0.583153:1,1:0.0105263," Effector="Visim_D-"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,-0.0046225:0,1:0.126316," Effector="Jaw_open_close"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,-0.00770416:0.0105263,1:0.463158," Effector="upper_lip_raiser"/>
+  </Effector>
+  <Effector Name="Visim_EE">
+   <SubCtrl Type="1" Weight="0.76999998" Keys="-1:-0.77,-0.003003:0.0222223,1:0.333333," Effector="mouth_wide"/>
+   <SubCtrl Type="1" Weight="0.56" Keys="-1:-0.56,0:0,1:0.56," Effector="upper_lip_raiser"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,0.00178891:-0.0631579,1:0.0210526," Effector="Jaw_open_close"/>
+  </Effector>
+  <Effector Name="Visim_F">
+   <SubCtrl Type="1" Weight="1" Keys="0.401728:0,1:1," Effector="Visim_F+"/>
+   <SubCtrl Type="1" Weight="1" Keys="0.00215983:0.0105263,0.600432:0.989474,1:0.0105263," Effector="Visim_F-"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,0.00271003:0,0.206657:0.51579,1:1," Effector="Lower_Lip_roll_in"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,0.00138696:-0.0526316,0.359223:0.0526316,1:-0.0421053," Effector="Jaw_open_close"/>
+  </Effector>
+  <Effector Name="Visim_JH">
+   <SubCtrl Type="1" Weight="1" Keys="0.399568:0,1:1," Effector="Visim_JH+"/>
+   <SubCtrl Type="1" Weight="1" Keys="0.00215983:0,0.602592:1,1:0.0105263," Effector="Visim_JH-"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,-0.00154083:0,1:0.222222," Effector="mouth_narrow"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,-0.00154083:0,1:0.755556," Effector="upper_lip_raiser"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,0:-0.0105263,1:0.147368," Effector="Jaw_open_close"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,0:-0.0105263,1:-0.105263," Effector="Lower_Lip_roll_in"/>
+  </Effector>
+  <Effector Name="Visim_K">
+   <SubCtrl Type="1" Weight="1" Keys="0.401728:0,1:1," Effector="Visim_K+"/>
+   <SubCtrl Type="1" Weight="1" Keys="0:0.0105263,0.598272:1,1:0.0105263," Effector="Visim_K-"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,-0.003003:0,1:0.178947," Effector="Jaw_open_close"/>
+  </Effector>
+  <Effector Name="Visim_L">
+   <SubCtrl Type="1" Weight="1" Keys="0.401728:0,1:1," Effector="Visim_L+"/>
+   <SubCtrl Type="1" Weight="1" Keys="0.00647948:0,0.602592:1,1:0," Effector="Visim_L-"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,-0.0046225:-0.0105263,1:0.631579," Effector="upper_lip_raiser"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,-0.00154083:0.0105263,1:0.189474," Effector="Jaw_open_close"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-0.0105263,0.00369004:0,1:-0.178947," Effector="Lower_Lip_roll_in"/>
+  </Effector>
+  <Effector Name="Visim_N">
+   <SubCtrl Type="1" Weight="1" Keys="0.401728:0,1:1," Effector="Visim_N+"/>
+   <SubCtrl Type="1" Weight="1" Keys="0.00215983:0,0.600432:1,1:0," Effector="Visim_N-"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,-0.00154083:-0.0105263,1:0.452632," Effector="upper_lip_raiser"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,-0.00154083:0,1:0.0315789," Effector="Jaw_open_close"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,-0.0046225:0,1:0.315789," Effector="mouth_narrow"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-0.0105263,0.00369004:-0.0105263,1:-0.189474," Effector="Lower_Lip_roll_in"/>
+  </Effector>
+  <Effector Name="Visim_O">
+   <SubCtrl Type="1" Weight="1" Keys="0.362851:0,1:1," Effector="Visim_o+"/>
+   <SubCtrl Type="1" Weight="1" Keys="0.00215983:0.0105263,0.356371:0.852632,0.641469:0.8,1:0," Effector="Visim_o-"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,-0.00154083:0,1:0.88421," Effector="mouth_narrow"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,-0.00154083:0,1:0.136842," Effector="Jaw_open_close"/>
+   <SubCtrl Type="1" Weight="1" Keys="-0.99262:0,0:0,1:-0.326316," Effector="Lower_Lip_roll_in"/>
+  </Effector>
+  <Effector Name="Visim_R">
+   <SubCtrl Type="1" Weight="1" Keys="0.401728:0,1:1," Effector="Visim_R+"/>
+   <SubCtrl Type="1" Weight="1" Keys="0.00431965:0,0.598272:1,1:0.0105263," Effector="Visim_R-"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,-0.00154083:0.0105263,1:0.578947," Effector="upper_lip_raiser"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,-0.00154083:-0.0105263,1:0.178947," Effector="Jaw_open_close"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,-0.00154083:0,1:0.221053," Effector="mouth_narrow"/>
+  </Effector>
+  <Effector Name="Visim_S">
+   <SubCtrl Type="1" Weight="1" Keys="0.401728:0,1:1," Effector="Visim_S+"/>
+   <SubCtrl Type="1" Weight="1" Keys="-0.00215983:0,0.602592:1,1:0," Effector="Visim_S-"/>
+   <SubCtrl Type="1" Weight="1" Keys="-1:-1,-0.00154083:0,1:1," Effector="upper_lip_raiser"/>
+  </Effector>
+  <Effector Name="Visim_x">
+   <SubCtrl Type="1" Weight="1" Keys="0.3979:0,1:1," Effector="Visim_x-"/>
+   <SubCtrl Type="1" Weight="1" Keys="0.00116686:0,0.600933:1,1:0," Effector="Visim_x+"/>
+  </Effector>
+  <Effector Name="Visimes">
+   <SubCtrl Weight="1" Keys="" Effector="Visimes-"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visimes+"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_AA"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_AW"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_B"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_D"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_F"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_JH"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_K"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_L"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_R"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_O"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_S"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_N"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_x"/>
+  </Effector>
+  <Effector Name="Visimes+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_AA+"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE+"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_o+"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_B+"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_N+"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_R+"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_D+"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_F+"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_S+"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_K+"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_JH+"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_L+"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_Aw+"/>
+  </Effector>
+  <Effector Name="Visimes-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_AA-"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE-"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_o-"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_B-"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_N-"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_R-"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_D-"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_F-"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_S-"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_K-"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_JH-"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_L-"/>
+   <SubCtrl Weight="1" Keys="" Effector="Visim_Aw-"/>
+  </Effector>
+  <Effector Name="w">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_R"/>
+  </Effector>
+  <Effector Name="w+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_R+"/>
+  </Effector>
+  <Effector Name="w-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_R-"/>
+  </Effector>
+  <Effector Name="x">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_x"/>
+  </Effector>
+  <Effector Name="y">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_D"/>
+  </Effector>
+  <Effector Name="y+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_D+"/>
+  </Effector>
+  <Effector Name="y-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_D-"/>
+  </Effector>
+  <Effector Name="z">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE"/>
+  </Effector>
+  <Effector Name="z+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE+"/>
+  </Effector>
+  <Effector Name="z-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE-"/>
+  </Effector>
+  <Effector Name="zh">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE"/>
+  </Effector>
+  <Effector Name="zh+">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE+"/>
+  </Effector>
+  <Effector Name="zh-">
+   <SubCtrl Weight="1" Keys="" Effector="Visim_EE-"/>
+  </Effector>
+ </Controllers>
+</ExpressionLibrary>

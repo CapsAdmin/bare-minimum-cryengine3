@@ -1,0 +1,758 @@
+<ReverbPresetDB>
+ <Carpark>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="5000"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.60000002"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="110"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="55"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="0"/>
+  <nLateReflections type="int" min="-100" max="20" value="0"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="50"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-5"/>
+  <nLFGain type="int" min="-100" max="0" value="0"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="5000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="250"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="222"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.2"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0.2"/>
+  </EchoDSP>
+ </Carpark>
+ <Hall_Big>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="4110"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.53500003"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="69"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="44"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="-4"/>
+  <nLateReflections type="int" min="-100" max="20" value="-1"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-16"/>
+  <nLFGain type="int" min="-100" max="0" value="-11"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="5000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="250"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="331"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.69999999"/>
+   <fDryMix type="float" min="0" max="1" value="0.60000002"/>
+   <fWetMix type="float" min="0" max="1" value="0.88"/>
+  </EchoDSP>
+ </Hall_Big>
+ <MP_Open_Ground>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="1930"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.333"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="221"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="58"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="-11"/>
+  <nLateReflections type="int" min="-100" max="20" value="-34"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-1"/>
+  <nLFGain type="int" min="-100" max="0" value="0"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="5000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="440.5"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="255"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.23999999"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0"/>
+  </EchoDSP>
+ </MP_Open_Ground>
+ <Tent>
+  <nMasterLevel type="int" min="-100" max="0" value="-15"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="1000"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.1"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="15"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="30"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="-2"/>
+  <nLateReflections type="int" min="-100" max="20" value="-2"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-1"/>
+  <nLFGain type="int" min="-100" max="0" value="0"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="5000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="250"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="75"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.1"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="1"/>
+  </EchoDSP>
+ </Tent>
+ <Tunnel>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="6000"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.30000001"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="50"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="100"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="-3"/>
+  <nLateReflections type="int" min="-100" max="20" value="0"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="50"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-5"/>
+  <nLFGain type="int" min="-100" max="0" value="0"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="4000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="1000"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="185"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.40000001"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0.5"/>
+  </EchoDSP>
+ </Tunnel>
+ <Staircase>
+  <nMasterLevel type="int" min="-100" max="0" value="-2"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="1750"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.40000001"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="12"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="24"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="-5"/>
+  <nLateReflections type="int" min="-100" max="20" value="0"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="0"/>
+  <nLFGain type="int" min="-100" max="0" value="-5"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="5000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="250"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="100"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.2"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0.2"/>
+  </EchoDSP>
+ </Staircase>
+ <Subway>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="3000"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.30000001"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="120"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="22"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="-10"/>
+  <nLateReflections type="int" min="-100" max="20" value="-2"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-8"/>
+  <nLFGain type="int" min="-100" max="0" value="0"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="6000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="1000"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="150"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.30000001"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0.40000001"/>
+  </EchoDSP>
+ </Subway>
+ <Alley>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="2000"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.5"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="75"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="50"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="0"/>
+  <nLateReflections type="int" min="-100" max="20" value="0"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-5"/>
+  <nLFGain type="int" min="-100" max="0" value="0"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="4000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="1000"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="150"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.30000001"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0.40000001"/>
+  </EchoDSP>
+ </Alley>
+ <Underwater>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="2000"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.2"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="10"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="10"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="-100"/>
+  <nLateReflections type="int" min="-100" max="20" value="10"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-50"/>
+  <nLFGain type="int" min="-100" max="0" value="0"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="1000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="1000"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="500"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.5"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0"/>
+  </EchoDSP>
+ </Underwater>
+ <Garage_Small>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="1500"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.80000001"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="5"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="25"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="0"/>
+  <nLateReflections type="int" min="-100" max="20" value="0"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-5"/>
+  <nLFGain type="int" min="-100" max="0" value="0"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="5000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="250"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="50"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.30000001"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0.40000001"/>
+  </EchoDSP>
+ </Garage_Small>
+ <Cave>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="6760"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.42199999"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="33"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="79"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="10"/>
+  <nLateReflections type="int" min="-100" max="20" value="14"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="85.800003"/>
+  <nHFGain type="int" min="-100" max="0" value="-22"/>
+  <nLFGain type="int" min="-100" max="0" value="-13"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="4748"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="222.3"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="99"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.35800001"/>
+   <fDryMix type="float" min="0" max="1" value="0.81"/>
+   <fWetMix type="float" min="0" max="1" value="0.33899999"/>
+  </EchoDSP>
+ </Cave>
+ <Garage_Big>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="3590"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.52999997"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="51"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="44"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="-4"/>
+  <nLateReflections type="int" min="-100" max="20" value="-5"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-22"/>
+  <nLFGain type="int" min="-100" max="0" value="-11"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="5000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="250"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="207"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.336"/>
+   <fDryMix type="float" min="0" max="1" value="0.667"/>
+   <fWetMix type="float" min="0" max="1" value="0.79299998"/>
+  </EchoDSP>
+ </Garage_Big>
+ <Rooftop>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="3200"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.76499999"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="246"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="60"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="0"/>
+  <nLateReflections type="int" min="-100" max="20" value="0"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="75"/>
+  <nHFGain type="int" min="-100" max="0" value="-11"/>
+  <nLFGain type="int" min="-100" max="0" value="-8"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="3163"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="578"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="506"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.37599999"/>
+   <fDryMix type="float" min="0" max="1" value="0.75999999"/>
+   <fWetMix type="float" min="0" max="1" value="0.89999998"/>
+  </EchoDSP>
+ </Rooftop>
+ <Park>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="100"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.1"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="7"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="100"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="-5"/>
+  <nLateReflections type="int" min="-100" max="20" value="-5"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="75"/>
+  <nHFGain type="int" min="-100" max="0" value="-5"/>
+  <nLFGain type="int" min="-100" max="0" value="0"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="4000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="500"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="400"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.15000001"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0"/>
+  </EchoDSP>
+ </Park>
+ <Room_Small>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="2000"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.5"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="20"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="20"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="-5"/>
+  <nLateReflections type="int" min="-100" max="20" value="2"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="50"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-10"/>
+  <nLFGain type="int" min="-100" max="0" value="0"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="5000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="250"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="40"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.2"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0.2"/>
+  </EchoDSP>
+ </Room_Small>
+ <Street>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="4000"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.40000001"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="200"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="100"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="-6"/>
+  <nLateReflections type="int" min="-100" max="20" value="-2"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-5"/>
+  <nLFGain type="int" min="-100" max="0" value="0"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="4000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="1000"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="400"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.2"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0.2"/>
+  </EchoDSP>
+ </Street>
+ <Shop>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="500"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.60000002"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="10"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="5"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="-2"/>
+  <nLateReflections type="int" min="-100" max="20" value="2"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-10"/>
+  <nLFGain type="int" min="-100" max="0" value="0"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="5000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="250"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="25"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.2"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0.2"/>
+  </EchoDSP>
+ </Shop>
+ <Underpass>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="2000"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.40000001"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="110"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="60"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="-3"/>
+  <nLateReflections type="int" min="-100" max="20" value="4"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-10"/>
+  <nLFGain type="int" min="-100" max="0" value="0"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="4000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="1000"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="115"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.30000001"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0.5"/>
+  </EchoDSP>
+ </Underpass>
+ <Vehicle>
+  <nMasterLevel type="int" min="-100" max="0" value="-11"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="410"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="1"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="10"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="11"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="-2"/>
+  <nLateReflections type="int" min="-100" max="20" value="10"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-4"/>
+  <nLFGain type="int" min="-100" max="0" value="0"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="5000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="250"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="500"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.5"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0"/>
+  </EchoDSP>
+ </Vehicle>
+ <Submarine>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="800"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.125"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="0"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="0"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="0"/>
+  <nLateReflections type="int" min="-100" max="20" value="5"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="30"/>
+  <nHFGain type="int" min="-100" max="0" value="-3"/>
+  <nLFGain type="int" min="-100" max="0" value="-4"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="10000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="250"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="60"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.15000001"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0.30000001"/>
+  </EchoDSP>
+ </Submarine>
+ <Elevator>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="500"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="2"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="8"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="11"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="-4"/>
+  <nLateReflections type="int" min="-100" max="20" value="2"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="0"/>
+  <nLFGain type="int" min="-100" max="0" value="0"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="5000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="250"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="22"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.30000001"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0.40000001"/>
+  </EchoDSP>
+ </Elevator>
+ <MP_Massive>
+  <nMasterLevel type="int" min="-100" max="0" value="-9"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="2970"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.60000002"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="104"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="70"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="2"/>
+  <nLateReflections type="int" min="-100" max="20" value="15"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="53.400002"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-3"/>
+  <nLFGain type="int" min="-100" max="0" value="-4"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="5000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="250"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="500"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.5"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0"/>
+  </EchoDSP>
+ </MP_Massive>
+ <Corridor_Wide>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="2000"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.40000001"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="86"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="59"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="-2"/>
+  <nLateReflections type="int" min="-100" max="20" value="4"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-7"/>
+  <nLFGain type="int" min="-100" max="0" value="-3"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="4000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="1000"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="115"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.43000001"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0.5"/>
+  </EchoDSP>
+ </Corridor_Wide>
+ <Hall>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="3003"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.64099997"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="176"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="58"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="3"/>
+  <nLateReflections type="int" min="-100" max="20" value="4"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-23"/>
+  <nLFGain type="int" min="-100" max="0" value="-4"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="4606"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="250"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="240"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.2"/>
+   <fDryMix type="float" min="0" max="1" value="0.81"/>
+   <fWetMix type="float" min="0" max="1" value="0.31799999"/>
+  </EchoDSP>
+ </Hall>
+ <Room_Large>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="4000"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.5"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="35"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="70"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="-3"/>
+  <nLateReflections type="int" min="-100" max="20" value="2"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-10"/>
+  <nLFGain type="int" min="-100" max="0" value="0"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="4000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="250"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="150"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.2"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0.2"/>
+  </EchoDSP>
+ </Room_Large>
+ <Corridor_Narrow>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="1000"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.69999999"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="7"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="14"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="0"/>
+  <nLateReflections type="int" min="-100" max="20" value="2"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="0"/>
+  <nLFGain type="int" min="-100" max="0" value="0"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="5000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="250"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="35"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.30000001"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0.30000001"/>
+  </EchoDSP>
+ </Corridor_Narrow>
+ <MP_Room_Small>
+  <nMasterLevel type="int" min="-100" max="0" value="-16"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="500"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.60000002"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="2"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="2"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="10"/>
+  <nLateReflections type="int" min="-100" max="20" value="15"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="50"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-3"/>
+  <nLFGain type="int" min="-100" max="0" value="-4"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="5000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="250"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="500"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.5"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0"/>
+  </EchoDSP>
+ </MP_Room_Small>
+ <MP_Room_Large>
+  <nMasterLevel type="int" min="-100" max="0" value="-4"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="3100"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.74800003"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="7"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="24"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="-1"/>
+  <nLateReflections type="int" min="-100" max="20" value="1"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-20"/>
+  <nLFGain type="int" min="-100" max="0" value="-55"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="5000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="250"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="239"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.24600001"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0"/>
+  </EchoDSP>
+ </MP_Room_Large>
+ <OpenGround>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="3750"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.30000001"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="50"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="100"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="-5"/>
+  <nLateReflections type="int" min="-100" max="20" value="-8"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="75"/>
+  <nHFGain type="int" min="-100" max="0" value="0"/>
+  <nLFGain type="int" min="-100" max="0" value="0"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="4000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="1000"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="400"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.2"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0.2"/>
+  </EchoDSP>
+ </OpenGround>
+ <Plaza>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="5000"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.30000001"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="200"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="100"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="-10"/>
+  <nLateReflections type="int" min="-100" max="20" value="0"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-5"/>
+  <nLFGain type="int" min="-100" max="0" value="0"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="4000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="1000"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="400"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.1"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0.2"/>
+  </EchoDSP>
+ </Plaza>
+ <Room_Medium>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="3000"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.5"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="20"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="40"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="-4"/>
+  <nLateReflections type="int" min="-100" max="20" value="2"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="75"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-10"/>
+  <nLFGain type="int" min="-100" max="0" value="0"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="5000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="250"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="80"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.25"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0.2"/>
+  </EchoDSP>
+ </Room_Medium>
+ <Sewer>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="3000"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.60000002"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="15"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="30"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="2"/>
+  <nLateReflections type="int" min="-100" max="20" value="2"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-2"/>
+  <nLFGain type="int" min="-100" max="0" value="0"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="5000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="250"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="20"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.30000001"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0.40000001"/>
+  </EchoDSP>
+ </Sewer>
+ <no_effect>
+  <nMasterLevel type="int" min="-100" max="0" value="-100"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="1490"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.82999998"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="7"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="11"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="-100"/>
+  <nLateReflections type="int" min="-100" max="20" value="-100"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-100"/>
+  <nLFGain type="int" min="-100" max="0" value="-1"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="5000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="250"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="500"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.5"/>
+   <fDryMix type="float" min="0" max="1" value="0"/>
+   <fWetMix type="float" min="0" max="1" value="0"/>
+  </EchoDSP>
+ </no_effect>
+ <Street_Canyon>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="2400"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.63"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="166"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="49"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="0"/>
+  <nLateReflections type="int" min="-100" max="20" value="-5"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="75"/>
+  <nHFGain type="int" min="-100" max="0" value="-8"/>
+  <nLFGain type="int" min="-100" max="0" value="-10"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="3247"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="722"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="345"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.26699999"/>
+   <fDryMix type="float" min="0" max="1" value="0.75999999"/>
+   <fWetMix type="float" min="0" max="1" value="0.86299998"/>
+  </EchoDSP>
+ </Street_Canyon>
+ <Station>
+  <nMasterLevel type="int" min="-100" max="0" value="0"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="5000"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.69999999"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="113"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="11"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="0"/>
+  <nLateReflections type="int" min="-100" max="20" value="1"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-6"/>
+  <nLFGain type="int" min="-100" max="0" value="0"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="5000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="250"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="400"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.2"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0.2"/>
+  </EchoDSP>
+ </Station>
+ <MP_Room_Medium>
+  <nMasterLevel type="int" min="-100" max="0" value="-10"/>
+  <fDecayTime type="float" min="100.0" max="20000.0" value="1540"/>
+  <fHFDecayRatio type="float" min="0.1" max="2.0" value="0.82999998"/>
+  <fPreDelay type="float" min="0.0" max="300.0" value="7"/>
+  <fLateDelay type="float" min="0.0" max="100.0" value="11"/>
+  <nEarlyReflections type="int" min="-100" max="10" value="-7"/>
+  <nLateReflections type="int" min="-100" max="20" value="10"/>
+  <fDiffusion type="float" min="0.0" max="100.0" value="100"/>
+  <fDensity type="float" min="0.0" max="100.0" value="100"/>
+  <nHFGain type="int" min="-100" max="0" value="-10"/>
+  <nLFGain type="int" min="-100" max="0" value="-1"/>
+  <fHFCrossover type="float" min="20.0" max="20000.0" value="5000"/>
+  <fLFCrossover type="float" min="20.0" max="1000.0" value="250"/>
+  <EchoDSP>
+   <fDelay type="float" min="10" max="5000" value="500"/>
+   <fDecayRatio type="float" min="0" max="1" value="0.5"/>
+   <fDryMix type="float" min="0" max="1" value="1"/>
+   <fWetMix type="float" min="0" max="1" value="0"/>
+  </EchoDSP>
+ </MP_Room_Medium>
+</ReverbPresetDB>

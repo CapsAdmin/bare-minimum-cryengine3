@@ -1,0 +1,8 @@
+<Material MtlFlags="524288" Shader="Illum" GenMask="0" StringGenMask="" SurfaceType="mat_default" MatTemplate="" Diffuse="1,1,1" Specular="0,0,0" Emissive="0,0,0" Shininess="10" Opacity="1" GlowAmount="0.25">
+ <Textures>
+  <Texture Map="Diffuse" File="materials/special/replaceme_texture.tif">
+   <TexMod TileU="2" TileV="2"/>
+  </Texture>
+ </Textures>
+ <PublicParams AmbientMultiplier="1"/>
+</Material>
