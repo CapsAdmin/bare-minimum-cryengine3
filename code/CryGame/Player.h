@@ -26,8 +26,6 @@
 class CPlayerMovement;
 class CPlayerRotation;
 struct IPlayerInput;
-struct IDebugHistory;
-struct IDebugHistoryManager;
 class CCameraInputHelper;
 
 struct SPlayerStats : public SActorStats
@@ -869,7 +867,6 @@ class CPlayer :
 		const char *GetFootstepEffectName() const;
 
 		bool ShouldUsePhysicsMovement();
-		void Debug();
 
 		void UpdateSounds(float fFrameTime);
 		float m_fLowHealthSoundMood;
@@ -1020,10 +1017,6 @@ class CPlayer :
 		Vec3	m_jumpVel;
 		ILeanPoseModifierPtr m_pLeanPoseModifier;
 		// ~PLAYERPREDICTION
-
-	public:
-		IDebugHistoryManager *m_pDebugHistoryManager;
-		void DebugGraph_AddValue(const char *id, float value) const;
 };
 
 //----------------------------------------------------------------
