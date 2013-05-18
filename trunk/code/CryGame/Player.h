@@ -604,11 +604,14 @@ class CPlayer :
 		// Accessed via function to allow game based modifiers to stance speed without multiplying the number of stances.
 		virtual float GetStanceNormalSpeed(EStance stance) const;
 
+		virtual void ToggleThirdPerson();
+		void SetThirdPerson(bool thirdPersonEnabled);
 		virtual void Revive( bool fromInit );
 		virtual void Kill();
 
 		//stances
 		virtual Vec3	GetStanceViewOffset(EStance stance, float *pLeanAmt = NULL, bool withY = false) const;
+		virtual bool IsThirdPerson() const;
 		virtual void StanceChanged(EStance last);
 		//virtual bool TrySetStance(EStance stance); // Moved to Actor, to be shared with Aliens.
 		virtual bool IsPlayingSmartObjectAction() const;

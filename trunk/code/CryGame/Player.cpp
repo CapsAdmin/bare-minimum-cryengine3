@@ -1333,10 +1333,15 @@ void CPlayer::UpdateView(SViewParams &viewParams)
 	{
 		return;
 	}
-
+	
+	viewParams.rotation = GetViewRotation();
 	viewParams.position = GetEntity()->GetWorldPos() + GetEyeOffset();
-	viewParams.rotation = this->GetViewRotation();
 	viewParams.fov = DEG2RAD(75);
+
+	if (IsThirdPerson())
+	{
+		viewParams.position += (viewParams.rotation.GetColumn1() * - 3);		
+	}
 
 	// finally, update the network system
 	if (gEnv->bMultiplayer)
@@ -2695,6 +2700,33 @@ void CPlayer::UpdateStats(float frameTime)
 	//m_stats.thrusterSprint = min(m_stats.thrusterSprint + frameTime, 1.0f);
 }
 
+
+//
+//-----------------------------------------------------------------------------
+void CPlayer::ToggleThirdPerson()
+{
+	SetThirdPerson(!m_stats.isThirdPerson);
+}
+
+void CPlayer::SetThirdPerson(bool thirdPersonEnabled)
+{
+	if (m_stats.isThirdPerson != thirdPersonEnabled)
+	{
+		m_stats.isThirdPerson = thirdPersonEnabled;
+		CALL_PLAYER_EVENT_LISTENERS(OnToggleThirdPerson(this, m_stats.isThirdPerson));
+	}
+}
+
+bool CPlayer::IsThirdPerson() const
+{
+	//force thirdperson view for non-clients
+	if (!IsClient())
+	{
+		return true;
+	}
+
+	return m_stats.isThirdPerson;
+}
 void CPlayer::Revive( bool fromInit )
 {
 	CActor::Revive(fromInit);
