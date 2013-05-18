@@ -186,7 +186,6 @@ CPlayer::CPlayer(): m_pInteractor(NULL),
 	m_bHasAssistance(false),
 	m_timedemo(false),
 	m_ignoreRecoil(false),
-	m_bDemoModeSpectator(false),
 	m_nParachuteSlot(0),
 	m_fParachuteMorph(0.0f),
 	m_pVoiceListener(NULL),
@@ -236,7 +235,6 @@ CPlayer::~CPlayer()
 
 	if(IsClient())
 	{
-		ResetScreenFX();
 		InitInterference();
 	}
 
@@ -414,18 +412,6 @@ void CPlayer::ProcessEvent(SEntityEvent &event)
 	}
 	else if (event.event == ENTITY_EVENT_XFORM)
 	{
-		if(gEnv->bMultiplayer)
-		{
-			// if our local player is spectating this one, move it to this position
-			CPlayer *pPlayer = (CPlayer *)gEnv->pGame->GetIGameFramework()->GetClientActor();
-
-			if(pPlayer && pPlayer->GetSpectatorMode() == CPlayer::eASM_Follow && pPlayer->GetSpectatorTarget() == GetEntityId())
-			{
-				// local player is spectating us. Move them to our position
-				pPlayer->MoveToSpectatorTargetPosition();
-			}
-		}
-
 		int flags = (int)event.nParam[0];
 
 		if (flags & ENTITY_XFORM_ROT && !(flags & (ENTITY_XFORM_USER | ENTITY_XFORM_PHYSICS_STEP)))
@@ -768,44 +754,6 @@ void CPlayer::Update(SEntityUpdateContext &ctx, int updateSlot)
 		if (m_pPlayerInput.get())
 		{
 			GetGameObject()->EnablePostUpdates(this);
-		}
-	}
-
-	// if spectating, send health of the spectator target to our client when it changes
-	if(gEnv->bServer && gEnv->bMultiplayer && g_pGame->GetGameRules() && m_stats.spectatorMode == CActor::eASM_Follow)
-	{
-		IActor *pActor = g_pGame->GetIGameFramework()->GetIActorSystem()->GetActor(m_stats.spectatorTarget);
-
-		if (pActor)
-		{
-			float health = pActor->GetHealth();
-
-			if(health != m_stats.spectatorHealth)
-			{
-				GetGameObject()->InvokeRMI(CActor::ClSetSpectatorHealth(), CActor::SetSpectatorHealthParams(health), eRMI_ToOwnClient | eRMI_NoLocalCalls);
-				m_stats.spectatorHealth = health;
-			}
-		}
-
-		// also, after the player we are spectating dies (or goes into spectator mode), wait 3s then switch to new target
-		CActor *pCActor = static_cast<CActor *>(pActor);
-
-		if(pCActor && pCActor->GetActorClass() == CPlayer::GetActorClassType())
-		{
-			CPlayer *pTargetPlayer = static_cast<CPlayer *>(pCActor);
-			float timeSinceDeath = gEnv->pTimer->GetFrameStartTime().GetSeconds() - pTargetPlayer->GetDeathTime();
-
-			if(pTargetPlayer && (pTargetPlayer->GetHealth() <= 0 && timeSinceDeath > 3.0f) || pTargetPlayer->GetSpectatorMode() != eASM_None)
-			{
-				m_stats.spectatorTarget = 0; // else if no other players found, HUD will continue to display previous name...
-				g_pGame->GetGameRules()->RequestNextSpectatorTarget(this, 1);
-			}
-		}
-		else if(!pActor)
-		{
-			// they might have disconnected. At any rate, they don't exist, so pick another...
-			m_stats.spectatorTarget = 0;	// else if no other players found, HUD will continue to display previous name...
-			g_pGame->GetGameRules()->RequestNextSpectatorTarget(this, 1);
 		}
 	}
 
@@ -2154,7 +2102,7 @@ void CPlayer::UpdateStats(float frameTime)
 	UpdateSwimStats(frameTime);
 
 	//FIXME:
-	if (m_stats.spectatorMode || (!simPar.bActive && !isClient) || m_stats.flyMode)
+	if ((!simPar.bActive && !isClient) || m_stats.flyMode)
 	{
 		ChangeParachuteState(0);
 		m_stats.velocity = m_stats.velocityUnconstrained.Set(0, 0, 0);
@@ -2390,7 +2338,7 @@ void CPlayer::UpdateStats(float frameTime)
 	}
 
 	//update status table
-	if (!onGround && !m_stats.spectatorMode)
+	if (!onGround)
 	{
 		if (ShouldSwim())
 		{
@@ -2721,7 +2669,7 @@ void CPlayer::UpdateStats(float frameTime)
 	pPhysEnt->SetParams(&ppd);
 	pe_player_dynamics simParSet;
 	bool shouldSwim = ShouldSwim();
-	simParSet.bSwimming = (m_stats.spectatorMode || m_stats.flyMode || shouldSwim || (InZeroG() && !bootableSurface) || m_stats.isOnLadder);
+	simParSet.bSwimming = (m_stats.flyMode || shouldSwim || (InZeroG() && !bootableSurface) || m_stats.isOnLadder);
 
 	//set gravity to 0 in water
 	if ((shouldSwim && m_stats.relativeWaterLevel <= 0.0f) || m_stats.isOnLadder)
@@ -2747,76 +2695,9 @@ void CPlayer::UpdateStats(float frameTime)
 	//m_stats.thrusterSprint = min(m_stats.thrusterSprint + frameTime, 1.0f);
 }
 
-
-//
-//-----------------------------------------------------------------------------
-void CPlayer::ToggleThirdPerson()
-{
-	SetThirdPerson(!m_stats.isThirdPerson);
-}
-
-void CPlayer::SetThirdPerson(bool thirdPersonEnabled)
-{
-	if (m_stats.isThirdPerson != thirdPersonEnabled)
-	{
-		m_stats.isThirdPerson = thirdPersonEnabled;
-		CALL_PLAYER_EVENT_LISTENERS(OnToggleThirdPerson(this, m_stats.isThirdPerson));
-	}
-}
-
-int CPlayer::IsGod()
-{
-	if (!m_pGameFramework->CanCheat())
-	{
-		return 0;
-	}
-
-	int godMode(g_pGameCVars->g_godMode);
-
-	// Demi-Gods are not Gods
-	if (godMode == 3)
-	{
-		return 0;
-	}
-
-	//check if is the player
-	if (IsClient())
-	{
-		return godMode;
-	}
-
-	//check if is a squadmate
-	IAIActor *pAIActor = CastToIAIActorSafe(GetEntity()->GetAI());
-
-	if (pAIActor)
-	{
-		int group = pAIActor->GetParameters().m_nGroup;
-
-		if(group >= 0 && group < 10)
-		{
-			return (godMode == 2 ? 1 : 0);
-		}
-	}
-
-	return 0;
-}
-
-bool CPlayer::IsThirdPerson() const
-{
-	//force thirdperson view for non-clients
-	if (!IsClient())
-	{
-		return true;
-	}
-
-	return m_stats.isThirdPerson;
-}
-
-
 void CPlayer::Revive( bool fromInit )
 {
 	CActor::Revive(fromInit);
-	ResetScreenFX();
 	InitInterference();
 	m_parachuteEnabled = false; // no parachute by default
 	m_openParachuteTimer = -1.0f;
@@ -2835,17 +2716,7 @@ void CPlayer::Revive( bool fromInit )
 		ToggleThirdPerson();
 	}
 
-	// HAX: to fix player spawning and floating in dedicated server: Marcio fix me?
-	if (gEnv->IsEditor() == false)  // AlexL: in editor, we never keep spectator mode
-	{
-		uint8 spectator = m_stats.spectatorMode;
-		m_stats = SPlayerStats();
-		m_stats.spectatorMode = spectator;
-	}
-	else
-	{
-		m_stats = SPlayerStats();
-	}
+	m_stats = SPlayerStats();
 
 	m_headAngles.Set(0, 0, 0);
 	m_eyeOffset.Set(0, 0, 0);
@@ -2960,19 +2831,6 @@ void CPlayer::Revive( bool fromInit )
 		GetGameObject()->EnableUpdateSlot(pInteractor, 0);
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 Vec3 CPlayer::GetStanceViewOffset(EStance stance, float *pLeanAmt, bool withY) const
 {
@@ -3246,7 +3104,6 @@ void CPlayer::CameraShake(float angle, float shift, float duration, float freque
 	m_viewShake.angle.Set(RANDOMR(0.0f,1.0f)*shakeAngle, RANDOM()*shakeAngle*0.15f, RANDOM()*shakeAngle*0.75f);
 	}*/
 }
-
 
 void CPlayer::ResetAnimations()
 {
@@ -3559,7 +3416,6 @@ void CPlayer::Freeze(bool freeze)
 }
 
 
-
 float CPlayer::GetMassFactor() const
 {
 	return 1.0f;
@@ -3742,11 +3598,6 @@ void CPlayer::FullSerialize( TSerialize ser )
 {
 	CActor::FullSerialize(ser);
 	m_pMovementController->Serialize(ser);
-
-	if(ser.IsReading())
-	{
-		ResetScreenFX();
-	}
 
 	ser.BeginGroup( "BasicProperties" );
 	//ser.EnumValue("stance", this, &CPlayer::GetStance, &CPlayer::SetStance, STANCE_NULL, STANCE_LAST);
@@ -4410,138 +4261,14 @@ EntityId CPlayer::GetCurrentTargetEntityId() const
 	return targetEntity;
 }
 
-void CPlayer::SwitchDemoModeSpectator(bool activate)
-{
-	if(!IsDemoPlayback())
-	{
-		return;
-	}
-
-	m_bDemoModeSpectator = activate;
-	m_stats.isThirdPerson = !activate;
-
-	if(activate)
-	{
-		m_stats.firstPersonBody = (uint8)g_pGameCVars->cl_fpBody;
-	}
-	
-	if (activate)
-	{
-		IScriptSystem *pSS = gEnv->pScriptSystem;
-		pSS->SetGlobalValue( "g_localActor", GetGameObject()->GetEntity()->GetScriptTable() );
-		pSS->SetGlobalValue( "g_localActorId", ScriptHandle( GetGameObject()->GetEntityId() ) );
-	}
-
-	m_isClient = activate;
-}
-
 void CPlayer::SetFlyMode(uint8 flyMode)
 {
-	if (m_stats.spectatorMode)
-	{
-		return;
-	}
-
-	m_stats.flyMode = flyMode;
-
-	if (m_stats.flyMode > 2)
-	{
-		m_stats.flyMode = 0;
-	}
-
+	m_stats.flyMode = flyMode%1;
+	
 	if(m_pAnimatedCharacter)
 	{
-		m_pAnimatedCharacter->RequestPhysicalColliderMode((m_stats.flyMode == 2) ? eColliderMode_Disabled : eColliderMode_Undefined, eColliderModeLayer_Game, "Player::SetFlyMode");
+		m_pAnimatedCharacter->RequestPhysicalColliderMode(m_stats.flyMode == 1 ? eColliderMode_Disabled : eColliderMode_Undefined, eColliderModeLayer_Game, "Player::SetFlyMode");
 	}
-}
-
-void CPlayer::SetSpectatorMode(uint8 mode, EntityId targetId)
-{
-	//CryLog("%s setting spectator mode %d, target %d", GetEntity()->GetName(), mode, targetId);
-	uint8 oldSpectatorMode = m_stats.spectatorMode;
-	bool server = gEnv->bServer;
-
-	if(server)
-	{
-		m_stats.spectatorHealth = -1;    // set this in all cases to trigger a send if necessary
-	}
-
-	if(gEnv->IsClient())
-	{
-		m_pPlayerInput.reset();
-	}
-
-	if (mode && !m_stats.spectatorMode)
-	{
-		Revive(false);
-
-		if (server)
-		{
-			GetGameObject()->SetAspectProfile(eEA_Physics, eAP_Spectator);
-			GetGameObject()->InvokeRMI(CActor::ClSetSpectatorMode(), CActor::SetSpectatorModeParams(mode, targetId), eRMI_ToAllClients | eRMI_NoLocalCalls);
-		}
-
-		Draw(false);
-		m_stats.spectatorTarget = targetId;
-		m_stats.spectatorMode = mode;
-		m_stats.inAir = 0.0f;
-		m_stats.onGround = 0.0f;
-		// spectators should be dead
-		m_health = -1;
-		GetGameObject()->ChangedNetworkState(ASPECT_HEALTH);
-
-		if(mode == CActor::eASM_Follow)
-		{
-			MoveToSpectatorTargetPosition();
-		}
-	}
-	else if (!mode && m_stats.spectatorMode)
-	{
-		if (server)
-		{
-			GetGameObject()->SetAspectProfile(eEA_Physics, eAP_Alive);
-			GetGameObject()->InvokeRMI(CActor::ClSetSpectatorMode(), CActor::SetSpectatorModeParams(mode, targetId), eRMI_ToAllClients | eRMI_NoLocalCalls);
-		}
-
-		Draw(true);
-		m_stats.spectatorTarget = 0;
-		m_stats.spectatorMode = mode;
-		m_stats.inAir = 0.0f;
-		m_stats.onGround = 0.0f;
-	}
-	else if (oldSpectatorMode != mode || m_stats.spectatorTarget != targetId)
-	{
-		m_stats.spectatorTarget = targetId;
-		m_stats.spectatorMode = mode;
-
-		if (server)
-		{
-			//SetHealth(GetMaxHealth());
-			GetGameObject()->InvokeRMI(CActor::ClSetSpectatorMode(), CActor::SetSpectatorModeParams(mode, targetId), eRMI_ToClientChannel | eRMI_NoLocalCalls, GetChannelId());
-		}
-
-		if(mode == CActor::eASM_Follow)
-		{
-			MoveToSpectatorTargetPosition();
-		}
-	}
-
-	CALL_PLAYER_EVENT_LISTENERS(OnSpectatorModeChanged(this, mode));
-}
-
-void CPlayer::MoveToSpectatorTargetPosition()
-{
-	// called when our target entity moves.
-	IEntity *pTarget = gEnv->pEntitySystem->GetEntity(m_stats.spectatorTarget);
-
-	if(!pTarget)
-	{
-		return;
-	}
-
-	Matrix34 tm = pTarget->GetWorldTM();
-	tm.AddTranslation(Vec3(0, 0, 2));
-	GetEntity()->SetWorldTM(tm);
 }
 
 void CPlayer::Stabilize(bool stabilize)
@@ -5431,79 +5158,6 @@ bool CPlayer::NeedToCrouch(const Vec3 &pos)
 }
 
 //------------------------------------------------------------------------
-
-void CPlayer::RemoveAllExplosives(float timeDelay, uint8 typeId)
-{
-}
-
-void CPlayer::RemoveExplosiveEntity(EntityId entityId)
-{
-	gEnv->pEntitySystem->RemoveEntity(entityId);
-}
-
-void CPlayer::RecordExplosivePlaced(EntityId entityId, uint8 typeId)
-{
-	int limit = 0;
-	bool debug = (g_pGameCVars->g_debugMines != 0);
-
-	if (typeId == 0)
-	{
-		limit = g_pGameCVars->g_claymore_limit;
-	}
-	else if (typeId == 1)
-	{
-		limit = g_pGameCVars->g_avmine_limit;
-	}
-
-	std::list<EntityId> &explosives = m_explosiveList[typeId];
-
-	if (limit && explosives.size() > limit)
-	{
-		// remove the oldest mine.
-		EntityId explosiveId = explosives.front();
-		explosives.pop_front();
-
-		if(debug)
-		{
-			CryLog("%s: Explosive(%d) force removed: %d", GetEntity()->GetName(), typeId, explosiveId);
-		}
-
-		gEnv->pEntitySystem->RemoveEntity(explosiveId);
-	}
-
-	explosives.push_back(entityId);
-
-	if(debug)
-	{
-		CryLog("%s: Explosive(%d) placed: %d, now %d", GetEntity()->GetName(), typeId, entityId, (int32)explosives.size());
-	}
-}
-
-void CPlayer::RecordExplosiveDestroyed(EntityId entityId, uint8 typeId)
-{
-	bool debug = (g_pGameCVars->g_debugMines != 0);
-	std::list<EntityId> &explosives = m_explosiveList[typeId];
-	std::list<EntityId>::iterator it = std::find(explosives.begin(), explosives.end(), entityId);
-
-	if(it != explosives.end())
-	{
-		explosives.erase(it);
-
-		if(debug)
-		{
-			CryLog("%s: Explosive(%d) destroyed: %d, now %d", GetEntity()->GetName(), typeId, entityId, (int32)explosives.size());
-		}
-	}
-	else
-	{
-		if(debug)
-		{
-			CryLog("%s: Explosive(%d) destroyed but not in list: %d", GetEntity()->GetName(), typeId, entityId);
-		}
-	}
-}
-
-//------------------------------------------------------------------------
 void CPlayer::EnterFirstPersonSwimming( )
 {
 	SendMusicLogicEvent(eMUSICLOGICEVENT_PLAYER_SWIM_ENTER);
@@ -5599,49 +5253,6 @@ bool CPlayer::HasHitAssistance()
 	return m_bHasAssistance;
 }
 
-//------------------------------------------------------------------------
-int32 CPlayer::GetArmor() const
-{
-	return 0;
-}
-
-//------------------------------------------------------------------------
-int32 CPlayer::GetMaxArmor() const
-{
-	return 0;
-}
-
-//-----------------------------------------------------------------------
-bool CPlayer::CanFire()
-{
-	//AI can always
-	if(!IsPlayer())
-	{
-		return true;
-	}
-
-	//For the player
-	float velSqr = m_stats.velocity.len2();
-
-	//1- Player can not fire while sprinting
-	if(m_stats.bSprinting && velSqr > 0.2f &&
-			GetPlayerInput() && (GetPlayerInput()->GetActions()&ACTION_SPRINT))
-	{
-		return false;
-	}
-
-	//2- Player can not fire while moving in prone
-	if((GetStance() == STANCE_PRONE) && (velSqr > 0.03f))
-	{
-		if(GetPlayerInput() && GetPlayerInput()->GetMoveButtonsState() != 0)
-		{
-			return false;
-		}
-	}
-
-	return true;
-}
-
 //-----------------------------------------------------------------------
 bool CPlayer::IsSprinting()
 {
@@ -5699,13 +5310,6 @@ IMPLEMENT_RMI(CPlayer, SvRequestUnfreeze)
 		GetGameObject()->ChangedNetworkState(ASPECT_FROZEN);
 	}
 
-	return true;
-}
-
-//------------------------------------------------------------------------
-IMPLEMENT_RMI(CPlayer, SvRequestHitAssistance)
-{
-	m_bHasAssistance = params.assistance;
 	return true;
 }
 
@@ -5824,10 +5428,6 @@ CPlayer::StagePlayer(bool bStage, SStagingParams *pStagingParams /* = 0 */)
 	{
 		SetStance(stance);
 	}
-}
-
-void CPlayer::ResetScreenFX()
-{
 }
 
 void CPlayer::ResetFPView()

@@ -720,11 +720,6 @@ void CGameRules::OnClientDisconnect(int channelId, EDisconnectionCause cause, co
 		return;
 	}
 
-	if(pActor->GetActorClass() == CPlayer::GetActorClassType())
-	{
-		static_cast<CPlayer *>(pActor)->RemoveAllExplosives(0.0f);
-	}
-
 	SetTeam(0, pActor->GetEntityId());
 	std::vector<int>::iterator channelit = std::find(m_channelIds.begin(), m_channelIds.end(), channelId);
 

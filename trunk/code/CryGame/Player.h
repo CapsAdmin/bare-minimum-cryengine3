@@ -75,15 +75,7 @@ struct SPlayerStats : public SActorStats
 	bool animationControlled;
 
 	//cheating stuff
-	uint8 flyMode;//0 no fly, 1 fly mode, 2 fly mode + noclip
-	EntityId spectatorTarget;	// which player we are watching
-	float spectatorHealth;
-	uint8 spectatorMode;
-	// 0=off,
-	// 1=on,no-move,
-	// 2=on,move
-	// 3=on,nomove,a fake spectatormode used by FlowPlayerStagingNode.cpp
-	// SNH: added the CActor::EActorSpectatorMode enum for the above and more...
+	uint8 flyMode;//0 no fly, 1 fly mode + noclip
 
 	Vec3 upVector;
 	Vec3 groundNormal;
@@ -154,8 +146,6 @@ struct SPlayerStats : public SActorStats
 		worldWaterLevel = 0.0f;
 		worldWaterLevelDelta = 0.0f;
 		swimJumping = false;
-		spectatorMode = 0;
-		spectatorTarget = 0;
 	}
 
 	void Serialize( TSerialize ser, unsigned aspects );
@@ -254,7 +244,6 @@ struct IPlayerEventListener
 		virtual void OnDeath(IActor *pActor, bool bIsGod) {};
 		virtual void OnRevive(IActor *pActor, bool bIsGod) {};
 		virtual void OnObjectGrabbed(IActor *pActor, bool bIsGrab, EntityId objectId, bool bIsNPC, bool bIsTwoHanded) {};
-		virtual void OnSpectatorModeChanged(IActor *pActor, uint8 mode) {};
 		virtual void OnHealthChange(IActor *pActor, float fHealth) {};
 
 	protected:
@@ -392,7 +381,6 @@ class CPlayer :
 			return m_bSwimming;
 		}
 		virtual bool IsSprinting();
-		virtual bool CanFire();
 		virtual bool Init( IGameObject *pGameObject );
 		virtual void PostInit( IGameObject *pGameObject );
 		virtual void InitClient( int channelId );
@@ -408,8 +396,6 @@ class CPlayer :
 		virtual void PostUpdateView(SViewParams &viewParams);
 		virtual void UpdateFirstPersonEffects(float frameTime);
 		virtual void GetMemoryUsage(ICrySizer *s) const;
-		virtual int32 GetArmor() const;
-		virtual int32 GetMaxArmor() const;
 
 		virtual IEntity *LinkToEntity(EntityId entityId, bool bKeepTransformOnDetach = true);
 
@@ -618,17 +604,11 @@ class CPlayer :
 		// Accessed via function to allow game based modifiers to stance speed without multiplying the number of stances.
 		virtual float GetStanceNormalSpeed(EStance stance) const;
 
-		virtual void ToggleThirdPerson();
-		void SetThirdPerson(bool thirdPersonEnabled);
-
-		virtual int  IsGod();
-
 		virtual void Revive( bool fromInit );
 		virtual void Kill();
 
 		//stances
 		virtual Vec3	GetStanceViewOffset(EStance stance, float *pLeanAmt = NULL, bool withY = false) const;
-		virtual bool IsThirdPerson() const;
 		virtual void StanceChanged(EStance last);
 		//virtual bool TrySetStance(EStance stance); // Moved to Actor, to be shared with Aliens.
 		virtual bool IsPlayingSmartObjectAction() const;
@@ -642,28 +622,6 @@ class CPlayer :
 		{
 			return m_stats.flyMode;
 		};
-		virtual void SetSpectatorMode(uint8 mode, EntityId targetId);
-		virtual uint8 GetSpectatorMode() const
-		{
-			return m_stats.spectatorMode;
-		};
-		virtual void SetSpectatorTarget(EntityId targetId)
-		{
-			m_stats.spectatorTarget = targetId;
-		};
-		virtual EntityId GetSpectatorTarget() const
-		{
-			return m_stats.spectatorTarget;
-		};
-		virtual void SetSpectatorHealth(float health)
-		{
-			m_stats.spectatorHealth = health;
-		};
-		virtual float GetSpectatorHealth() const
-		{
-			return m_stats.spectatorHealth;
-		};
-		void MoveToSpectatorTargetPosition();
 
 		virtual void RagDollize( bool fallAndPlay );
 		virtual void HandleEvent( const SGameObjectEvent &event );
@@ -777,7 +735,6 @@ class CPlayer :
 			return m_pPlayerInput.get();
 		}
 
-		virtual void SwitchDemoModeSpectator(bool activate);
 		bool IsTimeDemo() const
 		{
 			return m_timedemo;
@@ -849,12 +806,6 @@ class CPlayer :
 
 		bool NeedToCrouch(const Vec3 &pos);
 
-		// mines (and claymores)
-		void RemoveAllExplosives(float timeDelay, uint8 typeId = 0xff);
-		void RemoveExplosiveEntity(EntityId entityId);
-		void RecordExplosivePlaced(EntityId entityId, uint8 typeId);
-		void RecordExplosiveDestroyed(EntityId entityId, uint8 typeId);
-
 		//First person fists/hands actions
 		void EnterFirstPersonSwimming();
 		void ExitFirstPersonSwimming();
@@ -863,7 +814,6 @@ class CPlayer :
 		void UpdateFirstPersonFists();
 		void OnCollision(EventPhysCollision *physCollision);
 
-		void ResetScreenFX();
 		void ResetFPView();
 
 		//Hit assistance
@@ -1008,9 +958,6 @@ class CPlayer :
 		bool m_ignoreRecoil;
 		bool m_timedemo;
 
-		//Demo Mode
-		bool m_bDemoModeSpectator;
-
 		bool m_bRagDollHead;
 
 		// animation graph input ids
@@ -1051,7 +998,6 @@ class CPlayer :
 		typedef std::map<IEntityClass *, const SAlienInterferenceParams> TAlienInterferenceParams;
 		static TAlienInterferenceParams m_interferenceParams;
 
-		std::list<EntityId>			m_explosiveList[3];
 		bool                    m_bSpeedSprint;
 		bool										m_bHasAssistance;
 		bool                    m_bVoiceSoundPlaying;
