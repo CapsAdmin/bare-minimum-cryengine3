@@ -1586,7 +1586,6 @@ void CPlayerMovementController::UpdateMovementState( SMovementState &state )
 				EntityId currentWeaponId = 0;
 				IAIObject *pAIObject = m_pPlayer->GetEntity()->GetAI();
 				IAIActorProxy *pAIProxy = pAIObject ? pAIObject->GetProxy() : NULL;
-
 				// need to recalculate aimDirection, since weaponPos is changed
 				state.aimDirection = (m_aimTarget - state.weaponPosition).GetNormalizedSafe((m_lookTarget - state.weaponPosition).GetNormalizedSafe(forward)); //pEntity->GetRotation() * dirWeapon;
 			}

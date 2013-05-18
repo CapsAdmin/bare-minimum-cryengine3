@@ -78,7 +78,6 @@ void CNetPlayerInput::InitialiseInterpolation(f32 netPosDist, const Vec3 &desPos
 	//--- would be moving against the local player's velocity
 	bool isStatic = (m_pPlayer->GetActorStats()->onGround > 0.1f) && ((m_netDesiredSpeed < k_staticSpeed) || (desPosOffset.Dot(desiredVelocity) < 0.0f));
 	const float minDist = isStatic ? k_minDistStatic : k_minDistMoving;
-
 	m_netLastUpdate = curTime;
 
 	if (netPosDist > minDist)

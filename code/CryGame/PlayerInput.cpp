@@ -249,9 +249,7 @@ void CPlayerInput::OnAction( const ActionId &actionId, int activationMode, float
 				}
 			}
 		}
-		
 	}
-
 	{
 		FRAME_PROFILER("Script Processing", GetISystem(), PROFILE_GAME);
 		HSCRIPTFUNCTION scriptOnAction(NULL);
@@ -290,7 +288,6 @@ void CPlayerInput::OnAction( const ActionId &actionId, int activationMode, float
 
 		gEnv->pScriptSystem->ReleaseFunc(scriptOnAction);
 	}
-
 }
 
 //this function basically returns a smoothed movement vector, for better movement responsivness in small spaces
@@ -1087,7 +1084,7 @@ bool CPlayerInput::OnActionProne(EntityId entityId, const ActionId &actionId, in
 	if(!m_pPlayer->GetActorStats()->inZeroG)
 	{
 		if(activationMode == eAAM_OnPress)
-		{			
+		{
 			if (!(m_actions & ACTION_PRONE))
 			{
 				if(!m_pPlayer->GetActorStats()->inAir)
@@ -1613,7 +1610,7 @@ void CPlayerInput::StopSprint()
 	{
 		m_speedLean = 0.0f;
 		m_pPlayer->SetSpeedLean(0.0f);
-		
+
 		if ( m_fRestingTime == 0 )
 		{
 			m_fRestingTime = gEnv->pTimer->GetCurrTime();

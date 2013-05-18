@@ -55,7 +55,6 @@ CPlayerMovement::CPlayerMovement(CPlayer &player, const SActorFrameMovementParam
 
 void CPlayerMovement::Process(CPlayer &player)
 {
-	
 	if (m_stats.flyMode)
 	{
 		ProcessFlyMode();
@@ -737,7 +736,6 @@ void CPlayerMovement::ProcessOnGroundOrJumping(CPlayer &player)
 {
 	//process movement
 	Vec3 move(0, 0, 0);
-
 	IPhysicalEntity *pPhysEnt = m_player.GetEntity()->GetPhysics();
 
 	if (pPhysEnt != NULL)
@@ -817,6 +815,7 @@ void CPlayerMovement::ProcessOnGroundOrJumping(CPlayer &player)
 			// this leaves the decision of whether or not to use sprinting with the original code
 			paramsSprintMul = pPlayerStanceInfo->sprintSpeed / pPlayerStanceInfo->runSpeed;
 		}
+
 		if (customScale > 0.0f)
 		{
 			desiredVelocityClamped.Normalize();

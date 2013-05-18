@@ -86,7 +86,10 @@ class CEditorGame :
 		static ICVar  *s_pEditorGameMode;
 		static CEditorGame *s_pEditorGame;
 
-		virtual IEquipmentSystemInterface* GetIEquipmentSystemInterface() {return nullptr;};
+		virtual IEquipmentSystemInterface *GetIEquipmentSystemInterface()
+		{
+			return nullptr;
+		};
 };
 
 
