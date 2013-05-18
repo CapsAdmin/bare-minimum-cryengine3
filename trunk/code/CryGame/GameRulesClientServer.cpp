@@ -1091,50 +1091,6 @@ IMPLEMENT_RMI(CGameRules, ClDamageIndicator)
 	return true;
 }
 
-//------------------------------------------------------------------------
-
-IMPLEMENT_RMI(CGameRules, SvVote)
-{
-	CActor *pActor = GetActorByChannelId(m_pGameFramework->GetGameChannelId(pNetChannel));
-
-	if(pActor)
-	{
-		Vote(pActor, true);
-	}
-
-	return true;
-}
-
-IMPLEMENT_RMI(CGameRules, SvVoteNo)
-{
-	CActor *pActor = GetActorByChannelId(m_pGameFramework->GetGameChannelId(pNetChannel));
-
-	if(pActor)
-	{
-		Vote(pActor, false);
-	}
-
-	return true;
-}
-
-IMPLEMENT_RMI(CGameRules, SvStartVoting)
-{
-	CActor *pActor = GetActorByChannelId(m_pGameFramework->GetGameChannelId(pNetChannel));
-
-	if(pActor)
-	{
-		StartVoting(pActor, params.vote_type, params.entityId, params.param);
-	}
-
-	return true;
-}
-
-IMPLEMENT_RMI(CGameRules, ClVotingStatus)
-{
-	return true;
-}
-
-
 IMPLEMENT_RMI(CGameRules, ClEnteredGame)
 {
 	CPlayer *pClientActor = static_cast<CPlayer *>(m_pGameFramework->GetClientActor());

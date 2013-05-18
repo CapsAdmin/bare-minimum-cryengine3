@@ -12,7 +12,6 @@
 #include "ServerSynchedStorage.h"
 
 #include "GameActions.h"
-#include "Voting.h"
 #include "IWorldQuery.h"
 
 #include <StlUtils.h>
@@ -1384,21 +1383,6 @@ bool CGameRules::IsChannelInGame(int channelId) const
 	}
 
 	return false;
-}
-
-//------------------------------------------------------------------------
-void CGameRules::StartVoting(CActor *pActor, EVotingState t, EntityId id, const char *param)
-{
-}
-
-//------------------------------------------------------------------------
-void CGameRules::Vote(CActor *pActor, bool yes)
-{
-}
-
-//------------------------------------------------------------------------
-void CGameRules::EndVoting(bool success)
-{
 }
 
 //------------------------------------------------------------------------

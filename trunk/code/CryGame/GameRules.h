@@ -24,7 +24,6 @@
 #include "Actor.h"
 #include "SynchedStorage.h"
 #include <queue>
-#include "Voting.h"
 #include "IViewSystem.h"
 
 class CActor;
@@ -514,9 +513,6 @@ class CGameRules :	public CGameObjectExtensionHelper<CGameRules, IGameRules, 64>
 		virtual bool IsPlayerInGame(EntityId playerId) const;
 		virtual bool IsPlayerActivelyPlaying(EntityId playerId) const;	// [playing / dead / waiting to respawn (inc spectating while dead): true] [not yet joined game / selected Spectate: false]
 		virtual bool IsChannelInGame(int channelId) const;
-		virtual void StartVoting(CActor *pActor, EVotingState t, EntityId id, const char *param);
-		virtual void Vote(CActor *pActor, bool yes);
-		virtual void EndVoting(bool success);
 
 		//------------------------------------------------------------------------
 		// teams
@@ -976,38 +972,6 @@ class CGameRules :	public CGameObjectExtensionHelper<CGameRules, IGameRules, 64>
 			}
 		};
 
-		struct StartVotingParams
-		{
-			string        param;
-			EntityId      entityId;
-			EVotingState  vote_type;
-			StartVotingParams() {}
-			StartVotingParams(EVotingState st, EntityId id, const char *cmd): vote_type(st), entityId(id), param(cmd) {}
-			void SerializeWith(TSerialize ser)
-			{
-				ser.EnumValue("type", vote_type, eVS_none, eVS_last);
-				ser.Value("entityId", entityId, 'eid');
-				ser.Value("param", param);
-			}
-		};
-
-		struct VotingStatusParams
-		{
-			EVotingState  state;
-			int           timeout;
-			EntityId      entityId;
-			string        description;
-			VotingStatusParams() {}
-			VotingStatusParams(EVotingState s, int t, EntityId e, const char *d): state(s), timeout(t), entityId(e), description(d) {}
-			void SerializeWith(TSerialize ser)
-			{
-				ser.EnumValue("state", state, eVS_none, eVS_last);
-				ser.Value("timeout", timeout, 'ui8');
-				ser.Value("entityId", entityId, 'eid');
-				ser.Value("description", description);
-			}
-		};
-
 		struct AddMinimapEntityParams
 		{
 			EntityId entityId;
@@ -1234,8 +1198,6 @@ class CGameRules :	public CGameObjectExtensionHelper<CGameRules, IGameRules, 64>
 
 		DECLARE_SERVER_RMI_NOATTACH(SvVote, NoParams, eNRT_ReliableUnordered);
 		DECLARE_SERVER_RMI_NOATTACH(SvVoteNo, NoParams, eNRT_ReliableUnordered);
-		DECLARE_SERVER_RMI_NOATTACH(SvStartVoting, StartVotingParams, eNRT_ReliableUnordered);
-		DECLARE_CLIENT_RMI_NOATTACH(ClVotingStatus, VotingStatusParams, eNRT_ReliableUnordered);
 
 		DECLARE_CLIENT_RMI_NOATTACH(ClEnteredGame, NoParams, eNRT_ReliableUnordered);
 

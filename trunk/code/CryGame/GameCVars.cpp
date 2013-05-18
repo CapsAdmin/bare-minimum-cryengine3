@@ -187,19 +187,6 @@ void SCVars::InitCVars(IConsole *pConsole)
 	net_nat_type = REGISTER_STRING("net_nat_type", "Uninitialized", VF_READONLY, "The current NAT Type set.");
 	REGISTER_CVAR(net_initLobbyServiceToLan, 0, VF_CHEAT, "Always initialize lobby in LAN mode (NB: mode can still be changed afterwards!)");
 #endif
-	REGISTER_CVAR(gl_skip, 0, 0, "Skips the game lobby");
-	REGISTER_CVAR(gl_votingCloseTimeBeforeStart, 5.0f, 0, "Playlist voting will close this many secs before game start countdown finishes");
-	REGISTER_CVAR(gl_experimentalPlaylistRotationAdvance, 1, 0, "Testing code that gets the first level from the playlist and advances it when the server enters the lobby. Here so can be easily disabled! Currently needed for gl_enablePlaylistVoting");
-	REGISTER_CVAR(gl_enablePlaylistVoting, 1, 0, "Enabled voting on which level to play next within playlists that support it. Currently also needs gl_experimentalPlaylistRotationAdvance");
-	REGISTER_CVAR(gl_minPlaylistSizeToEnableVoting, 2, 0, "A playlist must contain at least this many levels for voting to be enabled, even when gl_enablePlaylistVoting is set. Note that setting it to 1 and having a playlist with 1 level in it will still work, but it'll present a vote with the same level as both voting candidates");
-	REGISTER_CVAR(gl_enableOfflinePlaylistVoting, 0, VF_CHEAT, "Enabled voting on offline games, just to make testing easier. Requires gl_enablePlaylistVoting to also be set");
-	REGISTER_CVAR(gl_enableOfflineCountdown, 0, VF_CHEAT, "Enabled the 'Game starts in X secs...' countdown in offline games, just to make testing of voting easier");
-	REGISTER_CVAR(gl_time, 45, 0, "Time in lobby between games");
-	REGISTER_CVAR(gl_checkDLCBeforeStartTime, 20, 0, "When the server game start countdown gets to this time between games it will do DLC checks to make sure it has the DLC needed for both the levels being voted on");
-	REGISTER_CVAR(gl_maxSessionNameTimeWithoutConnection, 5.f, 0, "Time a session name is allowed to persist before being removed");
-	REGISTER_CVAR(g_autoAssignTeams, 1, 0, "1 = auto assign teams, 0 = players choose teams");
-	REGISTER_CVAR(g_hostMigrationResumeTime, 3.0f, VF_CHEAT, "Time after players have rejoined before the game resumes");
-	REGISTER_CVAR(g_hostMigrationUseAutoLobbyMigrateInPrivateGames, 0, VF_CHEAT, "1=Make calls to EnsureBestHost when in private games");
 	//client cvars
 	REGISTER_CVAR(cl_fov, 60.0f, VF_NULL, "field of view.");
 	REGISTER_CVAR(cl_bob, 1.0f, VF_NULL, "view/weapon bobbing multiplier");
@@ -653,10 +640,6 @@ void SCVars::InitCVars(IConsole *pConsole)
 	REGISTER_CVAR(g_tpview_control, 0, VF_NULL, "Enables control of 3rd person view switching through cvar (F1 will be disabled!)");
 	REGISTER_CVAR(g_tpview_enable, 0, VF_NULL, "Enables 3rd person view if precedent cvar is true");
 	REGISTER_CVAR(g_tpview_force_goc, 0, VF_NULL, "Forces 'Gears of Crysis' (tm) when in 3rd person view");
-	REGISTER_CVAR(sv_votingTimeout, 60, VF_NULL, "Voting timeout");
-	REGISTER_CVAR(sv_votingCooldown, 180, VF_NULL, "Voting cooldown");
-	REGISTER_CVAR(sv_votingRatio, 0.51f, VF_NULL, "Part of player's votes needed for successful vote.");
-	REGISTER_CVAR(sv_votingTeamRatio, 0.67f, VF_NULL, "Part of team member's votes needed for successful vote.");
 	REGISTER_CVAR(sv_LoadAllLayersForResList, 0, 0, "Bypasses game object layer filtering to load all layers of objects for a multiplayer level");
 	REGISTER_CVAR(sv_input_timeout, 0, VF_NULL, "Experimental timeout in ms to stop interpolating client inputs since last update.");
 	REGISTER_CVAR(g_spectate_TeamOnly, 1, VF_NULL, "If true, you can only spectate players on your team");
@@ -714,11 +697,7 @@ void SCVars::ReleaseCVars()
 	pConsole->UnregisterVariable("g_MatchmakingVersion", true);
 	pConsole->UnregisterVariable("g_MatchmakingBlock", true);
 	pConsole->UnregisterVariable("gl_skip", true);
-	pConsole->UnregisterVariable("gl_votingCloseTimeBeforeStart", true);
 	pConsole->UnregisterVariable("gl_experimentalPlaylistRotationAdvance", true);
-	pConsole->UnregisterVariable("gl_enablePlaylistVoting", true);
-	pConsole->UnregisterVariable("gl_minPlaylistSizeToEnableVoting", true);
-	pConsole->UnregisterVariable("gl_enableOfflinePlaylistVoting", true);
 	pConsole->UnregisterVariable("gl_enableOfflineCountdown", true);
 	pConsole->UnregisterVariable("gl_time", true);
 	pConsole->UnregisterVariable("gl_checkDLCBeforeStartTime", true);
@@ -914,10 +893,6 @@ void SCVars::ReleaseCVars()
 	pConsole->UnregisterVariable("g_showPlayerState", true);
 	pConsole->UnregisterVariable("g_proneNotUsableWeapon_FixType", true);
 	pConsole->UnregisterVariable("g_proneAimAngleRestrict_Enable", true);
-	pConsole->UnregisterVariable("sv_voting_timeout", true);
-	pConsole->UnregisterVariable("sv_voting_cooldown", true);
-	pConsole->UnregisterVariable("sv_voting_ratio", true);
-	pConsole->UnregisterVariable("sv_voting_team_ratio", true);
 	pConsole->UnregisterVariable("g_spectate_TeamOnly", true);
 	pConsole->UnregisterVariable("g_claymore_limit", true);
 	pConsole->UnregisterVariable("g_avmine_limit", true);
@@ -1213,9 +1188,6 @@ void CGame::RegisterConsoleCommands()
 	REGISTER_COMMAND("g_quickGame", CmdQuickGame, VF_NULL, "Quick connect to good server.");
 	REGISTER_COMMAND("g_quickGameStop", CmdQuickGameStop, VF_NULL, "Cancel quick game search.");
 	REGISTER_COMMAND("g_nextlevel", CmdNextLevel, VF_NULL, "Switch to next level in rotation or restart current one.");
-	REGISTER_COMMAND("vote", CmdVote, VF_RESTRICTEDMODE, "Vote on current topic.");
-	REGISTER_COMMAND("startKickVoting", CmdStartKickVoting, VF_RESTRICTEDMODE, "Initiate voting.");
-	REGISTER_COMMAND("startNextMapVoting", CmdStartNextMapVoting, VF_RESTRICTEDMODE, "Initiate voting.");
 	REGISTER_COMMAND("login", CmdLogin, 0, "Log in as to CryNetwork using nickname and password as arguments");
 	REGISTER_COMMAND("login_profile", CmdLoginProfile, VF_NULL, "Log in as to CryNetwork using email, profile and password as arguments");
 	REGISTER_COMMAND("connect_crynet", CmdCryNetConnect, VF_NULL, "Connect to online game server");
@@ -1565,68 +1537,16 @@ void CGame::CmdStartKickVoting(IConsoleCmdArgs *pArgs)
 	{
 		return;
 	}
-
-	IEntity *pEntity = gEnv->pEntitySystem->FindEntityByName(pArgs->GetArg(1));
-
-	if(pEntity)
-	{
-		IActor *pActor = g_pGame->GetIGameFramework()->GetIActorSystem()->GetActor(pEntity->GetId());
-
-		if(pActor && pActor->IsPlayer())
-		{
-			CGameRules *pGameRules = g_pGame->GetGameRules();
-
-			if (pGameRules)
-			{
-				pGameRules->StartVoting(pGameRules->GetActorByEntityId(pClientActor->GetEntityId()), eVS_kick, pEntity->GetId(), "");
-			}
-		}
-	}
 }
 
 void CGame::CmdStartNextMapVoting(IConsoleCmdArgs *pArgs)
 {
-	if (!gEnv->IsClient())
-	{
-		return;
-	}
-
-	IActor *pClientActor = g_pGame->GetIGameFramework()->GetClientActor();
-
-	if (!pClientActor)
-	{
-		return;
-	}
-
-	CGameRules *pGameRules = g_pGame->GetGameRules();
-
-	if (pGameRules)
-	{
-		pGameRules->StartVoting(pGameRules->GetActorByEntityId(pClientActor->GetEntityId()), eVS_nextMap, 0, "");
-	}
 }
 
 
 void CGame::CmdVote(IConsoleCmdArgs *pArgs)
 {
-	if (!gEnv->IsClient())
-	{
-		return;
-	}
 
-	IActor *pClientActor = g_pGame->GetIGameFramework()->GetClientActor();
-
-	if (!pClientActor)
-	{
-		return;
-	}
-
-	CGameRules *pGameRules = g_pGame->GetGameRules();
-
-	if (pGameRules)
-	{
-		pGameRules->Vote(pGameRules->GetActorByEntityId(pClientActor->GetEntityId()), true);
-	}
 }
 
 void CGame::CmdQuickGame(IConsoleCmdArgs *pArgs)
