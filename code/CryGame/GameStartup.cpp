@@ -228,6 +228,8 @@ IGameRef CGameStartup::Init(SSystemInitParams &startupParams)
 		}
 
 		client_process = pi.hProcess;
+
+		DebugBreakProcess(pi.hProcess);
 		
 		const char *map = "blank";
 
