@@ -144,7 +144,8 @@ int CGameStartup::m_lastMoveY = 0;
 
 bool CGameStartup::m_initWindow = false;
 
-HANDLE client_process = nullptr;
+HANDLE client_process_a = nullptr;
+HANDLE client_process_b = nullptr;
 
 CGameStartup::CGameStartup()
 {
@@ -165,12 +166,44 @@ CGameStartup::~CGameStartup()
 		m_modDll = 0;
 	}
 
-	if (client_process)
+	if (client_process_a)
 	{
-		TerminateProcess(client_process, 0);
+		TerminateProcess(client_process_a, 0);
+	}
+
+	if (client_process_b)
+	{
+		TerminateProcess(client_process_b, 0);
 	}
 
 	ShutdownFramework();
+}
+
+PROCESS_INFORMATION CreateClient()
+{
+	STARTUPINFO si;
+	PROCESS_INFORMATION pi;
+	ZeroMemory( &si, sizeof(si) );
+	si.cb = sizeof(si);
+	ZeroMemory( &pi, sizeof(pi) );
+
+	if (!::CreateProcess(
+				nullptr,
+				(LPSTR)"Launcher.exe",
+				nullptr,
+				nullptr,
+				FALSE,
+				0,
+				nullptr,
+				nullptr,
+				&si,
+				&pi
+			))
+	{
+		printf( "CreateProcess failed (%d).\n", GetLastError() );
+	}
+
+	return pi;
 }
 
 IGameRef CGameStartup::Init(SSystemInitParams &startupParams)
@@ -205,51 +238,37 @@ IGameRef CGameStartup::Init(SSystemInitParams &startupParams)
 
 	if (gEnv->IsDedicated())
 	{
-		STARTUPINFO si;
-		PROCESS_INFORMATION pi;
-		ZeroMemory( &si, sizeof(si) );
-		si.cb = sizeof(si);
-		ZeroMemory( &pi, sizeof(pi) );
+		client_process_a = CreateClient().hProcess;
+		client_process_b = CreateClient().hProcess;
 
-		if (!::CreateProcess(
-					nullptr,
-					(LPSTR)"Launcher.exe",
-					nullptr,
-					nullptr,
-					FALSE,
-					0,
-					nullptr,
-					nullptr,
-					&si,
-					&pi
-				))
-		{
-			printf( "CreateProcess failed (%d).\n", GetLastError() );
-		}
-
-		client_process = pi.hProcess;
-		DebugBreakProcess(pi.hProcess);
-		const char *map = "blank";
 		//gEnv->pConsole->ExecuteString("map blank");
-		gEnv->pSystem->GetISystemEventDispatcher()->OnSystemEvent( ESYSTEM_EVENT_LEVEL_LOAD_PREPARE, 0, 0 );
+
+		const char *map = "blank";
+
+		gEnv->pSystem->GetISystemEventDispatcher()->OnSystemEvent(ESYSTEM_EVENT_LEVEL_LOAD_PREPARE, 0, 0);
+
 		gEnv->pCryPak->TouchDummyFile("startlevelload");
 		gEnv->pCryPak->GetFileReadSequencer()->StartSection(map);
+
 		gEnv->pGameFramework->StartedGameContext();
 		gEnv->pGameFramework->GetIGameSessionHandler();
 		gEnv->pGameFramework->GetILevelSystem()->PrepareNextLevel(map);
+		
 		SGameContextParams ctx;
-		ctx.gameRules = "DeathMatch";
-		ctx.levelName = map;
+			ctx.gameRules = "DeathMatch";
+			ctx.levelName = map;
+		
 		SGameStartParams params;
-		params.flags = eGSF_Server;
-		params.pContextParams = &ctx;
-		params.port = 64080;
-		params.maxPlayers = 512;
+			params.flags = eGSF_Server;
+			params.pContextParams = &ctx;
+			params.port = 64080;
+			params.maxPlayers = 512;
+
 		gEnv->pGameFramework->StartGameContext(&params);
 	}
 	else
 	{
-		if(true || gEnv->pSystem->GetICmdLine()->FindArg(eCLAT_Pre, "noborder", false))
+		if(gEnv->pSystem->GetICmdLine()->FindArg(eCLAT_Pre, "noborder", false))
 		{
 			auto window = (HWND)gEnv->pSystem->GetHWND();
 			RECT workarea;
@@ -260,20 +279,20 @@ IGameRef CGameStartup::Init(SSystemInitParams &startupParams)
 			SetWindowPos(window, NULL, workarea.left, workarea.top, workarea.right - workarea.left, workarea.bottom - workarea.top, SWP_FRAMECHANGED | SWP_NOZORDER);
 		}
 
-		//gEnv->pConsole->ExecuteString("connect localhost");
-		//gEnv->pConsole->GetCVar("g_allowDisconnectIfUpdateFails")->Set(false);
-
+		// cleanly disconnect from any current game if there is any
 		if (auto chan = gEnv->pGameFramework->GetClientChannel())
 		{
-			chan->Disconnect(eDC_UserRequested, "User left the game");
+			chan->Disconnect(eDC_UserRequested, "left");
 		}
 
-		gEnv->pNetwork->GetService("GameSpy");
+		// end the game context
 		gEnv->pGameFramework->EndGameContext();
+
+		// start a new one
 		SGameStartParams params;
-		params.hostname = "localhost";
-		params.port = 64080;
-		params.flags = eGSF_Client;
+			params.hostname = "localhost";
+			params.port = 64080;
+			params.flags = eGSF_Client;
 		gEnv->pGameFramework->StartGameContext(&params);
 	}
 
