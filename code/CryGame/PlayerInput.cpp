@@ -226,32 +226,30 @@ void CPlayerInput::OnAction( const ActionId &actionId, int activationMode, float
 		{
 			filterOut = true;
 
-			if (!m_pPlayer->m_stats.spectatorMode)
+			if (actions.ulammo == actionId && m_pPlayer->m_pGameFramework->CanCheat() && gEnv->pSystem->IsDevMode())
 			{
-				if (actions.ulammo == actionId && m_pPlayer->m_pGameFramework->CanCheat() && gEnv->pSystem->IsDevMode())
+				g_pGameCVars->i_unlimitedammo = 1;
+			}
+			else if (actions.debug_ag_step == actionId)
+			{
+				gEnv->pConsole->ExecuteString("ag_step");
+			}
+			else if(actions.voice_chat_talk == actionId)
+			{
+				if(gEnv->bMultiplayer)
 				{
-					g_pGameCVars->i_unlimitedammo = 1;
-				}
-				else if (actions.debug_ag_step == actionId)
-				{
-					gEnv->pConsole->ExecuteString("ag_step");
-				}
-				else if(actions.voice_chat_talk == actionId)
-				{
-					if(gEnv->bMultiplayer)
+					if(activationMode == eAAM_OnPress)
 					{
-						if(activationMode == eAAM_OnPress)
-						{
-							g_pGame->GetIGameFramework()->EnableVoiceRecording(true);
-						}
-						else if(activationMode == eAAM_OnRelease)
-						{
-							g_pGame->GetIGameFramework()->EnableVoiceRecording(false);
-						}
+						g_pGame->GetIGameFramework()->EnableVoiceRecording(true);
+					}
+					else if(activationMode == eAAM_OnRelease)
+					{
+						g_pGame->GetIGameFramework()->EnableVoiceRecording(false);
 					}
 				}
 			}
 		}
+		
 	}
 
 	{
@@ -1086,23 +1084,20 @@ bool CPlayerInput::OnActionToggleStance(EntityId entityId, const ActionId &actio
 
 bool CPlayerInput::OnActionProne(EntityId entityId, const ActionId &actionId, int activationMode, float value)
 {
-	if (!m_pPlayer->m_stats.spectatorMode)
+	if(!m_pPlayer->GetActorStats()->inZeroG)
 	{
-		if(!m_pPlayer->GetActorStats()->inZeroG)
-		{
-			if(activationMode == eAAM_OnPress)
-			{			
-				if (!(m_actions & ACTION_PRONE))
+		if(activationMode == eAAM_OnPress)
+		{			
+			if (!(m_actions & ACTION_PRONE))
+			{
+				if(!m_pPlayer->GetActorStats()->inAir)
 				{
-					if(!m_pPlayer->GetActorStats()->inAir)
-					{
-						m_actions |= ACTION_PRONE;
-					}
+					m_actions |= ACTION_PRONE;
 				}
-				else
-				{
-					m_actions &= ~ACTION_PRONE;
-				}
+			}
+			else
+			{
+				m_actions &= ~ACTION_PRONE;
 			}
 		}
 	}
@@ -1113,7 +1108,7 @@ bool CPlayerInput::OnActionProne(EntityId entityId, const ActionId &actionId, in
 bool CPlayerInput::OnActionGyroscope(EntityId entityId, const ActionId &actionId, int activationMode, float value)
 {
 	//FIXME:makes more sense a ExosuitActive()
-	if (!m_pPlayer->m_stats.spectatorMode && m_pPlayer->InZeroG())
+	if (m_pPlayer->InZeroG())
 	{
 		if (m_actions & ACTION_GYROSCOPE)
 			if(g_pGameCVars->pl_zeroGSwitchableGyro)
@@ -1138,7 +1133,7 @@ bool CPlayerInput::OnActionGBoots(EntityId entityId, const ActionId &actionId, i
 
 bool CPlayerInput::OnActionLeanLeft(EntityId entityId, const ActionId &actionId, int activationMode, float value)
 {
-	if (!m_pPlayer->m_stats.spectatorMode && !m_pPlayer->m_stats.inFreefall.Value())
+	if (!m_pPlayer->m_stats.inFreefall.Value())
 	{
 		m_actions |= ACTION_LEANLEFT;
 		//not sure about this, its for zeroG
@@ -1150,7 +1145,7 @@ bool CPlayerInput::OnActionLeanLeft(EntityId entityId, const ActionId &actionId,
 
 bool CPlayerInput::OnActionLeanRight(EntityId entityId, const ActionId &actionId, int activationMode, float value)
 {
-	if (!m_pPlayer->m_stats.spectatorMode && !m_pPlayer->m_stats.inFreefall.Value())
+	if (!m_pPlayer->m_stats.inFreefall.Value())
 	{
 		m_actions |= ACTION_LEANRIGHT;
 		//not sure about this, its for zeroG
@@ -1219,7 +1214,7 @@ bool CPlayerInput::OnActionThirdPerson(EntityId entityId, const ActionId &action
 	// outside of the editor
 	//if (!gEnv->pSystem->IsDevMode())
 	//return false;
-	if (!m_pPlayer->m_stats.spectatorMode && m_pPlayer->m_pGameFramework->CanCheat())
+	if (m_pPlayer->m_pGameFramework->CanCheat())
 	{
 		if (!m_pPlayer->GetLinkedVehicle())
 		{
@@ -1254,7 +1249,6 @@ bool CPlayerInput::OnActionDebugNextActor(EntityId entityId, const ActionId &act
 		EntityId currentEntityId = pActorSystem->SwitchDemoSpectator(0);
 		// Remote players should be viewed only in 3D mode with cl_cam_orbit set to 1
 		bool isPlayerViewed = (currentEntityId == entityId);
-		m_pPlayer->SetThirdPerson(!isPlayerViewed);
 		g_pGameCVars->cl_cam_orbit = isPlayerViewed ? 0 : 1;
 	}
 
@@ -1268,7 +1262,7 @@ bool CPlayerInput::OnActionFlyMode(EntityId entityId, const ActionId &actionId, 
 		return false;
 	}
 
-	if (!m_pPlayer->m_stats.spectatorMode && m_pPlayer->m_pGameFramework->CanCheat())
+	if (m_pPlayer->m_pGameFramework->CanCheat())
 	{
 		uint8 flyMode = m_pPlayer->GetFlyMode() + 1;
 
@@ -1305,7 +1299,7 @@ bool CPlayerInput::OnActionGodMode(EntityId entityId, const ActionId &actionId, 
 		return false;
 	}
 
-	if (!m_pPlayer->m_stats.spectatorMode && m_pPlayer->m_pGameFramework->CanCheat())
+	if (m_pPlayer->m_pGameFramework->CanCheat())
 	{
 		int godMode(g_pGameCVars->g_godMode);
 		godMode = (godMode + 1) % 4;

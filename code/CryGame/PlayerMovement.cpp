@@ -55,12 +55,7 @@ CPlayerMovement::CPlayerMovement(CPlayer &player, const SActorFrameMovementParam
 
 void CPlayerMovement::Process(CPlayer &player)
 {
-	//FUNCTION_PROFILER(GetISystem(), PROFILE_GAME);
-	if (m_stats.spectatorMode || m_stats.flyMode)
-	{
-		ProcessFlyMode();
-	}
-	else if (m_stats.isOnLadder)
+	if (m_stats.isOnLadder)
 	{
 		ProcessMovementOnLadder(player);
 	}
