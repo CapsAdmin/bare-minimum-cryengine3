@@ -22,7 +22,6 @@
 #include <IActionMapManager.h>
 #include <CoherentValue.h>
 #include <IMusicSystem.h>
-#include "CachedAIValues.h"
 #include <ISound.h>
 
 #include "Game.h" // for stance enum
@@ -845,11 +844,6 @@ class CActor :
 		};
 		virtual void ToggleThirdPerson() {}
 
-		virtual ICachedAIValues *GetCachedAIValues()
-		{
-			return &m_cachedAIValues;
-		}
-
 		virtual void RequestFacialExpression(const char *pExpressionName /* = NULL */, f32 *sequenceLength /*= NULL*/);
 		virtual void PrecacheFacialExpression(const char *pExpressionName);
 
@@ -1041,8 +1035,6 @@ class CActor :
 		virtual void PlayExactPositioningAnimation( const char *sAnimationName, bool bSignal, const Vec3 &vPosition, const Vec3 &vDirection, float startWidth, float startArcAngle, float directionTolerance ) {}
 		virtual void CancelExactPositioningAnimation() {}
 		virtual void PlayAnimation( const char *sAnimationName, bool bSignal ) {}
-
-		virtual bool PlayReadabilitySound(const Vec3 &vSoundPosition, const SReadabilitySoundEntry &soundEntry, bool bPlaySoundAtActorTarget, bool bStopPreviousSound);
 
 		void SetMaxHealth( float maxHealth );
 		virtual int   GetHealthAsRoundedPercentage() const
@@ -1349,8 +1341,6 @@ class CActor :
 			return GetStanceInfo(GetStance())->modelOffset;
 		}
 
-		void UpdateCachedAIValues();
-
 	private:
 		void CrapDollize();
 
@@ -1371,9 +1361,6 @@ class CActor :
 		//
 		virtual void SetActorModel();
 		virtual bool UpdateStance();
-
-		void UpdateReadabilitySound();
-		void ClPlayReadabilitySound(const SReadabilitySoundParams &params);
 		virtual void OnCloaked(bool cloaked) {};
 
 		mutable int16 m_boneIDs[BONE_ID_NUM];
@@ -1383,7 +1370,6 @@ class CActor :
 		float m_health;
 		int   m_healthAsRoundedPercentage;
 		float m_maxHealth;
-		CCachedAIValues m_cachedAIValues;
 		static SActorAnimationEvents s_animationEventsTable;
 
 		EStance m_stance;

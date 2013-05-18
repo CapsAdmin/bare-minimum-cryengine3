@@ -26,7 +26,6 @@
 #include <queue>
 #include "Voting.h"
 #include "IViewSystem.h"
-#include "CinematicInput.h"
 
 class CActor;
 class CPlayer;
@@ -1543,8 +1542,6 @@ class CGameRules :	public CGameObjectExtensionHelper<CGameRules, IGameRules, 64>
 		bool                m_timeOfDayInitialized;
 
 		bool                m_explosionScreenFX;
-
-		CCinematicInput			m_cinematicInput;
 
 		typedef std::vector<IGameRulesClientConnectionListener *> TClientConnectionListenersVec;
 		TClientConnectionListenersVec m_clientConnectionListeners;

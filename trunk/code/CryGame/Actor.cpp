@@ -283,19 +283,6 @@ CActor::~CActor()
 		g_pGame->GetIGameFramework()->GetIActorSystem()->RemoveActor( GetEntityId() );
 	}
 
-	// stop sound
-	if (m_cachedAIValues.GetReadabilitySoundID() != INVALID_SOUNDID)
-	{
-		_smart_ptr<ISound> pSound = gEnv->pSoundSystem->GetSound(m_cachedAIValues.GetReadabilitySoundID());
-
-		if (pSound)
-		{
-			pSound->RemoveEventListener(this);
-			pSound->Stop();
-		}
-	}
-
-	m_cachedAIValues.SetReadabilitySoundID(INVALID_SOUNDID);
 }
 
 //------------------------------------------------------------------------
@@ -319,7 +306,6 @@ void CActor::CrapDollize()
 bool CActor::Init( IGameObject *pGameObject )
 {
 	SetGameObject(pGameObject);
-	m_cachedAIValues.Init(pGameObject);
 
 	if (!GetGameObject()->CaptureView(this))
 	{
@@ -1342,9 +1328,6 @@ void CActor::Update(SEntityUpdateContext &ctx, int slot)
 	{
 		UpdateScriptStats(m_actorStats);
 	}
-
-	UpdateCachedAIValues();
-	UpdateReadabilitySound();
 }
 
 // PLAYERPREDICTION
@@ -1419,27 +1402,6 @@ bool CActor::UpdateStance()
 	return true;
 }
 
-void CActor::UpdateReadabilitySound()
-{
-	if(gEnv->bServer)
-	{
-		return;
-	}
-
-	// If we've received an updated readability sound from the server, play it!
-	if(const SReadabilitySoundParams *pReadabilitySound = m_cachedAIValues.PopUnplayedReadabilitySoundParams())
-	{
-		ClPlayReadabilitySound(*pReadabilitySound);
-	}
-}
-
-void CActor::ClPlayReadabilitySound(const SReadabilitySoundParams &params)
-{
-	PlayReadabilitySound(params.m_vSoundPosition, params.m_soundEntry, params.m_bPlaySoundAtActorTarget, params.m_bStopPreviousSound);
-}
-
-//------------------------------------------------------
-
 bool CActor::TrySetStance(EStance stance)
 {
 	//  if (stance == STANCE_NULL)
@@ -1485,8 +1447,6 @@ void CActor::OnSoundEvent(ESoundCallbackEvent event, ISound *pSound)
 {
 	if(event == SOUND_EVENT_ON_STOP)
 	{
-		m_cachedAIValues.SetReadabilitySoundFinished(true);
-		m_cachedAIValues.SetReadabilitySoundID(INVALID_SOUNDID);
 		pSound->RemoveEventListener(this);
 	}
 }
@@ -1713,96 +1673,6 @@ void CActor::SetHealth( float health )
 
 void CActor::DamageInfo(EntityId shooterID, EntityId weaponID, float damage, const char *damageType)
 {
-}
-
-
-
-bool CActor::PlayReadabilitySound(const Vec3 &vSoundPosition, const SReadabilitySoundEntry &soundEntry, bool bPlaySoundAtActorTarget, bool bStopPreviousSound)
-{
-	ISoundSystem *pSoundSystem = gEnv->pSoundSystem;
-
-	if(gEnv->bServer)
-	{
-		if(IsPlayer())//|| !GetAI()->IsEnabled())
-		{
-			return false;
-		}
-
-		// Cache the readability sound params so they will be netserialized to clients
-		SReadabilitySoundParams params(soundEntry, vSoundPosition, bPlaySoundAtActorTarget, bStopPreviousSound);
-		m_cachedAIValues.SetReadabilitySoundParams(params);
-	}
-
-	bool bHasSound = false;
-	IEntity *pEntity = GetEntity();
-
-	if (!bPlaySoundAtActorTarget)
-	{
-		IEntitySoundProxy *pSoundProxy = (IEntitySoundProxy *) pEntity->GetProxy( ENTITY_PROXY_SOUND );
-
-		if(!pSoundProxy)
-			if (pEntity->CreateProxy(ENTITY_PROXY_SOUND ))
-			{
-				pSoundProxy = (IEntitySoundProxy *)pEntity->GetProxy(ENTITY_PROXY_SOUND);
-			}
-
-		if (pSoundProxy)
-		{
-			// Stop the previously playing sound.
-			if (bStopPreviousSound && m_cachedAIValues.GetReadabilitySoundID() != INVALID_SOUNDID)
-			{
-				pSoundProxy->StopSound(m_cachedAIValues.GetReadabilitySoundID());
-				m_cachedAIValues.SetReadabilitySoundID(INVALID_SOUNDID);
-			}
-
-			// sound proxy uses head pos on dialog sounds
-			ISound *pSound = gEnv->pSoundSystem->CreateSound(soundEntry.m_fileName.c_str(), FLAG_SOUND_DEFAULT_3D | (soundEntry.voice ? FLAG_SOUND_VOICE : FLAG_SOUND_EVENT));
-
-			if (pSound)
-			{
-				m_cachedAIValues.SetReadabilitySoundID(pSound->GetId());
-				pSound->AddEventListener( this, "ActorReadabilitySound" );
-				m_cachedAIValues.SetReadabilitySoundFinished(false);
-				pSound->SetSemantic(eSoundSemantic_AI_Readability);
-				bHasSound = true;
-				pSoundProxy->PlaySound(pSound, Vec3(ZERO), FORWARD_DIRECTION);
-			}
-			else
-			{
-				// failed to play the sound.
-				GameWarning("Actor:'%s' -  Cannot play readability sound:'%s'",
-							pEntity->GetName(), soundEntry.m_fileName.c_str());
-				m_cachedAIValues.SetReadabilitySoundFinished(true);
-			}
-		}
-	}
-	else
-	{
-		// Sound Proxy should always be available; This else branch could be removed completely.
-		_smart_ptr<ISound> pSound = pSoundSystem->CreateSound(soundEntry.m_fileName.c_str(), FLAG_SOUND_3D);
-
-		if (pSound)
-		{
-			pSound->SetPosition(vSoundPosition);
-			pSound->SetSemantic(eSoundSemantic_AI_Readability);
-			pSound->AddEventListener( this, "ActorReadabilitySound" );
-			pSound->Play();
-			m_cachedAIValues.SetReadabilitySoundID(pSound->GetId());
-
-			if (m_cachedAIValues.GetReadabilitySoundID() != INVALID_SOUNDID)
-			{
-				bHasSound = true;
-			}
-		}
-		else
-		{
-			// failed to play the sound.
-			GameWarning("Actor:'%s' - Cannot play readability sound at target:'%s'",
-						pEntity->GetName(), soundEntry.m_fileName.c_str());
-		}
-	}
-
-	return bHasSound;
 }
 
 void CActor::SetFrozenAmount(float amount)
@@ -2313,7 +2183,7 @@ bool CActor::NetSerialize( TSerialize ser, EEntityAspects aspect, uint8 profile,
 		// ~PLAYERPREDICTION
 	}
 
-	return m_cachedAIValues.NetSerialize(ser, aspect, profile, pflags);
+	return false;
 }
 
 void CActor::HandleEvent( const SGameObjectEvent &event )
@@ -2427,20 +2297,6 @@ void CActor::UpdateAnimGraph( IAnimationGraphState *pState )
 	//state.pHealth = &m_health;
 	//const char * p = GetStanceInfo(m_stance)->name;
 	//state.pStance = &p;
-}
-
-void CActor::UpdateCachedAIValues()
-{
-	if(GetEntity()->GetAI() && gEnv->bServer)
-	{
-		// If we're not on the server, the cached alertness won't be netserialized
-		IAIActorProxy *pAIActorProxy = GetEntity()->GetAI()->GetProxy();
-
-		if(pAIActorProxy)
-		{
-			m_cachedAIValues.SetAlertnessState(pAIActorProxy->GetAlertnessState());
-		}
-	}
 }
 
 void CActor::QueueAnimationState( const char *state )
