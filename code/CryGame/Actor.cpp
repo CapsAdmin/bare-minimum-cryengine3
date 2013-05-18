@@ -2177,7 +2177,7 @@ bool CActor::NetSerialize( TSerialize ser, EEntityAspects aspect, uint8 profile,
 		// ~PLAYERPREDICTION
 	}
 
-	return false;
+	return true;
 }
 
 void CActor::HandleEvent( const SGameObjectEvent &event )
