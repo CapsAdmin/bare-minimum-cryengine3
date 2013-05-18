@@ -187,7 +187,6 @@ CPlayer::CPlayer(): m_pInteractor(NULL),
 CPlayer::~CPlayer()
 {
 	stl::find_and_erase(s_globPlayerList, this);
-
 	StopLoopingSounds();
 
 	if(IsClient())
@@ -961,7 +960,6 @@ void CPlayer::PrePhysicsUpdate()
 
 	bool client(IsClient());
 	float frameTime = gEnv->pTimer->GetFrameTime();
-
 	//FIXME:
 	// make first person ignore animation speed, and everything else use it
 	// will need to be reconsidered for multiplayer
@@ -1232,7 +1230,6 @@ void CPlayer::SetIK( const SActorFrameMovementParams &frameMovementParams )
 	SMovementState curMovementState;
 	m_pMovementController->GetMovementState(curMovementState);
 	pGraph->SetInput( m_inputUsingLookIK, int(frameMovementParams.lookIK || frameMovementParams.aimIK) );
-
 	// -----------------------------------
 	// AIMING
 	// -----------------------------------
@@ -1260,14 +1257,14 @@ void CPlayer::UpdateView(SViewParams &viewParams)
 	{
 		return;
 	}
-	
+
 	viewParams.rotation = GetViewRotation();
 	viewParams.position = GetEntity()->GetWorldPos() + GetEyeOffset();
 	viewParams.fov = DEG2RAD(75);
 
 	if (IsThirdPerson())
 	{
-		viewParams.position += (viewParams.rotation.GetColumn1() * - 3);		
+		viewParams.position += (viewParams.rotation.GetColumn1() * - 3);
 	}
 
 	// finally, update the network system
@@ -1936,7 +1933,7 @@ void CPlayer::UpdateStats(float frameTime)
 	{
 		return;
 	}
-	
+
 	bool isPlayer(IsPlayer());
 	// Update always the logical representation.
 	// [Mikko] The logical representation used to be updated later in the function
@@ -2444,7 +2441,7 @@ void CPlayer::UpdateStats(float frameTime)
 		m_stats.fallSpeed = 0.0f;
 		//CryLogAlways( "[player] end falling %f", ppos.z);
 	}
-	
+
 	m_stats.mass = dynStat.mass;
 
 	if (m_stats.speedFlat > 0.1f)
@@ -2571,7 +2568,6 @@ void CPlayer::Revive( bool fromInit )
 	}
 
 	m_stats = SPlayerStats();
-
 	m_headAngles.Set(0, 0, 0);
 	m_eyeOffset.Set(0, 0, 0);
 	m_eyeOffsetView.Set(0, 0, 0);
@@ -2919,7 +2915,6 @@ void CPlayer::CameraShake(float angle, float shift, float duration, float freque
 {
 	float angleAmount(max(-90.0f, min(90.0f, angle)) * gf_PI / 180.0f);
 	float shiftAmount(shift);
-
 	Ang3 shakeAngle(\
 					RANDOMR(0.0f, 1.0f)*angleAmount * 0.15f,
 					(angleAmount * min(1.0f, max(-1.0f, RANDOM() * 7.7f))) * 1.15f,
@@ -3221,7 +3216,7 @@ void CPlayer::Freeze(bool freeze)
 			UpdateAnimGraph(m_pAnimatedCharacter->GetAnimationGraphState());
 		}
 	}
-	
+
 	m_params.vLimitDir.zero();
 
 	if (IsPlayer() && freeze)
@@ -3326,7 +3321,6 @@ bool CPlayer::SetAspectProfile(EEntityAspects aspect, uint8 profile )
 	}
 
 	bool res = CActor::SetAspectProfile(aspect, profile);
-
 	return res;
 }
 
@@ -3421,7 +3415,6 @@ bool CPlayer::NetSerialize( TSerialize ser, EEntityAspects aspect, uint8 profile
 				{
 					ser.FlagPartialRead();
 				}
-
 			}
 			break;
 
@@ -3447,7 +3440,6 @@ void CPlayer::FullSerialize( TSerialize ser )
 {
 	CActor::FullSerialize(ser);
 	m_pMovementController->Serialize(ser);
-
 	ser.BeginGroup( "BasicProperties" );
 	//ser.EnumValue("stance", this, &CPlayer::GetStance, &CPlayer::SetStance, STANCE_NULL, STANCE_LAST);
 	// skip matrices... not supported
@@ -3656,7 +3648,6 @@ void CPlayer::PlayAction(const char *action, const char *extension, bool looping
 		{
 			strcpy(m_params.animationAppendix, "nw");
 		}
-
 	}
 
 	if (looping)
@@ -4112,8 +4103,8 @@ EntityId CPlayer::GetCurrentTargetEntityId() const
 
 void CPlayer::SetFlyMode(uint8 flyMode)
 {
-	m_stats.flyMode = flyMode%1;
-	
+	m_stats.flyMode = flyMode % 1;
+
 	if(m_pAnimatedCharacter)
 	{
 		m_pAnimatedCharacter->RequestPhysicalColliderMode(m_stats.flyMode == 1 ? eColliderMode_Disabled : eColliderMode_Undefined, eColliderModeLayer_Game, "Player::SetFlyMode");
@@ -4131,7 +4122,6 @@ void CPlayer::UpdateUnfreezeInput(const Ang3 &deltaRotation, const Vec3 &deltaMo
 	float deltaRot = (abs(deltaRotation.x) + abs(deltaRotation.z)) * mult;
 	float deltaMov = abs(deltaMovement.x) + abs(deltaMovement.y);
 	static float color[] = {1, 1, 1, 1};
-	
 	float freezeDelta = deltaRot * g_pGameCVars->cl_frozenMouseMult + deltaMov * g_pGameCVars->cl_frozenKeyMult;
 
 	if (freezeDelta > 0)
@@ -4953,8 +4943,6 @@ void CPlayer::UpdateFirstPersonSwimming()
 		// dyn.v is zero by default constructor, meaning it's safe to use even if the GetParams call fails.
 		bool moving = (dyn.v.GetLengthSquared() > 1.0f);
 		float  dotP = dyn.v.GetNormalized().Dot(direction);
-
-		
 		UpdateFirstPersonSwimmingEffects(false, dyn.v.len2());
 	}
 
@@ -5685,7 +5673,6 @@ void CPlayer::ExecuteFoleySignal(ICharacterInstance *pCharacter, const float fra
 	{
 		pMaterialEffects->ExecuteEffect(effectId, params);
 	}
-
 }
 
 void CPlayer::PlayBreathingSound( EActionSoundParamValues actionSoundParam )

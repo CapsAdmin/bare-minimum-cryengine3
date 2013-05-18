@@ -1546,7 +1546,6 @@ void CGame::CmdStartNextMapVoting(IConsoleCmdArgs *pArgs)
 
 void CGame::CmdVote(IConsoleCmdArgs *pArgs)
 {
-
 }
 
 void CGame::CmdQuickGame(IConsoleCmdArgs *pArgs)

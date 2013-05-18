@@ -261,7 +261,6 @@ CActor::~CActor()
 {
 	GetGameObject()->SetMovementController(NULL);
 	SAFE_RELEASE(m_pMovementController);
-
 	GetGameObject()->EnablePhysicsEvent( false, eEPE_OnPostStepImmediate );
 
 	if (m_pAnimatedCharacter)
@@ -282,7 +281,6 @@ CActor::~CActor()
 	{
 		g_pGame->GetIGameFramework()->GetIActorSystem()->RemoveActor( GetEntityId() );
 	}
-
 }
 
 //------------------------------------------------------------------------
@@ -437,7 +435,6 @@ void CActor::Revive( bool fromInit )
 	}
 
 	m_zoomSpeedMultiplier = 1.0f;
-
 	m_sleepTimer = 0.0f;
 	m_inCombat = false;
 	m_enterCombat = false;
@@ -1479,8 +1476,6 @@ bool CActor::CreateCodeEvent(SmartScriptTable &rTable)
 	{
 		return false;
 	}
-
-	
 	else if (!strcmp(event, "replaceMaterial"))
 	{
 		const char *strMat = NULL;
@@ -1566,7 +1561,6 @@ void CActor::FullSerialize( TSerialize ser )
 
 	ser.EndGroup();
 	m_linkStats.Serialize(ser);
-
 	m_serializeLostHelmet = m_lostHelmet;
 	ser.Value("LostHelmet", m_serializeLostHelmet);
 	m_serializelostHelmetObj = m_lostHelmetObj;
@@ -1667,7 +1661,6 @@ void CActor::SetHealth( float health )
 	int prevHealth = (int)m_health;
 	m_health = float(min(health, m_maxHealth));
 	m_healthAsRoundedPercentage = int_round( m_health * 100.0f / m_maxHealth);
-
 	//m_pGameplayRecorder->Event(GetEntity(), GameplayEvent(eGE_HealthChanged, 0, m_health, 0));
 }
 
@@ -1807,6 +1800,7 @@ void CActor::SetParams(SmartScriptTable &rTable, bool resetFirst)
 		{
 			pParams->lookFOVRadians = DEG2RAD(pParams->lookFOVRadians);
 		}
+
 		SmartScriptTable props;
 
 		if(GetEntity()->GetScriptTable()->GetValue("Properties", props))
@@ -2721,7 +2715,7 @@ void CActor::ReplaceMaterial(const char *strMaterial)
 				}
 			}
 		}
-		
+
 		m_testOldMats.clear();
 	}
 
@@ -2828,7 +2822,6 @@ void CActor::NetReviveAt(const Vec3 &pos, const Quat &rot, int teamId)
 	}
 
 	// ~PLAYERPREDICTION
-
 	GetEntity()->SetWorldTM(Matrix34::Create(Vec3(1, 1, 1), rot, pos));
 
 	if (IsClient())
@@ -3308,7 +3301,6 @@ void CActor::FillHitInfoFromKillParams(const CActor::KillParams &killParams, Hit
 	hitInfo.impulseScale			= killParams.impulseScale;
 	hitInfo.forceLocalKill = killParams.forceLocalKill;
 	// Get some needed parameters on the HitInfo structure
-
 	ICharacterInstance *pCharacter = NULL;
 
 	if ((hitInfo.partId != uint16(-1)) && (pCharacter = GetEntity()->GetCharacter(0)))

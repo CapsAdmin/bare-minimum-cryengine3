@@ -1430,21 +1430,45 @@ class CActor :
 		uint8		m_netPhysCounter;				 //	Physics counter, to enable us to throw away old updates
 		// ~PLAYERPREDICTION
 
-	// items are disabled but these are needed
-	public:		
+		// items are disabled but these are needed
+	public:
 		virtual void NotifyCurrentItemChanged(IItem *newItem) {};
-		IItem *GetCurrentItem(bool includeVehicle = false) const {return nullptr;};
-		EntityId GetCurrentItemId(bool includeVehicle = false) const {return 0;};
-		IItem *GetHolsteredItem() const {return nullptr;};
+		IItem *GetCurrentItem(bool includeVehicle = false) const
+		{
+			return nullptr;
+		};
+		EntityId GetCurrentItemId(bool includeVehicle = false) const
+		{
+			return 0;
+		};
+		IItem *GetHolsteredItem() const
+		{
+			return nullptr;
+		};
 
 		void HolsterItem(bool holster, bool playSelect = true) {};
-		bool DropItem(EntityId itemId, float impulseScale=1.0f, bool selectNext=true, bool byDeath=false) {return true;};
-		IInventory *GetInventory() const {return nullptr;};
+		bool DropItem(EntityId itemId, float impulseScale = 1.0f, bool selectNext = true, bool byDeath = false)
+		{
+			return true;
+		};
+		IInventory *GetInventory() const
+		{
+			return nullptr;
+		};
 		void HideAllAttachments(bool isHiding) {};
-		EntityId GetGrabbedEntityId() const {return 0;};
-		IVehicle *GetLinkedVehicle(void) const {return nullptr;};
+		EntityId GetGrabbedEntityId() const
+		{
+			return 0;
+		};
+		IVehicle *GetLinkedVehicle(void) const
+		{
+			return nullptr;
+		};
 		void SetViewInVehicle(Quat) {};
-		IEntity *LinkToVehicle(EntityId) {return nullptr;};
+		IEntity *LinkToVehicle(EntityId)
+		{
+			return nullptr;
+		};
 		void SerializeLevelToLevel(TSerialize &) {};
 };
 

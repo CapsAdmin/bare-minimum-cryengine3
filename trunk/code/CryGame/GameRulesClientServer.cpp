@@ -582,7 +582,6 @@ void CGameRules::ProcessClientExplosionScreenFX(const ExplosionInfo &explosionIn
 		Vec3 eyeToExplosion = explosionInfo.pos - state.eyePosition;
 		eyeToExplosion.Normalize();
 		bool inFOV = (state.eyeDirection.Dot(eyeToExplosion) > 0.68f);
-
 		//All explosions have radial blur (default 30m radius, to make Sean happy =))
 		float maxBlurDistance = (explosionInfo.maxblurdistance > 0.0f) ? explosionInfo.maxblurdistance : 30.0f;
 

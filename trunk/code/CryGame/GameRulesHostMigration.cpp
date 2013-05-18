@@ -157,7 +157,6 @@ void CGameRules::OnHostMigrationStateChanged()
 		}
 
 		CallOnForbiddenAreas("OnHostMigrationFinished");
-
 		// Migration has finished, if we've still got client params then they won't be valid anymore
 		SAFE_DELETE(m_pHostMigrationClientParams);
 	}
@@ -432,7 +431,6 @@ bool CGameRules::OnPromoteToServer(SHostMigrationInfo &hostMigrationInfo, uint32
 		HostMigrationRemoveDuplicateDynamicEntities();
 	}
 
-	
 	for (uint32 i = 0; i < MAX_PLAYERS; ++ i)
 	{
 		m_migratedPlayerChannels[i] = 0;
@@ -448,7 +446,6 @@ bool CGameRules::OnPromoteToServer(SHostMigrationInfo &hostMigrationInfo, uint32
 
 	uint32 itemIndex = 0;
 	IEntity *pEntity = NULL;
-	
 	// Tell entities that we're host migrating
 	// - Currently only used by ForbiddenArea but may well be needed for other entities later
 	// - Currently only called on the new server, add to OnDemoteToClient if we need to use this on a client
@@ -461,7 +458,6 @@ bool CGameRules::OnPromoteToServer(SHostMigrationInfo &hostMigrationInfo, uint32
 		m_pScriptSystem->PushFuncParam(true);
 		m_pScriptSystem->EndCall();
 	}
-	
 
 	// This needs initialising on the new server otherwise the respawn timer will be counting down
 	// from uninitialised data.  Likewise for the pre-round timer.

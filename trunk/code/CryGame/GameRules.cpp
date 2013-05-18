@@ -981,7 +981,6 @@ CActor *CGameRules::ChangePlayerClass(int channelId, const char *className)
 //------------------------------------------------------------------------
 void CGameRules::RevivePlayer(CActor *pActor, const Vec3 &pos, const Ang3 &angles, int teamId, bool clearInventory)
 {
-
 	if (IsFrozen(pActor->GetEntityId()))
 	{
 		FreezeEntity(pActor->GetEntityId(), false, false);
@@ -1005,7 +1004,6 @@ void CGameRules::RevivePlayer(CActor *pActor, const Vec3 &pos, const Ang3 &angle
 	tm.SetTranslation(pos);
 	pActor->GetEntity()->SetWorldTM(tm);
 	pActor->SetAngles(angles);
-
 	pActor->NetReviveAt(pos, Quat(angles), teamId);
 	// PLAYERPREDICTION
 	pActor->GetGameObject()->InvokeRMI(CActor::ClRevive(), CActor::ReviveParams(pos, angles, teamId, pActor->GetNetPhysCounter()),
@@ -1121,7 +1119,6 @@ void CGameRules::KillPlayer(IActor *pActor, const bool inDropItem, const bool in
 	}
 
 	CActor *pCActor = static_cast<CActor *>(pActor);
-
 	CActor::KillParams params;
 	params.shooterId = inHitInfo.shooterId;
 	params.targetId = inHitInfo.targetId;
@@ -3352,7 +3349,6 @@ bool CGameRules::OnCollision(const SGameCollision &event)
 	if (event.pSrcEntity)
 	{
 		pSrcClass = event.pSrcEntity->GetClass();
-
 		srcClassFilter = (pSrcClass == s_pBasicEntityClass || pSrcClass == s_pDefaultClass);
 
 		if (srcClassFilter && !event.pTrgEntity)

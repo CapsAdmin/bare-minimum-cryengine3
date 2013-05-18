@@ -1530,10 +1530,10 @@ class CGameRules :	public CGameObjectExtensionHelper<CGameRules, IGameRules, 64>
 		TCryUserIdSet m_participatingUsers;
 
 		// vehicles are disabled but these are needed
-		public:
-			void IGameRules::OnVehicleDestroyed(EntityId) {};
-			void IGameRules::OnVehicleSubmerged(EntityId,float) {};
-			void IGameRules::OnVehicleFlipped(EntityId) {};
+	public:
+		void IGameRules::OnVehicleDestroyed(EntityId) {};
+		void IGameRules::OnVehicleSubmerged(EntityId, float) {};
+		void IGameRules::OnVehicleFlipped(EntityId) {};
 
 
 };
