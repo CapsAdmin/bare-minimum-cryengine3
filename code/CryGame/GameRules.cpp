@@ -364,11 +364,6 @@ void CGameRules::Update( SEntityUpdateContext &ctx, int updateSlot )
 
 	UpdateMinimap(ctx.fFrameTime);
 
-	if ((!gEnv->bMultiplayer) && m_cinematicInput.IsAnyCutSceneRunning())
-	{
-		m_cinematicInput.Update(ctx.fFrameTime);
-	}
-
 	if (gEnv->bServer)
 	{
 		GetGameObject()->ChangedNetworkState( eEA_GameServerDynamic );
@@ -4510,7 +4505,6 @@ bool CGameRules::OnBeginCutScene(IAnimSequence *pSeq, bool bResetFX)
 	}
 
 	m_explosionScreenFX = false;
-	m_cinematicInput.OnBeginCutScene(pSeq->GetFlags());
 	return true;
 }
 
@@ -4522,7 +4516,6 @@ bool CGameRules::OnEndCutScene(IAnimSequence *pSeq)
 	}
 
 	m_explosionScreenFX = true;
-	m_cinematicInput.OnEndCutScene(pSeq->GetFlags());
 	return true;
 }
 
