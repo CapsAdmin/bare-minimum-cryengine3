@@ -476,7 +476,7 @@ CActor *CGameRules::GetActorByChannelId(int channelId) const
 					pCurrentActor = static_cast<CActor *>(pActor);
 				}
 			}
-		}
+ 		}
 
 		if (gEnv->bServer)
 		{
@@ -574,6 +574,11 @@ void CGameRules::OnDisconnect(EDisconnectionCause cause, const char *desc)
 	m_pClientNetChannel = 0;
 	int icause = (int)cause;
 	CallScript(m_clientStateScript, "OnDisconnect", icause, desc);
+
+	if (gEnv->IsClient())
+	{
+		gEnv->pSystem->Quit();
+	}
 
 	// BecomeRemotePlayer() will put the player camera into 3rd person view, but
 	// the player rig will still be first person (headless, not z sorted) so
