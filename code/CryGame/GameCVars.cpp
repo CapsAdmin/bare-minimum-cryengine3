@@ -1152,10 +1152,86 @@ void CmdCamGoto(IConsoleCmdArgs *pArgs)
 	gEnv->pLog->LogError("CAMGOTO: Invalid arguments");
 }
 
+#include "IIndexedMesh.h"
+
+void CmdTestMesh(IConsoleCmdArgs *pArgs)
+{
+	auto obj = gEnv->p3DEngine->CreateStatObj();
+    obj->AddRef();
+    obj->Refresh(FRO_GEOMETRY);
+
+    auto imesh = obj->GetIndexedMesh(true);
+    
+	CMesh mesh;
+	    mesh.SetVertexCount( 3 );
+	    mesh.SetFacesCount( 1 );
+		mesh.SetIndexCount( 3 );
+
+		auto vertices = mesh.GetStreamPtr<Vec3>(CMesh::POSITIONS);
+		auto normals = mesh.GetStreamPtr<Vec3>(CMesh::NORMALS);
+		auto indices = mesh.GetStreamPtr<uint16>(CMesh::INDICES);
+
+		vertices[0] = Vec3( 0.0f, 0.0f, 0.0f );
+		vertices[1] = Vec3( 0.0f, 20.0f, 0.0f );
+		vertices[2] = Vec3( 20.0f, 0.0f, 0.0f );
+
+		normals[0] = Vec3( 1, 0, 0 );
+		normals[1] = Vec3( 1, 0, 0 );
+		normals[2] = Vec3( 1, 0, 0 );
+
+		indices[0] = 2;
+		indices[1] = 1;
+		indices[2] = 0;
+
+		SMeshSubset sub;
+			sub.nFirstIndexId = 0;
+			sub.nFirstVertId = 0;
+			sub.nNumIndices = 3;
+			sub.nNumVerts = 3;
+
+		mesh.m_subsets.push_back( sub );
+		mesh.m_bbox = obj->GetAABB();
+      
+		const char *error;
+		if (!mesh.Validate(&error))
+		{
+			CryLogAlways("mesh validation error: %s", error);
+		}
+
+
+    imesh->SetMesh(mesh);
+    imesh->Invalidate();
+
+    auto rmesh = obj->GetRenderMesh();
+    rmesh->SetMesh(mesh);
+
+	SEntitySpawnParams params;
+		params.pClass = gEnv->pEntitySystem->GetClassRegistry()->FindClass("BasicEntity");
+		params.vPosition = Vec3(10,10,1);
+	auto ent = gEnv->pEntitySystem->SpawnEntity(params);
+    ent->Activate (true);
+
+	{
+		SEntityPhysicalizeParams params;
+			params.type = PE_RIGID;
+			params.nSlot = -1;
+			params.mass = 50;
+			params.density = 1.0f;
+		ent->Physicalize(params);
+	}
+   
+    int slotCount = ent->GetSlotCount();
+    int slotId = ent->SetStatObj(obj, -1, false);
+    int slotCount2 = ent->GetSlotCount();
+}
+
 //------------------------------------------------------------------------
 void CGame::RegisterConsoleCommands()
 {
 	assert(m_pConsole);
+
+	REGISTER_COMMAND("test_mesh", CmdTestMesh, VF_NULL, "test mesh");
+
 	REGISTER_COMMAND("quit", "System.Quit()", VF_RESTRICTEDMODE, "Quits the game");
 	REGISTER_COMMAND("goto", CmdGoto, VF_CHEAT,
 					 "Get or set the current position and orientation for the player\n"
