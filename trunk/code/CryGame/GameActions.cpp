@@ -6,16 +6,9 @@
 CGameActions::CGameActions()
 	: m_pFilterNoMove(0)
 	, m_pFilterNoMouse(0)
-	, m_pFilterInVehicleSuitMenu(0)
-	, m_pFilterSuitMenu(0)
 	, m_pFilterFreezeTime(0)
-	, m_pFilterNoVehicleExit(0)
-	, m_pFilterMPRadio(0)
 	, m_pFilterCutscene(0)
 	, m_pFilterCutsceneNoPlayer(0)
-	, m_pFilterNoMapOpen(0)
-	, m_pFilterNoObjectivesOpen(0)
-	, m_pFilterVehicleNoSeatChangeAndExit(0)
 	, m_pFilterNoConnectivity(0)
 	, m_pFilterUIOnly(0)
 {
@@ -27,16 +20,9 @@ void CGameActions::Init()
 {
 	CreateFilterNoMove();
 	CreateFilterNoMouse();
-	CreateFilterInVehicleSuitMenu();
-	CreateFilterSuitMenu();
 	CreateFilterFreezeTime();
-	CreateFilterNoVehicleExit();
-	CreateFilterMPRadio();
 	CreateFilterCutscene();
 	CreateFilterCutsceneNoPlayer();
-	CreateFilterNoMapOpen();
-	CreateFilterNoObjectivesOpen();
-	CreateFilterVehicleNoSeatChangeAndExit();
 	CreateFilterNoConnectivity();
 	CreateFilterUIOnly();
 }
@@ -86,49 +72,6 @@ void CGameActions::CreateFilterNoMouse()
 	m_pFilterNoMouse->Filter(xi_handgrenade);
 	m_pFilterNoMouse->Filter(xi_zoom);
 	m_pFilterNoMouse->Filter(jump);
-}
-
-void CGameActions::CreateFilterInVehicleSuitMenu()
-{
-	//need when suit menu is on in a vehicle. for XBOX controller and for keyboard
-	IActionMapManager *pActionMapMan = g_pGame->GetIGameFramework()->GetIActionMapManager();
-	m_pFilterInVehicleSuitMenu = pActionMapMan->CreateActionFilter("in_vehicle_suit_menu", eAFT_ActionFail);
-	m_pFilterInVehicleSuitMenu->Filter(use);
-	m_pFilterInVehicleSuitMenu->Filter(v_changeseat);
-	m_pFilterInVehicleSuitMenu->Filter(v_changeview);
-	m_pFilterInVehicleSuitMenu->Filter(v_lights);
-	m_pFilterInVehicleSuitMenu->Filter(v_changeseat1);
-	m_pFilterInVehicleSuitMenu->Filter(v_changeseat2);
-	m_pFilterInVehicleSuitMenu->Filter(v_changeseat3);
-	m_pFilterInVehicleSuitMenu->Filter(v_changeseat4);
-	m_pFilterInVehicleSuitMenu->Filter(v_changeseat5);
-}
-
-void CGameActions::CreateFilterSuitMenu()
-{
-	IActionMapManager *pActionMapMan = g_pGame->GetIGameFramework()->GetIActionMapManager();
-	m_pFilterSuitMenu = pActionMapMan->CreateActionFilter("suit_menu", eAFT_ActionFail);
-	m_pFilterSuitMenu->Filter(attack1);
-	m_pFilterSuitMenu->Filter(v_attack1);
-	m_pFilterSuitMenu->Filter(v_attack2);
-	m_pFilterSuitMenu->Filter(rotateyaw);
-	m_pFilterSuitMenu->Filter(v_rotateyaw);
-	m_pFilterSuitMenu->Filter(rotatepitch);
-	m_pFilterSuitMenu->Filter(v_rotatepitch);
-	m_pFilterSuitMenu->Filter(nextitem);
-	m_pFilterSuitMenu->Filter(previtem);
-	m_pFilterSuitMenu->Filter(small);
-	m_pFilterSuitMenu->Filter(medium);
-	m_pFilterSuitMenu->Filter(heavy);
-	m_pFilterSuitMenu->Filter(handgrenade);
-	m_pFilterSuitMenu->Filter(explosive);
-	m_pFilterSuitMenu->Filter(utility);
-	m_pFilterSuitMenu->Filter(reload);
-	m_pFilterSuitMenu->Filter(use);
-	m_pFilterSuitMenu->Filter(xi_use);
-	m_pFilterSuitMenu->Filter(xi_grenade);
-	m_pFilterSuitMenu->Filter(xi_handgrenade);
-	m_pFilterSuitMenu->Filter(xi_zoom);
 }
 
 void CGameActions::CreateFilterFreezeTime()
@@ -183,30 +126,6 @@ void CGameActions::CreateFilterFreezeTime()
 	m_pFilterFreezeTime->Filter(buyammo);
 }
 
-void CGameActions::CreateFilterNoVehicleExit()
-{
-	IActionMapManager *pActionMapMan = g_pGame->GetIGameFramework()->GetIActionMapManager();
-	m_pFilterNoVehicleExit = pActionMapMan->CreateActionFilter("no_vehicle_exit", eAFT_ActionFail);
-	m_pFilterNoVehicleExit->Filter(use);
-}
-
-void CGameActions::CreateFilterMPRadio()
-{
-	IActionMapManager *pActionMapMan = g_pGame->GetIGameFramework()->GetIActionMapManager();
-	m_pFilterMPRadio = pActionMapMan->CreateActionFilter("mp_radio", eAFT_ActionFail);
-	m_pFilterMPRadio->Filter(small);
-	m_pFilterMPRadio->Filter(medium);
-	m_pFilterMPRadio->Filter(heavy);
-	m_pFilterMPRadio->Filter(explosive);
-	m_pFilterMPRadio->Filter(handgrenade);
-	m_pFilterMPRadio->Filter(v_changeseat1);
-	m_pFilterMPRadio->Filter(v_changeseat2);
-	m_pFilterMPRadio->Filter(v_changeseat3);
-	m_pFilterMPRadio->Filter(v_changeseat4);
-	m_pFilterMPRadio->Filter(v_changeseat5);
-	m_pFilterMPRadio->Filter(v_changeseat);
-}
-
 void CGameActions::CreateFilterCutscene()
 {
 	IActionMapManager *pActionMapMan = g_pGame->GetIGameFramework()->GetIActionMapManager();
@@ -221,32 +140,6 @@ void CGameActions::CreateFilterCutsceneNoPlayer()
 	m_pFilterCutsceneNoPlayer = pActionMapMan->CreateActionFilter("cutscene_no_player", eAFT_ActionPass);
 	m_pFilterCutsceneNoPlayer->Filter(loadLastSave);
 	m_pFilterCutsceneNoPlayer->Filter(load);
-}
-
-void CGameActions::CreateFilterNoMapOpen()
-{
-	IActionMapManager *pActionMapMan = g_pGame->GetIGameFramework()->GetIActionMapManager();
-	m_pFilterNoMapOpen = pActionMapMan->CreateActionFilter("no_map_open", eAFT_ActionFail);
-}
-
-void CGameActions::CreateFilterNoObjectivesOpen()
-{
-	IActionMapManager *pActionMapMan = g_pGame->GetIGameFramework()->GetIActionMapManager();
-	m_pFilterNoObjectivesOpen = pActionMapMan->CreateActionFilter("no_objectives_open", eAFT_ActionFail);
-	m_pFilterNoObjectivesOpen->Filter(scores);
-}
-
-void CGameActions::CreateFilterVehicleNoSeatChangeAndExit()
-{
-	IActionMapManager *pActionMapMan = g_pGame->GetIGameFramework()->GetIActionMapManager();
-	m_pFilterVehicleNoSeatChangeAndExit = pActionMapMan->CreateActionFilter("vehicle_no_seat_change_and_exit", eAFT_ActionFail);
-	m_pFilterVehicleNoSeatChangeAndExit->Filter(v_exit);
-	m_pFilterVehicleNoSeatChangeAndExit->Filter(v_changeseat);
-	m_pFilterVehicleNoSeatChangeAndExit->Filter(v_changeseat1);
-	m_pFilterVehicleNoSeatChangeAndExit->Filter(v_changeseat2);
-	m_pFilterVehicleNoSeatChangeAndExit->Filter(v_changeseat3);
-	m_pFilterVehicleNoSeatChangeAndExit->Filter(v_changeseat4);
-	m_pFilterVehicleNoSeatChangeAndExit->Filter(v_changeseat5);
 }
 
 void CGameActions::CreateFilterNoConnectivity()

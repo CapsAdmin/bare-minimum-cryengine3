@@ -151,9 +151,6 @@ struct SActorParams
 	float vLimitRangeVUp;
 	float vLimitRangeVDown;
 
-	float	weaponBobbingMultiplier;
-	float	weaponInertiaMultiplier;
-
 	float speedMultiplier;
 
 	float timeImpulseRecover;
@@ -191,8 +188,6 @@ struct SActorParams
 		vLimitRangeVDown = 0.0f;
 		viewFoVScale = 1.0f;
 		viewSensitivity = 1.0f;
-		weaponInertiaMultiplier = 1.0f;
-		weaponBobbingMultiplier = 1.0f;
 		speedMultiplier = 1.0f;
 		timeImpulseRecover = 0.0f;
 	}
@@ -214,8 +209,6 @@ struct SActorAnimationEvents
 		uint32 m_swimmingStrokeId;
 		uint32 m_footStepImpulseId;
 		uint32 m_forceFeedbackId;
-		uint32 m_weaponLeftHandId;
-		uint32 m_weaponRightHandId;
 
 		uint32 m_reactionOnCollision;
 		uint32 m_forbidReactionsId;
@@ -272,8 +265,6 @@ struct SActorStats
 	CCoherentValue<bool> isShattered;
 	CCoherentValue<bool> isFrozen;
 
-	EntityId mountedWeaponID;
-
 	int groundMaterialIdx;
 
 	SActorStats()
@@ -300,12 +291,6 @@ struct SStanceInfo
 	float viewDownYMod;
 
 	Vec3 peekOverViewOffset;
-	Vec3 peekOverWeaponOffset;
-
-	//weapon
-	Vec3 weaponOffset;
-	Vec3 leanLeftWeaponOffset;
-	Vec3 leanRightWeaponOffset;
 
 	//movement
 	float normalSpeed;
@@ -344,26 +329,7 @@ struct SStanceInfo
 
 		return viewOffset + peekOffset;
 	}
-
-	inline Vec3	GetWeaponOffsetWithLean(float lean, float peekOver) const
-	{
-		float peek = clamp(peekOver, 0.0f, 1.0f);
-		Vec3 peekOffset = peek * (peekOverWeaponOffset - weaponOffset);
-
-		if (lean < -0.01f)
-		{
-			float a = clamp(-lean, 0.0f, 1.0f);
-			return weaponOffset + a * (leanLeftWeaponOffset - weaponOffset) + peekOffset;
-		}
-		else if (lean > 0.01f)
-		{
-			float a = clamp(lean, 0.0f, 1.0f);
-			return weaponOffset + a * (leanRightWeaponOffset - weaponOffset) + peekOffset;
-		}
-
-		return weaponOffset + peekOffset;
-	}
-
+	
 	static inline Vec3 GetOffsetWithLean(float lean, float peekOver, const Vec3 &sOffset, const Vec3 &sLeftLean, const Vec3 &sRightLean, const Vec3 &sPeekOffset)
 	{
 		float peek = clamp(peekOver, 0.0f, 1.0f);
@@ -438,10 +404,6 @@ struct SStanceInfo
 		, leanRightViewOffset(ZERO)
 		, viewDownYMod(0.0f)
 		, peekOverViewOffset(ZERO)
-		, peekOverWeaponOffset(ZERO)
-		, weaponOffset(ZERO)
-		, leanLeftWeaponOffset(ZERO)
-		, leanRightWeaponOffset(ZERO)
 		, normalSpeed(0.0f)
 		, maxSpeed(0.0f)
 		, modelOffset(ZERO)
@@ -630,9 +592,7 @@ class CActor :
 			KillParams()
 				: shooterId(0),
 				  targetId(0),
-				  weaponId(0),
 				  projectileId(0),
-				  weaponClassId(0),
 				  damage(0.0f),
 				  material(0),
 				  hit_type(0),
@@ -652,9 +612,7 @@ class CActor :
 
 			EntityId shooterId;
 			EntityId targetId;
-			EntityId weaponId;
 			EntityId projectileId;
-			int weaponClassId;
 			float damage;
 			float impulseScale;
 			Vec3 dir;
@@ -677,9 +635,7 @@ class CActor :
 			{
 				ser.Value("shooterId", shooterId, 'eid');
 				ser.Value("targetId", targetId, 'eid');
-				ser.Value("weaponId", weaponId, 'eid');
 				ser.Value("projectileId", projectileId, 'eid');
-				ser.Value("weaponClassId", weaponClassId, 'clas');
 				ser.Value("damage", damage, 'dmg');
 				ser.Value("material", material, 'mat');
 				ser.Value("hit_type", hit_type, 'hTyp');
@@ -776,7 +732,6 @@ class CActor :
 		virtual void NetKill(EntityId shooterId, uint16 weaponClassId, int damage, int material, int hit_type);
 
 		virtual void SetSleepTimer(float timer);
-		Vec3 GetWeaponOffsetWithLean(EStance stance, float lean, float peekOver, const Vec3 &eyeOffset);
 
 		virtual bool CanRagDollize() const;
 
@@ -962,7 +917,6 @@ class CActor :
 		virtual void StandUp();
 		virtual void NotifyLeaveFallAndPlay();
 		virtual bool IsFallen() const;
-		virtual void LinkToMountedWeapon(EntityId weaponId) {};
 		virtual IEntity *LinkToEntity(EntityId entityId, bool bKeepTransformOnDetach = true);
 
 		virtual bool AllowLandingBob()
@@ -1284,8 +1238,6 @@ class CActor :
 		{
 			return false;
 		}
-
-		virtual void DumpActorInfo();
 
 		void BecomeRemotePlayer();
 
