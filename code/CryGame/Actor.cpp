@@ -209,8 +209,6 @@ void SActorAnimationEvents::Init()
 		m_swimmingStrokeId = pCRC32->GetCRC32Lowercase("swimmingStroke");
 		m_footStepImpulseId = pCRC32->GetCRC32Lowercase("footstep_impulse");
 		m_forceFeedbackId = pCRC32->GetCRC32Lowercase("ForceFeedback");
-		m_weaponLeftHandId = pCRC32->GetCRC32Lowercase("leftHand");
-		m_weaponRightHandId = pCRC32->GetCRC32Lowercase("rightHand");
 		m_forbidReactionsId = pCRC32->GetCRC32Lowercase("ForbidReactions");
 		m_ragdollStartId = pCRC32->GetCRC32Lowercase( "RagdollStart");
 		m_killId = pCRC32->GetCRC32Lowercase("Kill");
@@ -1759,10 +1757,6 @@ void CActor::SetParams(SmartScriptTable &rTable, bool resetFirst)
 						sInfo.leanLeftViewOffset = sInfo.leanRightViewOffset = sInfo.viewOffset;
 						stanceTableChain.GetValue("leanLeftViewOffset", sInfo.leanLeftViewOffset);
 						stanceTableChain.GetValue("leanRightViewOffset", sInfo.leanRightViewOffset);
-						stanceTableChain.GetValue("weaponOffset", sInfo.weaponOffset);
-						sInfo.leanLeftWeaponOffset = sInfo.leanRightWeaponOffset = sInfo.weaponOffset;
-						stanceTableChain.GetValue("leanLeftWeaponOffset", sInfo.leanLeftWeaponOffset);
-						stanceTableChain.GetValue("leanRightWeaponOffset", sInfo.leanRightWeaponOffset);
 						stanceTableChain.GetValue("useCapsule", sInfo.useCapsule);
 
 						if (stanceTableChain.GetValue("name", name))
@@ -2783,11 +2777,12 @@ namespace ActorDetail
 		}
 	};
 }
+
 ISerializableInfoPtr CActor::GetSpawnInfo()
 {
 	ActorDetail::SInfo *p = new ActorDetail::SInfo();
 	CGameRules *pGameRules = g_pGame->GetGameRules();
-	p->teamId = pGameRules ? pGameRules->GetTeam(GetEntityId()) : 0;
+	p->teamId = 0;
 	return p;
 }
 
@@ -2842,7 +2837,7 @@ void CActor::NetKill(EntityId shooterId, uint16 weaponClassId, int damage, int m
 	}
 
 	Kill();
-	g_pGame->GetGameRules()->OnKillMessage(GetEntityId(), shooterId, weaponClassName, (float)damage, material, hit_type);
+
 	return;
 	bool ranked = false;
 
@@ -3104,7 +3099,7 @@ IMPLEMENT_RMI(CActor, ClRevive)
 //------------------------------------------------------------------------
 IMPLEMENT_RMI(CActor, ClKill)
 {
-	NetKill(params.shooterId, params.weaponClassId, (int)params.damage, params.material, params.hit_type);
+	NetKill(params.shooterId, 0, (int)params.damage, params.material, params.hit_type);
 	return true;
 }
 
@@ -3120,56 +3115,6 @@ IMPLEMENT_RMI(CActor, ClMoveTo)
 {
 	GetEntity()->SetWorldTM(Matrix34::Create(Vec3(1, 1, 1), params.rot, params.pos));
 	return true;
-}
-
-//------------------------------------------------------------------------
-void CActor::DumpActorInfo()
-{
-	IEntity *pEntity = GetEntity();
-	CryLog("ActorInfo for %s", pEntity->GetName());
-	CryLog("=====================================");
-	Vec3 pos = pEntity->GetWorldPos();
-	CryLog("Entity Pos: %.f %.f %.f", pos.x, pos.y, pos.z);
-	CryLog("Active: %i", pEntity->IsActive());
-	CryLog("Hidden: %i", pEntity->IsHidden());
-	CryLog("Invisible: %i", pEntity->IsInvisible());
-	CryLog("Profile: %i", m_currentPhysProfile);
-	CryLog("Health: %i", static_cast<int>(GetHealth()));
-	CryLog("Frozen: %.2f", GetFrozenAmount());
-
-	if (IPhysicalEntity *pPhysics = pEntity->GetPhysics())
-	{
-		CryLog("Physics type: %i", pPhysics->GetType());
-		pe_status_pos pe_pos;
-
-		if (pPhysics->GetStatus(&pe_pos))
-		{
-			CryLog("Physics pos: %.f %.f %.f", pe_pos.pos.x, pe_pos.pos.y, pe_pos.pos.z);
-		}
-
-		pe_status_dynamics pe_dyn;
-
-		if (pPhysics->GetStatus(&pe_dyn))
-		{
-			CryLog("Mass: %.1f", pe_dyn.mass);
-			CryLog("Vel: %.2f %.2f %.2f", pe_dyn.v.x, pe_dyn.v.y, pe_dyn.v.z);
-		}
-	}
-
-	CryLog("=====================================");
-}
-
-//
-//-----------------------------------------------------------------------------
-Vec3 CActor::GetWeaponOffsetWithLean(EStance stance, float lean, float peekOver, const Vec3 &eyeOffset)
-{
-	//for player just do it the old way - from stance info
-	if(IsPlayer())
-	{
-		return GetStanceInfo(stance)->GetWeaponOffsetWithLean(lean, peekOver);
-	}
-
-	return GetStanceInfo(stance)->GetWeaponOffsetWithLean(lean, peekOver);
 }
 
 bool CActor::IsFriendlyEntity( EntityId entityId ) const
@@ -3198,16 +3143,7 @@ bool CActor::IsFriendlyEntity( EntityId entityId ) const
 	{
 		if ( pGameRules )
 		{
-			if ( pGameRules->GetTeamCount() >= 2 )
-			{
-				int iMyTeam = pGameRules->GetTeam( GetEntityId() );
-				int iClientTeam = pGameRules->GetTeam( entityId );
-				return ( iClientTeam == iMyTeam );
-			}
-			else
-			{
-				return entityId == GetEntityId();
-			}
+			return entityId == GetEntityId();
 		}
 	}
 
@@ -3281,48 +3217,6 @@ void CActor::PostReloadExtension( IGameObject *pGameObject, const SEntitySpawnPa
 	GetGameObject()->EnablePrePhysicsUpdate( gEnv->bMultiplayer ? ePPU_Always : ePPU_WhenAIActivated );
 	GetEntity()->SetFlags(GetEntity()->GetFlags() |
 						  (ENTITY_FLAG_ON_RADAR | ENTITY_FLAG_CUSTOM_VIEWDIST_RATIO | ENTITY_FLAG_TRIGGER_AREAS));
-}
-
-void CActor::FillHitInfoFromKillParams(const CActor::KillParams &killParams, HitInfo &hitInfo) const
-{
-	hitInfo.type = killParams.hit_type;
-	hitInfo.damage = killParams.damage;
-	hitInfo.partId = killParams.hit_joint;
-	hitInfo.dir = killParams.dir;
-	hitInfo.material = killParams.material;
-	hitInfo.projectileId = killParams.projectileId;
-	hitInfo.shooterId = killParams.shooterId;
-	hitInfo.weaponClassId = killParams.weaponClassId;
-	hitInfo.projectileClassId = killParams.projectileClassId;
-	hitInfo.targetId = killParams.targetId;
-	hitInfo.weaponId = killParams.weaponId;
-	hitInfo.penetrationCount = killParams.penetration;
-	hitInfo.hitViaProxy = killParams.killViaProxy;
-	hitInfo.impulseScale			= killParams.impulseScale;
-	hitInfo.forceLocalKill = killParams.forceLocalKill;
-	// Get some needed parameters on the HitInfo structure
-	ICharacterInstance *pCharacter = NULL;
-
-	if ((hitInfo.partId != uint16(-1)) && (pCharacter = GetEntity()->GetCharacter(0)))
-	{
-		const int FIRST_ATTACHMENT_PARTID = 1000;
-
-		// perhaps it's an attachment?
-		if (hitInfo.partId < FIRST_ATTACHMENT_PARTID)
-		{
-			hitInfo.pos = GetEntity()->GetWorldTM().TransformPoint(pCharacter->GetISkeletonPose()->GetAbsJointByID(hitInfo.partId).t);
-		}
-		else
-		{
-			IAttachmentManager *pAttchmentManager = pCharacter->GetIAttachmentManager();
-			IAttachment *pAttachment = pAttchmentManager->GetInterfaceByIndex(hitInfo.partId - FIRST_ATTACHMENT_PARTID);
-
-			if (pAttachment)
-			{
-				hitInfo.pos = pAttachment->GetAttWorldAbsolute().t;
-			}
-		}
-	}
 }
 
 void CActor::BecomeRemotePlayer()

@@ -1127,7 +1127,6 @@ void CGameRules::KillPlayer(IActor *pActor, const bool inDropItem, const bool in
 	CActor::KillParams params;
 	params.shooterId = inHitInfo.shooterId;
 	params.targetId = inHitInfo.targetId;
-	params.weaponId = inHitInfo.weaponId;
 	params.damage = inHitInfo.damage;
 	params.material = -1;
 	params.hit_type = inHitInfo.type;

@@ -1535,8 +1535,6 @@ void CPlayer::SetParams(SmartScriptTable &rTable, bool resetFirst)
 	params.GetValue("thrusterImpulse", m_params.thrusterImpulse);
 	params.GetValue("thrusterStabilizeImpulse", m_params.thrusterStabilizeImpulse);
 	params.GetValue("gravityBootsMultipler", m_params.gravityBootsMultipler);
-	params.GetValue("weaponBobbingMultiplier", m_params.weaponBobbingMultiplier);
-	params.GetValue("weaponInertiaMultiplier", m_params.weaponInertiaMultiplier);
 	params.GetValue("viewPivot", m_params.viewPivot);
 	params.GetValue("viewDistance", m_params.viewDistance);
 	params.GetValue("viewHeightOffset", m_params.viewHeightOffset);
@@ -1568,8 +1566,6 @@ bool CPlayer::GetParams(SmartScriptTable &rTable)
 	params.SetValue("thrusterImpulse", m_params.thrusterImpulse);
 	params.SetValue("thrusterStabilizeImpulse", m_params.thrusterStabilizeImpulse);
 	params.SetValue("gravityBootsMultiplier", m_params.gravityBootsMultipler);
-	params.SetValue("weaponInertiaMultiplier", m_params.weaponInertiaMultiplier);
-	params.SetValue("weaponBobbingMultiplier", m_params.weaponBobbingMultiplier);
 	params.SetValue("speedMultiplier", m_params.speedMultiplier);
 	REUSE_VECTOR(rTable, "viewPivot", m_params.viewPivot);
 	params.SetValue("viewDistance", m_params.viewDistance);
@@ -3486,7 +3482,6 @@ void CPlayer::FullSerialize( TSerialize ser )
 		m_pPlayerInput.get()->SerializeSaveGame(ser);
 	}
 
-	ser.Value("mountedWeapon", m_stats.mountedWeaponID);
 	ser.Value("parachuteEnabled", m_parachuteEnabled);
 
 	// perform post-reading fixups

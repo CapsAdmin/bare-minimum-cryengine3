@@ -1055,164 +1055,52 @@ bool CPlayerMovementController::UpdateNormal( float frameTime, SActorFrameMoveme
 	hasControl = hasControl && (!pEntity->GetAI() || pEntity->GetAI()->IsEnabled());
 	m_aimClamped = false;
 
-	if (!m_pPlayer->IsClient() && hasControl)
+	Vec3 limitDirection = pEntity->GetRotation().GetColumn1();
+	Vec3 weaponPos(playerPos.x, playerPos.y, m_currentMovementState.weaponPosition.z);
+	const float LOOK_CONE_FOV = DEG2RAD(80.0f);
+	const float AIM_CONE_FOV = DEG2RAD(m_pPlayer->IsPlayer() ? 180.0f : 70.0f);
+
+	if (g_pGame->GetCVars()->g_debugaimlook)
 	{
-		if (((SPlayerStats *)m_pPlayer->GetActorStats())->mountedWeaponID)
+		DebugDrawWireFOVCone(gEnv->pRenderer, weaponPos, limitDirection, 2.0f, AIM_CONE_FOV, ColorB(255, 255, 255));
+		DebugDrawWireFOVCone(gEnv->pRenderer, eyePosition, limitDirection, 3.0f, LOOK_CONE_FOV, ColorB(0, 196, 255));
+	}
+
+	if (hasLookTarget)
+	{
+		params.lookTarget = lookTarget;
+		bool lookClamped = ClampTargetPointToCone(m_usingAimIK /* AimIK involves LookIK */, params.lookTarget, eyePosition, limitDirection, LOOK_CONE_FOV);
+
+		if (!lookClamped)
 		{
-			if (hasAimTarget)
-			{
-				params.aimTarget = aimTarget;
-			}
-			else
-			{
-				params.aimTarget = lookTarget;
-			}
-
-			// Luciano - prevent snapping of aim direction out of existing horizontal angle limits
-			float limitH = m_pPlayer->GetActorParams()->vLimitRangeH;
-			IEntity *pWeaponEntity = gEnv->pEntitySystem->GetEntity(m_pPlayer->GetActorStats()->mountedWeaponID);
-			// m_currentMovementState.weaponPosition is offset to the real weapon position
-			Vec3 weaponPosition (pWeaponEntity ? pWeaponEntity->GetWorldPos() : m_currentMovementState.weaponPosition);
-
-			if(limitH > 0 && limitH < gf_PI)
-			{
-				Vec3 aimDirection(params.aimTarget - weaponPosition);//m_currentMovementState.weaponPosition);
-				Vec3 limitAxisY(m_pPlayer->GetActorParams()->vLimitDir);
-				limitAxisY.z = 0;
-				Vec3 limitAxisX(limitAxisY.y, -limitAxisY.x, 0);
-				limitAxisX.NormalizeSafe(Vec3Constants<float>::fVec3_OneX);
-				limitAxisY.NormalizeSafe(Vec3Constants<float>::fVec3_OneY);
-				float px = limitAxisX.Dot(aimDirection);
-				float py = limitAxisY.Dot(aimDirection);
-				float len = cry_sqrtf(sqr(px) + sqr(py));
-				len = max(len, 2.f); // bring the aimTarget away for degenerated cases when it's between firepos and weaponpos
-				float angle = cry_atan2f(px, py);
-
-				if (angle < -limitH || angle > limitH)
-				{
-					Limit(angle, -limitH, limitH);
-					px = sinf(angle) * len;
-					py = cosf(angle) * len;
-					params.aimTarget = weaponPosition + px * limitAxisX + py * limitAxisY + Vec3(0, 0, aimDirection.z);
-					m_aimClamped = true;
-				}
-			}
-
-			float limitUp = m_pPlayer->GetActorParams()->vLimitRangeVUp;
-			float limitDown = m_pPlayer->GetActorParams()->vLimitRangeVDown;
-
-			if(limitUp != 0 || limitDown != 0)
-			{
-				Vec3 aimDirection(params.aimTarget - weaponPosition);//m_currentMovementState.weaponPosition);
-				Vec3 limitAxisXY(aimDirection);
-				limitAxisXY.z = 0;
-				Vec3 limitAxisZ(Vec3Constants<float>::fVec3_OneZ);
-				limitAxisXY.NormalizeSafe(Vec3Constants<float>::fVec3_OneY);
-				float z = limitAxisZ.Dot(aimDirection);
-				float x = limitAxisXY.Dot(aimDirection);
-				float len = cry_sqrtf(sqr(z) + sqr(x));
-				len = max(len, 2.f); // bring the aimTarget away for degenerated cases when it's between firepos and weaponpos
-				float angle = cry_atan2f(z, x);
-
-				if (angle < limitDown && limitDown != 0 || angle > limitUp && limitUp != 0)
-				{
-					Limit(angle, limitDown, limitUp);
-					z = sinf(angle) * len;
-					x = cosf(angle) * len;
-					params.aimTarget = weaponPosition + z * limitAxisZ + x * limitAxisXY;
-					m_aimClamped = true;
-				}
-			}
-
-			params.aimIK = true;
+			ikType = "look";
 			params.lookIK = true;
-			lookType = aimType = bodyTargetType = "mountedweapon";
 		}
-		else
+
+		if (m_state.AllowStrafing() || !hasMoveTarget)
 		{
-			Vec3 limitDirection = pEntity->GetRotation().GetColumn1();
-			Vec3 weaponPos(playerPos.x, playerPos.y, m_currentMovementState.weaponPosition.z);
-			const float LOOK_CONE_FOV = DEG2RAD(80.0f);
-			const float AIM_CONE_FOV = DEG2RAD(m_pPlayer->IsPlayer() ? 180.0f : 70.0f);
-
-			if (g_pGame->GetCVars()->g_debugaimlook)
-			{
-				DebugDrawWireFOVCone(gEnv->pRenderer, weaponPos, limitDirection, 2.0f, AIM_CONE_FOV, ColorB(255, 255, 255));
-				DebugDrawWireFOVCone(gEnv->pRenderer, eyePosition, limitDirection, 3.0f, LOOK_CONE_FOV, ColorB(0, 196, 255));
-			}
-
-			if (hasLookTarget)
-			{
-				params.lookTarget = lookTarget;
-				bool lookClamped = ClampTargetPointToCone(m_usingAimIK /* AimIK involves LookIK */, params.lookTarget, eyePosition, limitDirection, LOOK_CONE_FOV);
-
-				if (!lookClamped)
-				{
-					ikType = "look";
-					params.lookIK = true;
-				}
-
-				if (m_state.AllowStrafing() || !hasMoveTarget)
-				{
-					//bodyTarget = params.lookTarget;
-					//bodyTargetType = "look";
-				}
-			}
-
-			if (hasAimTarget && !swimming)
-			{
-				params.aimTarget = aimTarget;
-				m_aimClamped = ClampTargetPointToCone(m_usingAimIK, params.aimTarget, weaponPos, limitDirection, AIM_CONE_FOV);
-
-				if (!m_aimClamped)
-				{
-					ikType = "aim";
-					params.aimIK = !m_aimClamped;
-				}
-
-				if (m_state.AllowStrafing() || !hasMoveTarget)
-				{
-					bodyTarget = params.aimTarget;
-					bodyTargetType = "aim";
-				}
-			}
-
-			/*
-					if (!m_state.HasNoAiming() && m_aimInterpolator.HasTarget( now, AIM_TIME ) && !swimming)
-					{
-						params.aimIK = m_aimInterpolator.GetTarget(
-							params.aimTarget,
-							bodyTarget,
-							Vec3( playerPos.x, playerPos.y, m_currentMovementState.weaponPosition.z ),
-							moveDirection,
-							animBodyDirection,
-							entDirection,
-							MAX_AIM_TURN_ANGLE,
-							m_state.GetDistanceToPathEnd(),
-							viewFollowMovement,
-							pDbgClr,
-							&bodyTargetType );
-						ikType = "aim";
-					}
-					else if (m_lookInterpolator.HasTarget( now, LOOK_TIME ))	// Look IK
-					{
-						params.lookIK = m_lookInterpolator.GetTarget(
-							params.lookTarget,
-							bodyTarget,
-							Vec3( playerPos.x, playerPos.y, m_currentMovementState.eyePosition.z ),
-							moveDirection,
-							animBodyDirection,
-							entDirection,
-							MAX_HEAD_TURN_ANGLE,
-							m_state.GetDistanceToPathEnd(),
-							viewFollowMovement,
-							pDbgClr,
-							&bodyTargetType );
-						ikType = "look";
-					}
-			*/
+			//bodyTarget = params.lookTarget;
+			//bodyTargetType = "look";
 		}
 	}
+
+	if (hasAimTarget && !swimming)
+	{
+		params.aimTarget = aimTarget;
+		m_aimClamped = ClampTargetPointToCone(m_usingAimIK, params.aimTarget, weaponPos, limitDirection, AIM_CONE_FOV);
+
+		if (!m_aimClamped)
+		{
+			ikType = "aim";
+			params.aimIK = !m_aimClamped;
+		}
+
+		if (m_state.AllowStrafing() || !hasMoveTarget)
+		{
+			bodyTarget = params.aimTarget;
+			bodyTargetType = "aim";
+		}
+	}	
 
 	Vec3 viewDir = ((bodyTarget - playerPos).GetNormalizedSafe(ZERO));
 
@@ -1504,11 +1392,7 @@ void CPlayerMovementController::UpdateMovementState( SMovementState &state )
 		state.fireTarget = m_fireTarget;
 		state.eyePosition = vNewEyePosition;
 
-		if (pActorStats && pActorStats->mountedWeaponID)
-		{
-			state.isAiming = true;
-		}
-		else if (isCharacterVisible)
+		if (isCharacterVisible)
 		{
 			state.isAiming = false;
 			IAnimationPoseBlenderDir *pIPoseBlenderAimShadow = pCharacter->GetISkeletonPose()->GetIPoseBlenderAim();
@@ -1571,50 +1455,24 @@ void CPlayerMovementController::UpdateMovementState( SMovementState &state )
 			state.animationEyeDirection = ZERO;
 		}
 
-		//changed by ivo: most likely this doesn't work any more
-		//state.entityDirection = pEntity->GetRotation() * pSkeleton->GetCurrentBodyDirection();
-		// [kirill] when AI at MG need to update body/movementDirection coz entity is not moved/rotated AND set AIPos/weaponPs to weapon
-		if (pActorStats && pActorStats->mountedWeaponID)
+		state.entityDirection = pEntity->GetWorldRotation().GetColumn1();
+
+		if (isCharacterVisible)
 		{
-			IEntity *pWeaponEntity = gEnv->pEntitySystem->GetEntity(pActorStats->mountedWeaponID);
+			IAnimationPoseBlenderDir *pIPoseBlenderAim = pCharacter->GetISkeletonPose()->GetIPoseBlenderAim();
 
-			if(pWeaponEntity)
+			if (pIPoseBlenderAim)
 			{
-				state.eyePosition.x = pWeaponEntity->GetWorldPos().x;
-				state.eyePosition.y = pWeaponEntity->GetWorldPos().y;
-				state.weaponPosition = state.eyePosition;
-				EntityId currentWeaponId = 0;
-				IAIObject *pAIObject = m_pPlayer->GetEntity()->GetAI();
-				IAIActorProxy *pAIProxy = pAIObject ? pAIObject->GetProxy() : NULL;
-				// need to recalculate aimDirection, since weaponPos is changed
-				state.aimDirection = (m_aimTarget - state.weaponPosition).GetNormalizedSafe((m_lookTarget - state.weaponPosition).GetNormalizedSafe(forward)); //pEntity->GetRotation() * dirWeapon;
-			}
-
-			state.isAiming = !m_aimClamped;
-			state.entityDirection = state.aimDirection;
-			state.movementDirection = state.aimDirection;
-		}
-		else
-		{
-			state.entityDirection = pEntity->GetWorldRotation().GetColumn1();
-
-			if (isCharacterVisible)
-			{
-				IAnimationPoseBlenderDir *pIPoseBlenderAim = pCharacter->GetISkeletonPose()->GetIPoseBlenderAim();
-
-				if (pIPoseBlenderAim)
-				{
-					state.isAiming = !m_aimClamped && (pIPoseBlenderAim->GetBlend() > 0.99f);
-				}
-				else
-				{
-					state.isAiming = true;
-				}
+				state.isAiming = !m_aimClamped && (pIPoseBlenderAim->GetBlend() > 0.99f);
 			}
 			else
 			{
 				state.isAiming = true;
 			}
+		}
+		else
+		{
+			state.isAiming = true;
 		}
 	}
 
@@ -1695,7 +1553,6 @@ bool CPlayerMovementController::GetStanceState( const SStanceStateQuery &query, 
 	if(query.defaultPose)
 	{
 		state.eyePosition = pos + stanceInfo->GetViewOffsetWithLean(query.lean, query.peekOver);
-		state.weaponPosition = pos + m_pPlayer->GetWeaponOffsetWithLean(query.stance, query.lean, query.peekOver, m_pPlayer->GetEyeOffset());
 		state.upDirection.Set(0, 0, 1);
 		state.eyeDirection = FORWARD_DIRECTION;
 		state.aimDirection = FORWARD_DIRECTION;
@@ -1715,7 +1572,6 @@ bool CPlayerMovementController::GetStanceState( const SStanceStateQuery &query, 
 		state.eyePosition = pos + lookRot.TransformVector(stanceInfo->GetViewOffsetWithLean(query.lean, query.peekOver));
 		Matrix33 aimRot;
 		aimRot.SetRotationVDir(constrainedAimDir);
-		state.weaponPosition = pos + aimRot.TransformVector(m_pPlayer->GetWeaponOffsetWithLean(query.stance, query.lean, query.peekOver, m_pPlayer->GetEyeOffset()));
 		state.upDirection = orientation.GetColumn2();
 		state.eyeDirection = (lookTarget - state.eyePosition).GetNormalizedSafe(forward);
 		state.aimDirection = (aimTarget - state.weaponPosition).GetNormalizedSafe((lookTarget - state.weaponPosition).GetNormalizedSafe(forward));

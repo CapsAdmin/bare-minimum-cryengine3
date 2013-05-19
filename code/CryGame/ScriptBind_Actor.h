@@ -37,12 +37,6 @@ class CScriptBind_Actor :
 
 		void AttachTo(CActor *pActor);
 
-		//------------------------------------------------------------------------
-		// <title DumpActorInfo>
-		// Syntax: Actor.DumpActorInfo()
-		// Description:
-		//		Dumps actor info in the log file.
-		virtual int DumpActorInfo(IFunctionHandler *pH);
 		// <title SetViewAngleOffset>
 		// Syntax: Actor.SetViewAngleOffset()
 		// Description:
